@@ -10,5 +10,8 @@ package org.compi2.Interprete.CSS;
  * @author luigitercero
  */
 public class CSS {
-    
+
+    public CSS() {
+
+    }
 }
