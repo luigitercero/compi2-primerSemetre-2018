@@ -1,0 +1,190 @@
+package org.compi2.codigo3d.parser;
+
+import java_cup.runtime.Symbol;
+import com.ParserTree.Node;
+import com.ParserTree.ParserTree;
+import com.ParserTree.Location;
+import com.ParserTree.Term;
+import com.ParserTree.Token;
+import java.util.ArrayList;
+//PARSER PARA EL ARCHIVO DE ESCENARIOS
+parser code
+{://Codigo visible
+ public ParserTree parserTree ;
+public ArrayList<Symbol> error = new ArrayList<Symbol>();
+
+    String expresion = "";
+    public void syntax_error(Symbol s){
+    System.err.println("Error Sintactico en la Linea " + (s.right+1) +" Columna "+s.left+ ".  " +s.value + " no reconocido." );
+        this.error.add(s);
+        System.err.println(s);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+         System.err.println("Error Sintactico en la Linea " + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido.");
+        this.error.add(s);
+        System.err.println(s);
+    }
+
+:}
+
+action code
+{://Codigo de acciones
+      
+:}
+
+terminal String MAYORQUE,
+IGUAL,MENORQUE,PAREA,PAREC,PUNTOCOMA,MENOS,MAS,POR,DIV,CORCHA,CORCHC,ID,ENTERO,DECIMAL, DOSPI,COMA,TRUE,FALSE,CADENA;
+terminal String 
+COLORTEXT,
+OPAQUE,
+BORDE,
+VISIBLE,
+AUTOREDIMENSION,
+FONDOELEMENTO,
+TAMTEXT,
+LETRA,
+FORMATO,
+TEXT,
+ALINEADO,
+IZQUIERDA,
+DERECHA,
+CENTRADO,
+JUSTIFICADO,
+NEGRILLA,
+CURSIVA,
+MAYUSCULA,
+MINUSCULA,
+CAPITAL,
+GRUPO,
+ENTER
+;
+
+nonterminal ParserTree inicial,css,encabezado,definicionii,definicion,definir,group,elementos,elemento,exp,lista;
+nonterminal Node propiedad,reservada,valor;
+
+precedence left COMA;
+precedence left MAS, MENOS;
+precedence left POR, DIV;
+start with inicial;
+
+inicial ::= css:a{:this.parser.parserTree = a; RESULT = a;:};
+
+css::= css:a encabezado:b{:a.addChildren(b); RESULT= a;:}
+    | encabezado:a {:ParserTree arbol= new ParserTree("css");arbol.addChildren(a); RESULT = a; :}
+    ;
+
+encabezado ::= ID:a CORCHA definicionii:b 
+        {:Node nodo = new Node(new Term("ID"), new Token(new Location(aleft,aright),a,"ID"));
+         ParserTree arbol = new ParserTree("encabezado"); 
+         arbol.addChildren(nodo); 
+         arbol.addChildren(b);
+         RESULT = arbol;
+        :}
+    ;
+
+definicionii ::= definicion:a CORCHC {:RESULT = a;:}
+    | CORCHC {:ParserTree arbol = new ParserTree("Definicion"); RESULT = arbol;:}
+    ;
+
+definicion ::= definicion:a definir:b{:a.addChildren(b); RESULT = a;:}
+    |definir:a
+        {:ParserTree arbol = new ParserTree("Definicion");arbol.addChildren(a); RESULT = arbol;:}
+    
+    ;
+
+definir ::= elemento:a PUNTOCOMA{:RESULT = a;:}
+    |GRUPO PAREA ID:a PAREC PUNTOCOMA
+     {:ParserTree arbol = new ParserTree("GURPO");
+     Node nodo = new Node(new Term("ID"), new Token(new Location(aleft,aright),a,"ID"));
+     arbol.addChildren(nodo); RESULT = arbol;
+     :}
+    |error:a
+        {:
+        Node nodo = new Node(new Term("error"), new Token(new Location(aleft,aright),a,"error"));
+        ParserTree arbol = new ParserTree("error");arbol.addChildren(nodo); RESULT = arbol;
+        :}
+    ;
+
+
+
+
+elemento::= propiedad:a DOSPI exp:b
+     {:ParserTree arbol = new ParserTree("elemento");arbol.addChildren(a); arbol.addChildren(b);RESULT = arbol;:}
+;
+
+
+
+exp ::= exp:a MAS:s exp:b{:ParserTree arbol = new ParserTree(new Node(new Term("EXP")));arbol.addChildren(a); Node nodo = new Node(new Term("MAS"))  ; arbol.addChildren(nodo); arbol.addChildren(b); RESULT = arbol;:}
+    |exp:a POR:s exp:b{:ParserTree arbol = new ParserTree(new Node(new Term("EXP")));   arbol.addChildren(a); Node nodo = new Node(new Term("POR"))  ; arbol.addChildren(nodo); arbol.addChildren(b); RESULT = arbol;:}
+    |exp:a MENOS:s exp:b{:ParserTree arbol = new ParserTree(new Node(new Term("EXP"))); arbol.addChildren(a); Node nodo = new Node(new Term("MENOS")); arbol.addChildren(nodo); arbol.addChildren(b); RESULT = arbol;:}
+    |exp:a DIV:s exp:b{:ParserTree arbol = new ParserTree(new Node(new Term("EXP")));   arbol.addChildren(a); Node nodo = new Node(new Term("DIV"))  ; arbol.addChildren(nodo); arbol.addChildren(b); RESULT = arbol;:}
+    |exp:a COMA:s exp:b{:ParserTree arbol = new ParserTree(new Node(new Term("EXP")));  arbol.addChildren(a); Node nodo = new Node(new Term("COMA")) ; arbol.addChildren(nodo); arbol.addChildren(b); RESULT = arbol;:}
+    |CORCHA exp:a CORCHC{:RESULT = a;:}
+    |PAREA exp:a PAREC{:RESULT = a;:}
+    |reservada:a{:ParserTree arbol = new ParserTree(new Node(new Term("EXP"))); arbol.addChildren(a); RESULT = arbol;:}
+    |valor:a{:ParserTree arbol = new ParserTree(new Node(new Term("EXP"))); arbol.addChildren(a); RESULT = arbol;:}
+    ;
+
+valor ::=
+     TRUE:a
+        {:Node nodo = new Node(new Term("TRUE"), new Token(new Location(aleft,aright),a,"TRUE"));RESULT = nodo;:}
+    |FALSE:a
+        {:Node nodo = new Node(new Term("FALSE"), new Token(new Location(aleft,aright),a,"FALSE"));RESULT = nodo;:}
+    |ENTERO:a
+        {:Node nodo = new Node(new Term("ENTERO"), new Token(new Location(aleft,aright),a,"ENTERO"));RESULT = nodo;:}
+    |DECIMAL:a
+        {:Node nodo = new Node(new Term("DECIMAL"), new Token(new Location(aleft,aright),a,"DECIMAL"));RESULT = nodo;:}
+    |CADENA:a
+        {:Node nodo = new Node(new Term("CADENA"), new Token(new Location(aleft,aright),a,"CADENA"));RESULT = nodo;:}
+    |ID:a
+        {:Node nodo = new Node(new Term("ID"), new Token(new Location(aleft,aright),a,"ID"));RESULT = nodo;:}
+    ;
+reservada::=
+     ALINEADO:a
+        {:Node nodo = new Node(new Term("ALINEADO"), new Token(new Location(aleft,aright),a,"ALINEADO"));RESULT = nodo;:}
+    |IZQUIERDA:a
+        {:Node nodo = new Node(new Term("IZQUIERDA"), new Token(new Location(aleft,aright),a,"IZQUIERDA"));RESULT = nodo;:}
+    |DERECHA:a
+        {:Node nodo = new Node(new Term("DERECHA"), new Token(new Location(aleft,aright),a,"DERECHA"));RESULT = nodo;:}
+    |CENTRADO:a
+        {:Node nodo = new Node(new Term("CENTRADO"), new Token(new Location(aleft,aright),a,"CENTRADO"));RESULT = nodo;:}
+    |JUSTIFICADO:a
+        {:Node nodo = new Node(new Term("JUSTIFICADO"), new Token(new Location(aleft,aright),a,"JUSTIFICADO"));RESULT = nodo;:}
+    |NEGRILLA:a
+        {:Node nodo = new Node(new Term("NEGRILLA"), new Token(new Location(aleft,aright),a,"NEGRILLA"));RESULT = nodo;:}
+    |CURSIVA:a
+        {:Node nodo = new Node(new Term("CURSIVA"), new Token(new Location(aleft,aright),a,"CURSIVA"));RESULT = nodo;:}
+    |MAYUSCULA:a
+        {:Node nodo = new Node(new Term("MAYUSCULA"), new Token(new Location(aleft,aright),a,"MAYUSCULA"));RESULT = nodo;:}
+    |MINUSCULA:a
+        {:Node nodo = new Node(new Term("MINUSCULA"), new Token(new Location(aleft,aright),a,"MINUSCULA"));RESULT = nodo;:}
+    |CAPITAL:a
+        {:Node nodo = new Node(new Term("CAPITAL"), new Token(new Location(aleft,aright),a,"CAPITAL"));RESULT = nodo;:}    
+   
+    ;
+propiedad ::=
+     COLORTEXT:a
+        {:Node nodo = new Node(new Term("COLORTEXT"), new Token(new Location(aleft,aright),a,"COLORTEXT")); RESULT = nodo;:}
+    |OPAQUE:a
+        {:Node nodo = new Node(new Term("OPAQUE"), new Token(new Location(aleft,aright),a,"OPAQUE")); RESULT = nodo;:}
+    |BORDE:a
+        {:Node nodo = new Node(new Term("BORDE"), new Token(new Location(aleft,aright),a,"BORDE")); RESULT = nodo;:}
+    |VISIBLE:a
+        {:Node nodo = new Node(new Term("VISIBLE"), new Token(new Location(aleft,aright),a,"VISIBLE")); RESULT = nodo;:}
+    |AUTOREDIMENSION:a
+        {:Node nodo = new Node(new Term("AUTOREDIMENSION"), new Token(new Location(aleft,aright),a,"AUTOREDIMENSION")); RESULT = nodo;:}
+    |FONDOELEMENTO:a
+        {:Node nodo = new Node(new Term("FONDOELEMENTO"), new Token(new Location(aleft,aright),a,"FONDOELEMENTO")); RESULT = nodo;:}
+    |TAMTEXT:a
+        {:Node nodo = new Node(new Term("TAMTEXT"), new Token(new Location(aleft,aright),a,"TAMTEXT")); RESULT = nodo;:}
+    |LETRA:a
+        {:Node nodo = new Node(new Term("LETRA"), new Token(new Location(aleft,aright),a,"LETRA")); RESULT = nodo;:}
+    |FORMATO:a
+        {:Node nodo = new Node(new Term("FORMATO"), new Token(new Location(aleft,aright),a,"FORMATO")); RESULT = nodo;:}
+    |TEXT:a
+        {:Node nodo = new Node(new Term("TEXT"), new Token(new Location(aleft,aright),a,"TEXT")); RESULT = nodo;:}
+    |ID:a
+        {:Node nodo = new Node(new Term("ID"), new Token(new Location(aleft,aright),a,"ID"));RESULT = nodo;:}
+    
+    ;

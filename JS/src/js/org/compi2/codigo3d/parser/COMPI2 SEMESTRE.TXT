@@ -1,0 +1,1631 @@
+COMPI2 SEMESTRE
+package com.CompiladorGraphik.Gramaticas;
+
+import com.ParserTree.Location;
+import com.ParserTree.NodeTree;
+import com.ParserTree.ParserTree;
+import com.ParserTree.Term;
+import com.ParserTree.Token;
+import java.io.*;
+import java_cup.runtime.*;
+import java.util.ArrayList;
+
+//import static com.compi1.proyecto_1.Vista.arrayvariable;
+
+parser code
+{:
+
+  String expresion="";
+ public ParserTree parserTree;
+public ArrayList<Symbol> error = new ArrayList<Symbol>();
+
+// METODOS Y VARIABLES GLOBALES DEL PARSER, PUEDEN SER PUBLICAS O PRIVADAS
+
+    public  String prueba = "";
+
+    public void syntax_error(Symbol s){
+        /**Metodo al que se llama automaticamente ante algun error sintactico.*/
+        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna "+s.left+ ".  " +s.value + " no reconocido." );
+        this.error.add(s);
+      
+    }
+             
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        /**Metodo al que se llama en el momento en que ya no es posible una recuperacion de errores.*/
+        System.out.println(" no se recupero Error Sintactico en la Linea " + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido.");
+        this.error.add(s);
+    }
+
+
+:}
+
+
+action code
+{:
+
+public String
+mas="+",
+menos="-",
+por="*",
+div="/",
+parea="parea",
+eleva="eleva",
+parec="parec",
+igual="=",
+corcha="[",
+corchc="]",
+llv1="llv1",
+llv2="llv2",
+coma="coma",
+dosp="dosp",
+puntocoma="puntocoma",
+orr="||",
+xorr="&|",
+andd="&&",
+nott="!",
+masmas="++",
+menosmenos="--",
+finexp="finexp",
+mayorque=">",
+menorque="<",
+mayorIgual=">=",
+menorIgual="<=",
+igualIgual="==",
+noIgual="!=",
+verdadero="true",
+falso="false",
+publico="publico",
+protegido="protegido",
+privado="privado",
+entero="entero",
+decimal="decimal",
+bool="bool",
+cadena="cadena",
+
+als="als",
+vacio="vacio",
+importar="importar",
+hereda="hereda",
+var="var",
+nuevo="nuevo",
+retornar="retornar",
+llamar="llamar",
+string = "string",
+si="si",
+sino="sino",
+seleccion="seleccion",
+caso="caso";
+public String
+dedefecto = "dedefecto",
+para="para",
+mientras="mientras",
+hacer="hacer",
+continuar="continuar",
+terminar="terminar",
+columna="columna",
+procesar="procesar",
+donde="donde",
+dondeCada="dondeCada",
+dondeTodo="dondeTodo",
+imprimir="imprimir",
+incluir_HK="incluir_HK",
+
+expresion= "expresion",
+inicio="inicio",
+graphikar_funcion="graphikar",
+tchar="tchar",
+punto="punto",
+datos="datos",
+llamarHK="llamarHK",
+titulo= "titulo",
+caracter ="caracter",
+numero="numero",
+identificador= "id",
+ 
+INICIO="INICIO", 
+GRAPHICK="GRAPHICK", 
+ENCABEZADO="ENCABEZADO",
+CLASE="CLASE", 
+VISIBILIDAD="VISIBILIDAD",
+CUERPO="CUERPO",
+CUERPO1="CUERPO1",
+VAR_GLOBAL="VAR_GLOBAL",
+ARREGLO="ARREGLO",
+RETORNAR="RETORNAR",
+IF1="IF1",
+IF2="IF2",
+FUNCION="FUNCION",
+CONTROL="CONTROL",
+PARAMETRO="PARAMETRO",
+TIPO="TIPO",
+IDS="IDS",
+DIMENSION="DIMENSION",
+LLAMARMETODO="LLAMARMETODO",
+IMPRIMIR="IMPRIMIR",
+VAR_GLOBALASIGNAR="VAR_GLOBALASIGNAR",
+EXP="EXP",
+ARREGLO_GLOBAL_ASIGNAR="ARREGLO_GLOBAL_ASIGNAR",
+ARREGLO_ASIGNAR="ARREGLO_ASIGNAR",
+ARRE_GLOBAL="ARRE_GLOBAL", 
+ARREGLO_ASIGNAR1="ARREGLO_ASIGNAR1",
+ARREGLO_ASIGNAR2="ARREGLO_ASIGNAR2", 
+PRINCIPAL="PRINCIPAL", 
+LISTA_SENTENCIAS="LISTA_SENTENCIAS";
+public String
+SENTENCIA="SENTENCIA",
+VARIABLE="VARIABLE",
+VAR_ASIGNAR="VAR_ASIGNAR",
+ARREGLO_DECLARAR="ARREGLO_DECLARAR",
+SENTECIA="SENTECIA",
+DETENER="DETENER",
+CONTINUAR="CONTINUAR",
+VAR_DECLARARCION="VAR_DECLARARCION",
+DECLAALS="DECLAALS",
+INCLUIR="INCLUIR",
+IMPORTAR="IMPORTAR",
+HERENCIA="HERENCIA",
+SWITCH="SWITCH",
+MIENTRAS="MIENTRAS",
+HACER="HACER", 
+PARA="PARA",
+CUERPO2="",
+ METODO="METODO",
+ATRIBUTO="ATRIBUTO",
+GET_CLASS = "GET_CLASS",
+
+GET_INSTANCIA="GET_INSTANCIA",
+CONDICION="CONDICION",
+CASO="CASO",
+DEFECTO="DEFECTO",
+SWICH_CUERPO="SWITCH",
+VALOR="VALOR",
+AUMENTO="AUMENTO",
+SALIDA_GRAFICA="SALIDA_GRAFICA",
+ARREGLO_ASIGNAR_D="ARREGLO_ASIGNAR_D",
+GRAFICAR_FUNCION="GRAFICAR_FUNCION",
+LLAMARDATOS="LLAMARDATOS",
+COLUMNA="COLUMNA",
+PROCESAR="PROCESAR",
+ DONDE ="DONDE",
+ DONDECADA ="DONDECADA",
+ DONDETODO ="DONDETODO",
+LLAMARHK="LLAMARHK",
+TIPO2="TIPO2",
+DECPARM="DECPARM",
+AgregarVar="AgregarVar",
+Identi = "Identi",
+Corchetes = "Corchetes",ALS_ASIGNAR="ALS_ASIGNAR",DATOS="DATOS",ALSNuevo="ALSNuevo";
+public  final
+            int _v_List = 5,_v_Caracter =3 , _v_Number = 1, _v_String = 4, _v_Boolean = 0, _v_Double = 2, _v_Void = 4, _Tcontinue = 3, _Tdetener = 2 , _Tretornar = 1;
+ 
+:}
+
+
+
+terminal String numero, identificador, caracter,ndecimal;
+terminal String
+mas,
+menos,
+por,
+div,
+parea,
+eleva,
+parec,
+igual,
+corcha,
+corchc,
+llv1,
+llv2,
+coma,
+dosp,
+puntocoma,
+orr,
+xorr,
+andd,
+nott,
+masmas,
+menosmenos,
+finexp,
+mayorque,
+menorque,
+mayorIgual,
+menorIgual,
+igualIgual,
+noIgual,
+verdadero,
+falso,
+publico,
+protegido,
+privado,
+entero,
+decimal,
+bool,
+cadena,
+
+als,
+vacio,
+importar,
+hereda,
+var,
+nuevo,
+retornar,
+llamar,
+si,
+sino,
+seleccion,
+caso,
+defecto,
+para,
+mientras,
+hacer,
+continuar,
+terminar,
+columna,
+procesar,
+donde,
+dondeCada,
+dondeTodo,
+imprimir,
+incluir_HK,
+
+expresion,
+inicio,
+graphikar_funcion,
+tchar,
+punto,
+datos,
+llamarHK,
+titulo, titulo2
+;   
+
+non terminal NodeTree
+TITULO, 
+INICIO, 
+GRAPHICK, 
+ENCABEZADO,
+CLASE, 
+VISIBILIDAD,
+CUERPO,
+CUERPO1,
+VAR_GLOBAL,
+ARREGLO,
+RETORNAR,
+IF1,
+IF2,
+FUNCION,
+CONTROL,
+PARAMETRO,
+TIPO,
+IDS,
+DIMENSION,
+LLAMARMETODO,
+IMPRIMIR,
+VAR_GLOBALASIGNAR,
+EXP,
+ARREGLO_GLOBAL_ASIGNAR,
+ARREGLO_ASIGNAR,
+ARRE_GLOBAL, 
+ARREGLO_ASIGNAR1,
+ARREGLO_ASIGNAR2, 
+PRINCIPAL, 
+LISTA_SENTENCIAS,
+SENTENCIA,
+VARIABLE,
+VAR_ASIGNAR,
+ARREGLO_DECLARAR,
+SENTECIA,
+DETENER,
+CONTINUAR,
+VAR_DECLARARCION,
+DECLAALS,
+INCLUIR,
+IMPORTAR,
+HERENCIA,
+SWITCH,
+MIENTRAS,
+HACER, 
+PARA,
+CUERPO2,
+ METODO,
+ATRIBUTO,
+GET_CLASS,
+GET_INSTANCIA,
+CONDICION,
+CASO,
+DEFECTO,
+SWICH_CUERPO,
+VALOR,
+AUMENTO,
+SALIDA_GRAFICA,
+ARREGLO_ASIGNAR_D,
+GRAFICAR_FUNCION,
+LLAMARDATOS,
+COLUMNA,
+PROCESAR,
+ DONDE ,
+ DONDECADA ,
+ DONDETODO ,
+LLAMARHK,
+TIPO2,
+DECPARM,
+AgregarVar,
+Identi,
+Corchetes,
+SENTENCIA2,
+VISIBILIDAD1,
+CLASE1,ALS_ASIGNAR,ARR,DATOS,ALSNuevo
+
+
+;
+precedence left orr;
+precedence left xorr;
+precedence left andd;
+precedence left nott;
+precedence left igualIgual, noIgual;
+precedence left mayorque, menorque, mayorIgual, menorIgual;
+precedence left mas, menos;
+precedence left por, div;
+precedence left eleva;
+
+
+
+
+
+
+
+
+
+start with INICIO;
+
+INICIO ::= GRAPHICK:a{:this.parser.parserTree = new ParserTree(a); this.parser.parserTree.ParserMessages = this.parser.error;
+                                    
+        :} ;
+
+GRAPHICK::= ENCABEZADO:a CLASE1:b {:
+                                    NodeTree nodo = new NodeTree(new Term(GRAPHICK));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a,b);
+                                    RESULT = arbol.root;
+        :} 
+    | ENCABEZADO:a {:
+                                    NodeTree nodo = new NodeTree(new Term(GRAPHICK));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a);
+                                    RESULT = arbol.root;
+        :} 
+    | CLASE1:a {:
+                                    NodeTree nodo = new NodeTree(new Term(GRAPHICK));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a);
+                                    RESULT = arbol.root;
+        :} 
+        
+
+ ;
+
+
+ CLASE1::= CLASE1:a CLASE:b{:
+
+                                    ParserTree arbol = new ParserTree (a);
+                                    arbol.addChildren(b);
+                                    RESULT = arbol.root;
+                :}
+
+    | CLASE:a {:                    NodeTree nodo = new NodeTree(new Term("CLASE1"));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a);
+                                    RESULT = arbol.root;
+
+                                    :}
+    ; 
+
+ENCABEZADO::=   INCLUIR:a{:
+                                    NodeTree nodo = new NodeTree(new Term(ENCABEZADO));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a);
+                                    RESULT = arbol.root;
+        :} 
+    | ENCABEZADO:a INCLUIR:b{:
+                                    
+                                    ParserTree arbol = new ParserTree (a);
+                                    arbol.addChildren(b);
+                                    RESULT = arbol.root;
+        :} 
+    | IMPORTAR:a{:
+                                    NodeTree nodo = new NodeTree(new Term(ENCABEZADO));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a);
+                                    RESULT = arbol.root;
+        :} 
+    | ENCABEZADO:a IMPORTAR:b{:
+                                    
+                                    ParserTree arbol = new ParserTree (a);
+                                    arbol.addChildren(b);
+                                    RESULT = arbol.root;
+        :} 
+    ;
+INCLUIR ::= incluir_HK identificador:a finexp{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(INCLUIR));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja);
+                                    RESULT = arbol.root;
+        :} 
+;
+IMPORTAR ::= importar TITULO:a finexp{:
+                                     
+                                    NodeTree nodo = new NodeTree(new Term(IMPORTAR));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a);
+                                    RESULT = arbol.root;
+        :} ; 
+        TITULO::= 
+            titulo2:a{:NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));RESULT = hoja; :}
+            |expresion:a{:NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));RESULT = hoja; :};
+CUERPO::= CUERPO:a CUERPO1:b {: 
+                                    ParserTree arbol = new ParserTree (a);
+                                    arbol.addChildren(b);
+                                    RESULT = arbol.root;
+                    :}
+        | CUERPO1:a{: NodeTree nodo = new NodeTree(new Term(CUERPO));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(a);
+                                    RESULT = arbol.root;
+                    :}
+        ; 
+
+
+CLASE::=  als identificador:a  VISIBILIDAD:b llv1 CUERPO:c llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja,b,c);
+                                    RESULT = arbol.root;
+        :} 
+        | als identificador:a  VISIBILIDAD:b llv1 llv2 {:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja,b);
+                                    RESULT = arbol.root;
+        :} 
+        | als identificador:a llv1 CUERPO:b llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja,b);
+                                    RESULT = arbol.root;
+        :}
+        | als identificador:a llv1 llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja);
+                                    RESULT = arbol.root;
+        :}
+        | als identificador:a  VISIBILIDAD:b HERENCIA:c llv1 CUERPO:d llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja,b,c,d);
+                                    RESULT = arbol.root;
+        :}
+        | als identificador:a  VISIBILIDAD:b HERENCIA:c llv1 llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja,b,c);
+                                    RESULT = arbol.root;
+        :}  
+        | als identificador:a HERENCIA:b llv1 CUERPO:c llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja,b,c);
+                                    RESULT = arbol.root;
+        :}
+        | als identificador:a HERENCIA:b llv1 llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(CLASE));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja,b);
+                                    RESULT = arbol.root;
+        :}
+        ;
+HERENCIA::= hereda identificador:a{: NodeTree nodo = new NodeTree(new Term(HERENCIA));
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(hoja);
+                                    RESULT = arbol.root;
+             :}
+    ;           
+
+
+CUERPO1::=  VAR_GLOBAL:a finexp {:RESULT =a;/*declarar variable global*/:}
+          | ARRE_GLOBAL:a finexp {:RESULT =a;/*declarar arreglo global*/:}
+          | VAR_GLOBALASIGNAR:a finexp{:RESULT =a;/*declarar variable global y asignar*/:}
+          | ARREGLO_GLOBAL_ASIGNAR:a finexp {:RESULT =a;/*declarar arreglo y asiganar*/:}
+          | FUNCION:a{:RESULT =a;/*declarar una funcion*/:}
+          | PRINCIPAL:a {: RESULT =a;:}
+          | DATOS:a{:RESULT = a;:}
+          | DECLAALS:a finexp{:RESULT = a;:}
+          | error:a {: NodeTree nod = new NodeTree(new Term("error"), new Token(new Location(aleft, aright),a));
+                        RESULT = nod ;
+                        System.out.println("error fila"+ aleft + "columna" + aright );
+                        :}
+          ;
+
+          
+
+
+VAR_GLOBALASIGNAR ::= VAR_GLOBAL:a igual EXP:b {:           
+                                    NodeTree nodo = new NodeTree(new Term(VAR_GLOBALASIGNAR));
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a,b);  
+                                    RESULT = arbol.root;
+
+                                    :} 
+
+;
+
+ARREGLO_GLOBAL_ASIGNAR ::= ARREGLO_DECLARAR:a igual ARREGLO_ASIGNAR_D:b {:          
+                                    NodeTree nodo = new NodeTree(new Term(ARREGLO_GLOBAL_ASIGNAR));
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a,b);  
+                                    RESULT = arbol.root;
+
+                                    :} 
+;
+
+
+VAR_GLOBAL::= VAR_DECLARARCION:a  {:            
+                                    NodeTree nodo = new NodeTree(new Term(VAR_GLOBAL));
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = a;
+
+                                    :} 
+
+    ;//ya
+                        
+ARRE_GLOBAL::= ARREGLO_DECLARAR:a /*dosp VISIBILIDAD:b*/{:          
+                                    NodeTree nodo = new NodeTree(new Term(ARRE_GLOBAL));
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;
+
+                                    :} 
+/*  | ARREGLO_DECLARAR:a{:          NodeTree nodo = new NodeTree(new Term(ARRE_GLOBAL));
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;:}*/
+    ;//ya
+
+DIMENSION::= corcha EXP:a corchc {:NodeTree nodo = new NodeTree(new Term(DIMENSION));
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;
+                                    :}
+    | DIMENSION:a corcha EXP:b corchc {:
+                                    ParserTree arbol = new ParserTree (a); 
+                                    arbol.addChildren(b);  
+                                    RESULT = arbol.root;
+                                    :}
+    ;
+
+
+//------------------------------------------------------------> fin de sentencias glombales
+
+//--------------------------------------------------------------> arreglo global -> { a,l,{3}}
+ARREGLO_ASIGNAR_D ::= llv1  ARREGLO_ASIGNAR1:a llv2{:  NodeTree nodoEXP = new NodeTree(new Term(ARREGLO));  
+                        ParserTree arbol = new ParserTree (nodoEXP); 
+                        arbol.addChildren(a);  
+                        //RESULT = arbol.root;
+                        RESULT = a;:}
+                        ;
+                                                
+ARREGLO_ASIGNAR1 ::=  ARREGLO_ASIGNAR1:a coma ARREGLO_ASIGNAR2:b {:ParserTree arbol = new ParserTree (a); 
+                        arbol.addChildren(b);
+                         RESULT = arbol.root;  :}
+    | ARREGLO_ASIGNAR2:a {:
+                        NodeTree nodoEXP = new NodeTree(new Term(PARAMETRO));  
+                        ParserTree arbol = new ParserTree (nodoEXP); 
+                        arbol.addChildren(a);  
+                        RESULT = arbol.root;
+                        :} 
+    ;
+
+ARREGLO_ASIGNAR2::= EXP:a {:RESULT = a;:}
+    | llv1  ARREGLO_ASIGNAR1:a llv2 {:RESULT = a; :} 
+    ;
+//------------------------------------------------------------> fin de arreglo global 
+//------------------------------------------------------------> METODO PRINCIPAL
+PRINCIPAL::= vacio:b inicio:a parea parec llv1 llv2{:
+                                    NodeTree nodo = new NodeTree(new Term(PRINCIPAL));
+                                    NodeTree hoja = new NodeTree(new Term(inicio), new Token(new Location(aleft, aright),a));
+                                    NodeTree nodo1 = new NodeTree(new Term(vacio), new Token(new Location(bleft, bright),b));
+                                    
+                                    NodeTree Tipo = new NodeTree(new Term(TIPO));
+                                    ParserTree arbolTipo = new  ParserTree (Tipo);
+                                    arbolTipo.addChildren(nodo1);
+
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(arbolTipo.root,hoja);
+                                    RESULT = arbol.root;:}
+    | vacio:c inicio:a parea parec llv1 LISTA_SENTENCIAS:b llv2{:
+                                    NodeTree nodo = new NodeTree(new Term(PRINCIPAL));
+                                    NodeTree hoja = new NodeTree(new Term(inicio), new Token(new Location(aleft, aright),a));
+                                    NodeTree nodo1 = new NodeTree(new Term(vacio), new Token(new Location(cleft, cright),c));
+                                    
+                                    NodeTree Tipo = new NodeTree(new Term(TIPO));
+                                    ParserTree arbolTipo = new  ParserTree (Tipo);
+                                    arbolTipo.addChildren(nodo1);
+
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(arbolTipo.root,hoja,b);
+                                    RESULT = arbol.root;:}
+    ; 
+
+
+
+
+    DATOS::= vacio:b datos:a parea parec llv1 llv2{:
+                                    NodeTree nodo = new NodeTree(new Term(DATOS));
+                                    NodeTree hoja = new NodeTree(new Term(datos), new Token(new Location(aleft, aright),a));
+                                    NodeTree nodo1 = new NodeTree(new Term(vacio), new Token(new Location(bleft, bright),b));
+                                    
+                                    NodeTree Tipo = new NodeTree(new Term(TIPO));
+                                    ParserTree arbolTipo = new  ParserTree (Tipo);
+                                    arbolTipo.addChildren(nodo1);
+
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(arbolTipo.root,hoja);
+                                    RESULT = arbol.root;:}
+    | vacio:c datos:a parea parec llv1 LISTA_SENTENCIAS:b llv2{:
+                                    NodeTree nodo = new NodeTree(new Term(DATOS));
+                                    NodeTree hoja = new NodeTree(new Term(datos), new Token(new Location(aleft, aright),a));
+                                    NodeTree nodo1 = new NodeTree(new Term(vacio), new Token(new Location(cleft, cright),c));
+                                    
+                                    NodeTree Tipo = new NodeTree(new Term(TIPO));
+                                    ParserTree arbolTipo = new  ParserTree (Tipo);
+                                    arbolTipo.addChildren(nodo1);
+
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(arbolTipo.root,hoja,b);
+                                    RESULT = arbol.root;:}
+    ; 
+
+FUNCION::= TIPO2:b identificador:a parea parec llv1 llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja);
+                                    RESULT = arbol.root;
+        :}
+    | TIPO2:b identificador:a parea parec llv1 LISTA_SENTENCIAS:c llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja,c);
+                                    RESULT = arbol.root;
+        :}
+    | TIPO2:b identificador:a parea DECPARM:c parec llv1 LISTA_SENTENCIAS:d llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja,c,d);
+                                    RESULT = arbol.root;
+        :}
+
+    |TIPO2:b identificador:a parea DECPARM:c parec llv1  llv2{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja,c);
+                                    RESULT = arbol.root;
+        :}  
+    | TIPO2:b identificador:a parea parec  VISIBILIDAD:c llv1 LISTA_SENTENCIAS:d llv2  {:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja,c,d);
+                                    RESULT = arbol.root;
+        :}
+    | TIPO2:b identificador:a parea DECPARM:c parec VISIBILIDAD:d llv1 LISTA_SENTENCIAS:e llv2  {:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja,c,d,e);
+                                    RESULT = arbol.root;
+        :}
+
+    | TIPO2:b identificador:a parea parec VISIBILIDAD:c llv1 llv2   {:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja,c);
+                                    RESULT = arbol.root;
+        :}
+    | TIPO2:b identificador:a parea DECPARM:c parec VISIBILIDAD:d llv1  llv2  {:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(FUNCION));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja,c,d);
+                                    RESULT = arbol.root;
+        :}
+    ;
+
+TIPO2::= TIPO:a{:RESULT = a;:} 
+    | vacio:a{:
+                                        NodeTree nodo1 = new NodeTree(new Term(vacio), new Token(new Location(aleft, aright),a));
+                                    
+                                    NodeTree Tipo = new NodeTree(new Term(TIPO));
+                                    ParserTree arbolTipo = new  ParserTree (Tipo);
+                                    arbolTipo.addChildren(nodo1);
+                                    RESULT = arbolTipo.root;
+                                        :}
+    | identificador:a{:
+                                        NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));
+                                    
+                                    NodeTree Tipo = new NodeTree(new Term(TIPO));
+                                    ParserTree arbolTipo = new  ParserTree (Tipo);
+                                    arbolTipo.addChildren(nodo1);
+                                    RESULT = arbolTipo.root;
+                                        :}
+
+    ;   
+
+DECPARM::= TIPO2:b identificador:a {:NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(DECPARM));
+                                    ParserTree arbol = new ParserTree (nodo);
+                                    arbol.addChildren(b,hoja);
+                                    RESULT = arbol.root;
+
+                                    :}
+            | DECPARM:c  coma TIPO2:b identificador:a{:
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    ParserTree arbol = new ParserTree (c);
+                                    arbol.addChildren(b,hoja);
+                                    RESULT = arbol.root;
+
+                                    :} ;
+
+/*
+    TIPO2 id parentesiAbre parentesiCierra dospuntos VISIBILIDAD llaveAbre SENTENCIAS llaveCierra
+    | TIPO2 id parentesiAbre DECPARM parentesiCierra dospuntos VISIBILIDAD llaveAbre SENTENCIAS llaveCierra
+    | TIPO2 id parentesiAbre parentesiCierra llaveAbre SENTENCIAS llaveCierra
+    | TIPO2 id parentesiAbre DECPARM parentesiCierra llaveAbre SENTENCIAS llaveCierra;
+
+
+*/
+    
+LISTA_SENTENCIAS::= LISTA_SENTENCIAS:a SENTENCIA:b {:
+
+                    ParserTree arbol = new ParserTree (a);
+                    arbol.addChildren(b);
+                    RESULT = arbol.root;
+
+                    :}
+    |SENTENCIA:a{:  NodeTree nodo = new NodeTree(new Term(LISTA_SENTENCIAS));
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a);
+                    RESULT = arbol.root;
+    :}
+
+
+    ;
+
+SENTENCIA::= SENTENCIA2:a{:RESULT = a;:} finexp //ya
+    | CONTROL:a{:RESULT = a;:}
+    | error:a {: NodeTree nod = new NodeTree(new Term("error"), new Token(new Location(aleft, aright),a));
+                        RESULT = nod ;
+                        System.out.println("error fila"+ aleft + "columna" + aright );
+                        :}
+    ;
+
+SENTENCIA2 ::= VARIABLE:a{:RESULT = a;:}  //ya
+    | ARREGLO:a{:RESULT = a;:} // ya
+    | DECLAALS:a{:RESULT = a;:} //ya 
+    | IMPRIMIR:a{:RESULT = a;:} //ya
+    
+    | LLAMARMETODO:a{:RESULT = a;:} //ya
+    | DETENER:a{:RESULT = a;:} //ya
+    | CONTINUAR:a{:RESULT = a;:} //ya
+    | RETORNAR:a{:RESULT = a;:} //ya
+    | AUMENTO:a{:RESULT = a;:} 
+    | ALSNuevo:a{:
+                        NodeTree nodo = new NodeTree(new Term(DECLAALS));   
+                        ParserTree arbol = new ParserTree (nodo);
+                        arbol.addChildren(a);
+                        RESULT = arbol.root;
+
+                        :}
+    | SALIDA_GRAFICA:a{: NodeTree nodo = new NodeTree(new Term(SALIDA_GRAFICA));        
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a);
+                                                    RESULT = arbol.root;:} 
+    | LLAMARHK:a{:RESULT = a;:} 
+    ;
+
+
+CONTROL::= IF1:a{:  NodeTree nodo = new NodeTree(new Term(IF1));
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a);
+                    RESULT = a;
+    :}
+    | IF2:a{:   NodeTree nodo = new NodeTree(new Term(IF2));
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a);
+                    RESULT = a;
+    :}
+    | MIENTRAS:a{:  NodeTree nodo = new NodeTree(new Term(MIENTRAS));
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a);
+                    RESULT = a;
+    :}
+    | PARA:a{:  NodeTree nodo = new NodeTree(new Term(PARA));
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a);
+                    RESULT = a;
+    :}
+    | SWITCH:a{:    NodeTree nodo = new NodeTree(new Term(SWITCH));
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a);
+                    RESULT = a;
+    :}
+    | HACER:a {:    NodeTree nodo = new NodeTree(new Term(HACER));
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a);
+                    RESULT = a;
+    :}
+    ;
+
+
+//controlo-----------------------------------------------------> control
+CUERPO2::= llv1 LISTA_SENTENCIAS:a llv2 {:RESULT= a ;:}
+        ;
+CONDICION::= parea EXP:a parec {:RESULT= a;:}
+        ;
+
+IF1::= si:a   CONDICION:b   CUERPO2:c{:
+                                                    NodeTree nodo = new NodeTree(new Term(IF1), new Token(new Location(aleft, aright),a));          
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+        ;
+
+IF2::= si:a  CONDICION:b  CUERPO2:c sino CUERPO2:d{:
+                                                    
+                                                    NodeTree nodo = new NodeTree(new Term(IF2), new Token(new Location(aleft, aright),a));          
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c,d);
+                                                    RESULT = arbol.root;
+                                                    :}
+        ;
+
+MIENTRAS::= mientras:a  CONDICION:b  CUERPO2:c{:
+                                                    
+                                                    NodeTree nodo = new NodeTree(new Term(MIENTRAS), new Token(new Location(aleft, aright),a));         
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+        ;
+
+HACER::= hacer:a CUERPO2:b mientras CONDICION:c{:
+                                                    
+                                                    NodeTree nodo = new NodeTree(new Term(HACER), new Token(new Location(aleft, aright),a));            
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+        ;
+PARA::= para:a parea AgregarVar:b  dosp EXP:c dosp AUMENTO:d parec CUERPO2:e{:
+                                                    
+                                                    NodeTree nodo = new NodeTree(new Term(PARA), new Token(new Location(aleft, aright),a));         
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c,d,e);
+                                                    RESULT = arbol.root;
+                                                    :};
+
+AgregarVar ::= var TIPO:b identificador:a igual EXP:c
+{:
+                                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));
+                                                    NodeTree nodo = new NodeTree(new Term(AgregarVar), new Token(new Location(aleft, aright),a));           
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,hoja,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+                | identificador:a igual EXP:c{:
+                                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));
+                                                    NodeTree nodo = new NodeTree(new Term(AgregarVar), new Token(new Location(aleft, aright),a));           
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(hoja,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+
+                ;       
+
+SWITCH::= seleccion:a CONDICION:b llv1 CASO:c DEFECTO:d {:
+                                                    NodeTree nodo = new NodeTree(new Term(SWITCH), new Token(new Location(aleft, aright),a));           
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c,d);
+                                                    RESULT = arbol.root;
+                                                    :}
+        ;
+
+CASO::= CASO:a SWICH_CUERPO:b{:         
+                                                    ParserTree arbol = new ParserTree (a);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}
+        | SWICH_CUERPO:a{:
+                                                    NodeTree nodo = new NodeTree(new Term(CASO));           
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a);
+                                                    RESULT = arbol.root;
+                                                    :}
+        ;
+
+SWICH_CUERPO::= caso:a VALOR:b dosp LISTA_SENTENCIAS:c{:     
+                                                            
+                                                    
+                                                    b.childNode.add(c);
+                                                    
+                                                    RESULT = b;
+                                                    :}  
+        ;
+
+
+
+DEFECTO::= defecto:a dosp LISTA_SENTENCIAS:b llv2{:     
+                                                    NodeTree nodo = new NodeTree(new Term(DEFECTO), new Token(new Location(aleft, aright),a));          
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}  
+            | llv2:a  {:     
+                                                    NodeTree nodo = new NodeTree(new Term(DEFECTO));        
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    RESULT = arbol.root;
+                                                    :}
+        ;
+
+DETENER::= terminar:a{:     
+                                                    NodeTree nodo = new NodeTree(new Term(DETENER), new Token(new Location(aleft, aright),a));                  
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    RESULT = arbol.root;
+                                                    :}
+;
+CONTINUAR::= continuar:a{:     
+                                                    NodeTree nodo = new NodeTree(new Term(CONTINUAR), new Token(new Location(aleft, aright),a));        
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    RESULT = arbol.root;
+                                                    :}
+;
+RETORNAR::= retornar:a EXP:b{:     
+                                                    NodeTree nodo = new NodeTree(new Term(RETORNAR), new Token(new Location(aleft, aright),a));                                                         
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}
+            |retornar:a{:     
+                                                    NodeTree nodo = new NodeTree(new Term(RETORNAR), new Token(new Location(aleft, aright),a));     
+                                                    
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    
+                                                    RESULT = arbol.root;
+                                                    :}
+
+            ;
+//---------------------------------------------------------------> termina control
+//--------------------------------------------------------------> llamar metodo
+
+LLAMARMETODO::= llamar:a identificador:b parea parec{:     
+                                                    NodeTree nodo = new NodeTree(new Term(LLAMARMETODO), new Token(new Location(aleft, aright),a));     
+                                                    NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(bleft, bright),b));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(nodo1);
+                                                    RESULT = arbol.root;
+                                                    :}
+    | llamar:a identificador:b parea PARAMETRO:c parec{:     
+                                                    NodeTree nodo = new NodeTree(new Term(LLAMARMETODO), new Token(new Location(aleft, aright),a));     
+                                                    NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(bleft, bright),b));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(nodo1,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+
+    | llamar:a GET_INSTANCIA:b{:     
+                                                    NodeTree nodo = new NodeTree(new Term(LLAMARMETODO), new Token(new Location(aleft, aright),a));     
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;
+SALIDA_GRAFICA::= GRAFICAR_FUNCION:a{:RESULT =a;:}
+    | LLAMARDATOS:a{:RESULT =a;:}
+    | PROCESAR:a{:RESULT =a;:}
+    | DONDE:a{:RESULT =a;:}
+    | DONDECADA:a{:RESULT =a;:}
+    | DONDETODO:a{:RESULT =a;:}
+    | COLUMNA:a{:RESULT =a;:}
+
+    ;
+
+GRAFICAR_FUNCION::= graphikar_funcion:a parea ARR:b coma ARR:c parec{:     
+                                                    NodeTree nodo = new NodeTree(new Term(GRAFICAR_FUNCION), new Token(new Location(aleft, aright),a));     
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;
+
+
+ARR::= EXP:a{:RESULT = a;:}
+    | ARREGLO_ASIGNAR_D:a{:RESULT = a;:};
+
+
+
+LLAMARDATOS::= llamar:a datos:b parea parec{:     
+                                                    NodeTree nodo = new NodeTree(new Term(LLAMARDATOS), new Token(new Location(aleft, aright),a));  
+                                                    NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(bleft, aright),b));       
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(nodo1);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;
+COLUMNA ::= columna:a parea EXP:b parec{:     
+                                                    NodeTree nodo = new NodeTree(new Term(COLUMNA), new Token(new Location(aleft, aright),a));      
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;   
+PROCESAR::= procesar:a igual EXP:b {:     
+                                                    NodeTree nodo = new NodeTree(new Term(PROCESAR), new Token(new Location(aleft, aright),a));     
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;   
+ DONDE ::= donde:a parea EXP:b parec igual EXP:c {:     
+                                                    NodeTree nodo = new NodeTree(new Term(DONDE), new Token(new Location(aleft, aright),a));        
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;
+ DONDECADA ::= dondeCada:a parea     EXP:b parec{:     
+                                                    NodeTree nodo = new NodeTree(new Term(DONDECADA), new Token(new Location(aleft, aright),a));        
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;
+
+ DONDETODO ::= dondeTodo:a parea EXP:b parec     {:     
+                                                    NodeTree nodo = new NodeTree(new Term(DONDETODO), new Token(new Location(aleft, aright),a));        
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;
+
+LLAMARHK ::= llamarHK:a identificador:b parea PARAMETRO:c parec{:     
+                                                    NodeTree nodo = new NodeTree(new Term(LLAMARHK), new Token(new Location(aleft, aright),a));
+                                                    NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(bleft, bright),b));       
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(nodo1,c);
+                                                    RESULT = arbol.root;
+                                                    :}
+    | llamarHK:a identificador:b parea parec {:     
+                                                    NodeTree nodo = new NodeTree(new Term(LLAMARHK), new Token(new Location(aleft, aright),a));
+                                                    NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(bleft, bright),b));       
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(nodo1);
+                                                    RESULT = arbol.root;
+                                                    :}
+    ;
+
+
+//--------------------------------------------------------------> fin llamar metodo
+
+//--------------------------------------------------------------> DECLARAR ALS
+DECLAALS::= var:a identificador:b IDS:c igual nuevo:d identificador:e parea parec{:
+                        NodeTree nodo = new NodeTree(new Term(DECLAALS), new Token(new Location(aleft, aright),a));
+                        NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(bleft, bright),b));
+                        NodeTree nodo2 = new NodeTree(new Term(identificador), new Token(new Location(eleft, eright),e));
+                        ParserTree arbol = new ParserTree (nodo);
+                        arbol.addChildren(nodo1,c,nodo2);
+                        RESULT = arbol.root;
+            :}
+
+    | var:a identificador:b IDS:c{:
+                        NodeTree nodo = new NodeTree(new Term(DECLAALS), new Token(new Location(aleft, aright),a));
+                        NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(bleft, bright),b));
+                        ParserTree arbol = new ParserTree (nodo);
+                        arbol.addChildren(nodo1,c);
+                        RESULT = arbol.root;
+                        ;:}
+        
+    ;
+
+
+    ALSNuevo::=IDS:c igual nuevo:d identificador:e parea parec{:NodeTree nodo = new NodeTree(new Term(ALSNuevo), new Token(new Location(dleft, dright),d));
+                        
+                        NodeTree nodo2 = new NodeTree(new Term(identificador), new Token(new Location(eleft, eright),e));
+                        ParserTree arbol = new ParserTree (nodo);
+                        arbol.addChildren(c,nodo2);
+                        RESULT = arbol.root;:}  
+
+     ;
+//--------------------------------------------------------------->
+IMPRIMIR::= imprimir:a parea EXP:b parec{:          
+                                                    NodeTree nodo = new NodeTree(new Term(IMPRIMIR), new Token(new Location(aleft, aright),a));         
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(b);
+                                                    RESULT = arbol.root;
+                                                    :} 
+    ;
+//--------------------------------------------------------------> variables 
+
+VARIABLE::= VAR_DECLARARCION:a{:                    NodeTree nodo = new NodeTree(new Term(VARIABLE));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a);
+                                                    RESULT = arbol.root;
+                                                    :} 
+
+    | VAR_ASIGNAR:a {:                              NodeTree nodo = new NodeTree(new Term(VARIABLE));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a);
+                                                    RESULT = arbol.root;
+                                                    :} 
+    ;
+
+
+
+VAR_DECLARARCION ::= var TIPO:a IDS:b {:NodeTree nodo = new NodeTree(new Term(VAR_DECLARARCION));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a,b);
+                                                    RESULT = arbol.root;
+                                                    :} 
+    ;
+
+VAR_ASIGNAR::= IDS:a igual EXP:b{:                  NodeTree nodo = new NodeTree(new Term(VAR_ASIGNAR));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a,b);
+                                                    RESULT = arbol.root;
+                                :}
+    | VAR_DECLARARCION:a igual EXP:b {:             NodeTree nodo = new NodeTree(new Term(VAR_ASIGNAR));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a,b);
+                                                    RESULT = arbol.root;
+                                :}
+   |ALS_ASIGNAR:a {:                                NodeTree nodo = new NodeTree(new Term(VAR_ASIGNAR));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a);
+                                                    RESULT = arbol.root;:}
+                    
+
+    ;
+ALS_ASIGNAR::= Identi:a GET_CLASS:b ATRIBUTO:c igual EXP:d{:
+                                        NodeTree nodo = new NodeTree(new Term(ALS_ASIGNAR));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a,b,c,d);
+                                        
+                                        RESULT = arbol.root;  
+                                    :}
+               |Identi:a punto Identi:c igual EXP:d{:
+                                        NodeTree nodo = new NodeTree(new Term(ALS_ASIGNAR));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a,c,d);
+                                        
+                                        RESULT = arbol.root;  
+                                    :}
+
+                                    ;
+
+//---------------------------------------------------------------> fin variable
+
+//---------------------------------------------------------------> arreglo
+
+ARREGLO::= ARREGLO_DECLARAR:a{:                     NodeTree nodo = new NodeTree(new Term(ARREGLO));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a);
+                                                    RESULT = arbol.root;
+                                :}
+    | ARREGLO_ASIGNAR:a{:                           NodeTree nodo = new NodeTree(new Term(ARREGLO));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a);
+                                                    RESULT = arbol.root;
+                                :}
+    ;
+
+ARREGLO_DECLARAR::= var TIPO:a IDS:b DIMENSION:c{:NodeTree nodo = new NodeTree(new Term(ARREGLO_DECLARAR));
+                                                    ParserTree arbol = new ParserTree (nodo);
+                                                    arbol.addChildren(a,b,c);
+                                                    RESULT = arbol.root;
+                                :} ; 
+
+ARREGLO_ASIGNAR::= ARREGLO_DECLARAR:a igual ARREGLO_ASIGNAR_D:b{:
+                                NodeTree nodo = new NodeTree(new Term(ARREGLO_ASIGNAR));
+                                ParserTree arbol = new ParserTree (nodo);
+                                arbol.addChildren(a,b);
+                                RESULT = arbol.root;
+                                :}
+    | IDS:a igual ARREGLO_ASIGNAR_D:b {:
+                                NodeTree nodo = new NodeTree(new Term(ARREGLO_ASIGNAR));
+                                ParserTree arbol = new ParserTree (nodo);
+                                arbol.addChildren(a,b);
+                                RESULT = arbol.root;
+                                :}
+
+    | identificador:a DIMENSION:b igual EXP:c{:NodeTree nodo1 = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));  
+                                NodeTree nodo = new NodeTree(new Term(ARREGLO_ASIGNAR));
+                                ParserTree arbol = new ParserTree (nodo);
+                                arbol.addChildren(nodo1,b,c);
+                                RESULT = arbol.root;
+                                :}
+
+        
+
+    ; 
+
+//---------------------------------------------------------------> fin arreglo
+
+VISIBILIDAD1::= protegido:a{:NodeTree nodo = new NodeTree(new Term(VISIBILIDAD));  
+                            NodeTree hoja = new NodeTree(new Term(protegido), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+                        :} 
+            | privado:a {:NodeTree nodo = new NodeTree(new Term(VISIBILIDAD));  
+                        NodeTree hoja = new NodeTree(new Term(privado), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+                        :} 
+            | publico:a {:NodeTree nodo = new NodeTree(new Term(VISIBILIDAD));  
+                        NodeTree hoja = new NodeTree(new Term(publico), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+                        :} ;
+
+VISIBILIDAD::=  dosp VISIBILIDAD1:a {:RESULT =a;:};
+
+
+PARAMETRO::= PARAMETRO:a coma EXP:b{:
+                        ParserTree arbol = new ParserTree (a); 
+                        arbol.addChildren(b);
+                        RESULT = arbol.root;
+                    :} 
+            | EXP:a{:NodeTree nodo = new NodeTree(new Term(PARAMETRO)); 
+                    ParserTree arbol = new ParserTree (nodo);
+                    arbol.addChildren(a); 
+                    RESULT = arbol.root;
+                    :};
+
+TIPO::= entero:a{:
+                        NodeTree nodo = new NodeTree(new Term(TIPO));  
+                        NodeTree hoja = new NodeTree(new Term(entero), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+    :}
+     | cadena:a{:
+                        NodeTree nodo = new NodeTree(new Term(TIPO));  
+                        NodeTree hoja = new NodeTree(new Term(cadena), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+        :}
+     | decimal:a{:
+                        NodeTree nodo = new NodeTree(new Term(TIPO));  
+                        NodeTree hoja = new NodeTree(new Term(decimal), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+        :}
+     | caracter:a{:
+                        NodeTree nodo = new NodeTree(new Term(TIPO));  
+                        NodeTree hoja = new NodeTree(new Term(caracter), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+        :}
+     | bool:a{:
+                        NodeTree nodo = new NodeTree(new Term(TIPO));  
+                        NodeTree hoja = new NodeTree(new Term(bool), new Token(new Location(aleft, aright),a));
+                        ParserTree arbol = new ParserTree (nodo); 
+                        arbol.addChildren(hoja);
+                        RESULT = arbol.root;
+        :}
+     ;
+
+IDS::= IDS:b coma identificador:a VISIBILIDAD:c
+    {:                              ParserTree arbol = new ParserTree (b); 
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));    
+                                    arbol.addChildren(hoja,c);  
+                                    RESULT = arbol.root;
+
+    :}
+
+
+    |IDS:b coma identificador:a {:ParserTree arbol = new ParserTree (b); 
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));    
+                                    NodeTree nodo = new NodeTree(new Term(VISIBILIDAD));
+                                    arbol.addChildren(hoja, nodo);  
+                                    RESULT = arbol.root;
+
+    :}  
+        | identificador:a VISIBILIDAD:b{:NodeTree nodo = new NodeTree(new Term(IDS));  
+                            NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));
+                            ParserTree arbol = new ParserTree (nodo); 
+                            arbol.addChildren(hoja,b);  
+                            RESULT = arbol.root;
+            :} 
+        | identificador:a {:NodeTree nodo = new NodeTree(new Term(IDS));
+                            NodeTree nodo1 = new NodeTree(new Term(VISIBILIDAD));  
+                            NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a));
+                            ParserTree arbol = new ParserTree (nodo); 
+                            arbol.addChildren(hoja,nodo1);  
+                            RESULT = arbol.root;
+            :}
+
+
+
+            ;
+
+
+/*
+EXP::= EXP mas EXP 
+    | EXP menos EXP
+    | EXP por EXP 
+    | EXP div EXP
+    | EXP eleva EXP
+    | parea EXP parec
+    | menos EXP
+    | numero {:System.out.println("numero");:} | identificador {:System.out.println("identificador");:}|caracter|falso|verdadero ;
+*/
+      EXP::= 
+                // inicio de operaciones aritmeticas
+                EXP:c mas:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(mas), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c menos:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(menos), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c por:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(por), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c div:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(div), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c eleva:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(eleva), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                // fin de operaciones aritmeticas
+                // inico de operaciones relacionales
+                | EXP:c mayorque :a  EXP:b{:                     NodeTree nodo = new NodeTree(new Term(mayorque), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c menorque :a  EXP:b{:                     NodeTree nodo = new NodeTree(new Term(menorque), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c mayorIgual:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(mayorIgual), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c menorIgual:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(menorIgual), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c igualIgual:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(igualIgual), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c noIgual:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(noIgual), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:} 
+                //fin de operaciones relacionlaes
+                //inicio operaciones logicas
+                | EXP:c orr:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(orr), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c xorr:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(xorr), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | EXP:c andd:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(andd), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(c, nodo, b);  
+                                                        RESULT = arbol.root;:}
+                | nott:a EXP:b{:                     NodeTree nodo = new NodeTree(new Term(nott), new Token(new Location(aleft, aright),a));
+                                                        NodeTree nodoEXP = new NodeTree(new Term(EXP));  
+                                                        ParserTree arbol = new ParserTree (nodoEXP); 
+                                                        arbol.addChildren(nodo, b);  
+                                                        RESULT = arbol.root;:}
+                //fin de operanciones logicas
+                | parea  EXP:c  parec {:RESULT = c;:}
+                | menos:a EXP:b{: NodeTree unario = new NodeTree(new Term(menos), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(EXP));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(unario, b);  
+                                    RESULT = arbol.root;:}  
+                | VALOR:a {:
+
+                        NodeTree nodoEXP = new NodeTree(new Term(EXP));
+                        ParserTree arbol = new ParserTree (nodoEXP);
+                        arbol.addChildren(a);
+                    RESULT = nodoEXP;:}
+                | LLAMARMETODO:a {: NodeTree unario = new NodeTree(new Term(LLAMARMETODO)); 
+                                    NodeTree nodo = new NodeTree(new Term(EXP));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;:} 
+
+                 |LLAMARHK:a{:NodeTree unario = new NodeTree(new Term(LLAMARHK)); 
+                                    NodeTree nodo = new NodeTree(new Term(EXP));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;:}                      
+                                
+                | GET_INSTANCIA:a {: NodeTree unario = new NodeTree(new Term(GET_INSTANCIA)); 
+                                    NodeTree nodo = new NodeTree(new Term(EXP));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;:} 
+                | Identi:a{: NodeTree unario = new NodeTree(new Term(Identi)); 
+                                    NodeTree nodo = new NodeTree(new Term(EXP));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;:}
+                | COLUMNA:a{: NodeTree unario = new NodeTree(new Term(COLUMNA)); 
+                                    NodeTree nodo = new NodeTree(new Term(EXP));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(a);  
+                                    RESULT = arbol.root;:} 
+                 ;
+
+ /*
+ ll
+ */  
+ VALOR::= numero:a{:        NodeTree nodo = new NodeTree(new Term(numero), new Token(new Location(aleft, aright),a,_v_Number));  
+                       
+                        RESULT = nodo;:} 
+    | expresion:a{:     NodeTree nodo = new NodeTree(new Term(cadena), new Token(new Location(aleft, aright),a,_v_String));  
+                       RESULT = nodo;:} 
+    | verdadero:a{:     NodeTree nodo = new NodeTree(new Term(verdadero), new Token(new Location(aleft, aright),a,_v_Boolean));  
+                        RESULT = nodo;:} 
+    | falso:a{:         NodeTree nodo = new NodeTree(new Term(falso), new Token(new Location(aleft, aright),a,_v_Boolean));  
+                       RESULT = nodo;:} 
+    | ndecimal:a{:      NodeTree nodo = new NodeTree(new Term(decimal), new Token(new Location(aleft, aright),a,_v_Double));  
+                        RESULT = nodo;:} 
+    | tchar:a{:         NodeTree nodo = new NodeTree(new Term(caracter), new Token(new Location(aleft, aright),a,_v_String));  
+                       RESULT = nodo;:}
+
+
+                        ;
+                        /**/
+AUMENTO::= VALOR:b masmas:a{:           NodeTree hoja = new NodeTree(new Term(masmas), new Token(new Location(aleft, aright),"1")); 
+                                    NodeTree nodo = new NodeTree(new Term(AUMENTO));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(hoja, b);  
+                                    RESULT = arbol.root;:}
+| VALOR:b menosmenos:a{:            NodeTree hoja = new NodeTree(new Term(menosmenos), new Token(new Location(aleft, aright),"1")); 
+                                    NodeTree nodo = new NodeTree(new Term(AUMENTO));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(hoja, b);  
+                                    RESULT = arbol.root;:} 
+| Identi:b masmas:a{:           NodeTree hoja = new NodeTree(new Term(masmas), new Token(new Location(aleft, aright),"1")); 
+                                    NodeTree nodo = new NodeTree(new Term(AUMENTO));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(hoja, b);  
+                                    RESULT = arbol.root;:} 
+| Identi:b menosmenos:a{:           NodeTree hoja = new NodeTree(new Term(menosmenos), new Token(new Location(aleft, aright),"1")); 
+                                    NodeTree nodo = new NodeTree(new Term(AUMENTO));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(hoja, b);  
+                                    RESULT = arbol.root;:}
+                                    ;
+Identi ::= identificador:a {:           
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(Identi));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(hoja);  
+                                    RESULT = arbol.root;:}
+         | identificador:a DIMENSION:b {:
+
+                                    NodeTree hoja = new NodeTree(new Term(identificador), new Token(new Location(aleft, aright),a)); 
+                                    NodeTree nodo = new NodeTree(new Term(Identi));  
+                                    ParserTree arbol = new ParserTree (nodo); 
+                                    arbol.addChildren(hoja,b);  
+                                    RESULT = arbol.root;
+            :}
+         ;
+
+//-------------------------------------------------------->instancias de metodos
+GET_INSTANCIA::= Identi:a GET_CLASS:b {:
+                                        NodeTree nodo = new NodeTree(new Term(GET_INSTANCIA));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a,b);
+                                        RESULT = arbol.root;  
+                                    :}
+
+          
+
+
+
+        ;
+GET_CLASS::= METODO:a{:                 NodeTree nodo = new NodeTree(new Term(GET_CLASS));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a);
+                                        RESULT = arbol.root; 
+                                    :}
+        | ATRIBUTO:a{:                  NodeTree nodo = new NodeTree(new Term(GET_CLASS));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a);
+                                        RESULT = arbol.root; 
+                                    :}
+        | GET_CLASS:a METODO:b{:        
+                                        NodeTree nodo = new NodeTree(new Term(GET_CLASS));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a,b);
+                                        RESULT = arbol.root;  
+                                        
+                                        :}
+
+
+        | GET_CLASS:a ATRIBUTO:b{:      NodeTree nodo = new NodeTree(new Term(GET_CLASS));
+                                        
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a,b);
+                                        RESULT = arbol.root; :}
+        ;       
+ METODO::= punto Identi:a parea parec{: 
+                                        NodeTree nodo = new NodeTree(new Term(METODO));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a);
+                                        RESULT = arbol.root;
+                            :} 
+        | punto Identi:a parea PARAMETRO:b parec{:  
+                                        NodeTree nodo = new NodeTree(new Term(METODO));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a,b);
+                                        RESULT = arbol.root;
+                            :} 
+        ;
+ATRIBUTO::= punto Identi:a {:               
+                                NodeTree nodo = new NodeTree(new Term(ATRIBUTO));
+                                        ParserTree arbol = new ParserTree (nodo); 
+                                        arbol.addChildren(a);
+                                        RESULT = arbol.root;
+
+                            :} 
+        ;

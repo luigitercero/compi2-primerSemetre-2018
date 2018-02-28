@@ -1,0 +1,387 @@
+package analizadores;
+
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+//PARSER PARA EL ARCHIVO DE ESCENARIOS
+parser code
+{://Codigo visible
+ public String salida = "";
+ public String nombreclase = "";
+public ArrayList<Symbol> error = new ArrayList<Symbol>();
+
+    String expresion = "";
+    public void syntax_error(Symbol s){
+    System.err.println("Error Sintactico en la Linea " + (s.right+1) +" Columna "+s.left+ ".  " +s.value + " no reconocido." );
+        this.error.add(s);
+        System.err.println(s);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+         System.err.println("Error Sintactico en la Linea " + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido.");
+        this.error.add(s);
+        System.err.println(s);
+    }
+
+:}
+
+action code
+{://Codigo de acciones
+      
+:}
+
+terminal String 
+MAS,
+MENOS,
+POR,
+DIV,
+PAREA,
+PAREC,
+COMA,
+PUNTO,
+MAYORQUE,
+MENORQUE,
+MAYORIGUAL,
+MENORIGUAL,
+IGUAL,
+NOIGUAL,
+AMPERSAND,
+TRUE,
+FALSE,
+MODULE,
+END,
+PUBLIC,
+PRIVATE,
+DIM,
+STATIC,
+AS,
+INTEGER,
+BOOLEAN,
+CHAR,
+DOUBLE,
+LONG,
+STRING,
+CONSOLE,
+BYVAL,
+SUB,
+MAIN,
+FUNCTION,
+RETURN,
+IF,
+ELSE,
+THEN,
+ELSEIF,
+WHILE,
+FOR,
+TO,
+STEP,
+NEXT,
+DO,
+LOOP,
+UNTIL,
+SELECT,
+CASE,
+AND,
+OR,
+NOT,
+EXIT,
+NUMERO,
+CARACTER,
+ID,
+CADENA,
+NDECIMAL,
+CORA,
+CORC,
+WRITELINE,
+READLINE
+;
+
+nonterminal String 
+vb,
+cuerpo,
+codigo,
+codigop,
+codigos,
+codigosp,
+declaracion,
+asignacion,
+declarasignacion,
+declararreglos,
+asignarreglos,
+impresion,
+metodo,
+main,
+norm,
+sentenciam,
+funcion,
+sentenciaf,
+sentenciascontrol,
+ifelse,
+else,
+elseif,
+elseifp,
+while,
+for,
+do,
+switch,
+cases,
+caselse,
+acceso,
+lista_id,
+tipodato,
+exp,
+lista_num,
+param,
+caso,
+simbolo,
+valor,
+arreglo,
+funciones,
+fparam,
+parame,
+paramef
+;
+
+
+
+nonterminal Node dato,texto;
+start with vb;
+vb ::= MODULE:a ID:b cuerpo:c{:
+  this.parser.nombreclase = b;
+  this.parser.salida = "public class "+b+"{\n"+c;:};
+
+exp ::= exp:a simbolo:b valor:c{:RESULT = a+" "+b+" "+c;:} 
+  |valor:a{:RESULT = a;:}
+  ;
+
+simbolo ::= MAS:a{:RESULT = a;:}
+  |MENOS:a{:RESULT = a;:}
+  |POR:a{:RESULT = a;:}
+  |DIV:a{:RESULT = a;:}
+  |AMPERSAND:a{:RESULT = "+";:} 
+  |MAYORQUE:a{:RESULT = a;:}
+  |MENORQUE:a{:RESULT = a;:}
+  |MAYORIGUAL:a{:RESULT = a;:} 
+  |MENORIGUAL:a{:RESULT = a;:}
+  |IGUAL:a{:RESULT = "==";:}
+  |NOIGUAL:a{:RESULT = "!=";:}
+  |AND:a{:RESULT = "&&";:}
+  |OR:a{:RESULT = "||";:}
+  |NOT:a{:RESULT = "!";:}
+  ;
+
+valor ::= NUMERO:a{:RESULT = a;:}
+  |CADENA:a{:RESULT = a;:}
+  |ID:a{:RESULT = a;:}
+  |TRUE:a{:RESULT = "true";:}
+  |FALSE:a{:RESULT = "false";:}
+  |NDECIMAL:a{:RESULT = a;:}
+  |arreglo:a{:RESULT = a;:}
+  |funciones:a{:RESULT = a;:}
+  ;
+
+arreglo ::= ID:a CORA:b lista_num:c CORC:d
+            {:String listaid = c;
+              String dimcorchetes = "";
+              String[] partes = listaid.split(",");  
+              int dimension = partes.length;
+              for(int i = 0; i < dimension; i++){
+                dimcorchetes = dimcorchetes + "["+partes[i]+"]";
+              }
+              RESULT = a+dimcorchetes;
+            :} 
+  ;
+
+funciones ::= ID:a PAREA:b fparam:c PAREC:d
+            {:RESULT = a+b+c+d;:} 
+  ;
+
+fparam ::= fparam:a COMA:b exp:c{:RESULT = a+" "+b+" "+c;:}
+  |exp:a{:RESULT = a;:}
+  ;
+
+acceso ::= PUBLIC:a{:RESULT = "public";:} 
+  |PRIVATE:a{:RESULT = "private";:}
+  |DIM:a{:RESULT = "private";:}
+  |STATIC:a{:RESULT = "static";:}
+  ;
+
+caso ::= NUMERO:a{:RESULT = a;:}
+  |CADENA:a{:RESULT = a;:}
+  |ID:a{:RESULT = a;:}
+  ;
+
+tipodato ::= BOOLEAN:a{:RESULT = "boolean";:}
+  |CHAR:a{:RESULT = "char";:}
+  |DOUBLE:a{:RESULT = "double";:}
+  |INTEGER:a{:RESULT = "int";:}
+  |LONG:a{:RESULT = "long";:}
+  |STRING:a{:RESULT = "String";:}
+  ;
+
+lista_id ::= lista_id:a COMA:b ID:c{:RESULT = a+""+b+""+c;:} 
+  |ID:a{:RESULT = a;:}
+  ;
+
+lista_num ::= lista_num:a COMA:b NUMERO:c{:RESULT = a+""+b+""+c;:} 
+  |NUMERO:a{:RESULT = a;:}
+  ;
+
+param ::= param:a COMA:b BYVAL:c ID:d AS:e tipodato:f{:RESULT = a+""+b+" "+f+" "+d;:}
+  |BYVAL:a ID:b AS:c tipodato:d{:RESULT = d+" "+b;:}
+  ;
+
+declaracion ::= acceso:a lista_id:b AS:c declarasignacion:d
+                {:String decla = d;
+                  String[] partes = decla.split(","); 
+                  if (partes.length>1){
+                    RESULT = "\n"+a+" "+partes[0]+" "+b+" = "+partes[1]+";";
+                  } else{
+                    RESULT = "\n"+a+" "+d+" "+b+";";
+                  }
+                  
+                :}
+  ;
+
+asignacion ::= ID:a IGUAL:b exp:c{:RESULT = "\n"+a+" "+b+" "+c+";";:}
+  ;
+
+declarasignacion ::= tipodato:a IGUAL:b exp:c{:RESULT = a+","+c;:}
+  |tipodato:a{:RESULT = a;:}
+  ;
+
+declararreglos ::= acceso:a ID:b CORA:c lista_num:d CORC:e AS:f tipodato:g
+                  {:String listaid = d;
+                    String corchetes = "";
+                    String dimcorchetes = "";
+                    String[] partes = listaid.split(",");  
+                    int dimension = partes.length;
+                    for(int i = 0; i < dimension; i++){
+                      corchetes = corchetes + "[]";
+                      dimcorchetes = dimcorchetes + "["+partes[i]+"]";
+                    }
+                    RESULT = "\n"+a+" "+g+corchetes+" "+b+" = new "+g+" "+dimcorchetes+";";
+                  :}
+  ;
+
+asignarreglos ::= ID:a CORA:b lista_num:c CORC:d IGUAL:e exp:f
+                  {:String listaid = c;
+                    String dimcorchetes = "";
+                    String[] partes = listaid.split(",");  
+                    int dimension = partes.length;
+                    for(int i = 0; i < dimension; i++){
+                      dimcorchetes = dimcorchetes + "["+partes[i]+"]";
+                    }
+                    RESULT = "\n"+a+dimcorchetes+" "+e+" "+f+";";
+                  :}
+  ;
+
+impresion ::= CONSOLE PUNTO WRITELINE PAREA exp:a PAREC{:RESULT = "\nSystem.out.println("+a+");";:}
+  ;
+
+codigo ::= codigo:a codigop:b{:RESULT = a+" "+b;:}
+  |codigop:a{:RESULT = a;:}
+  ;
+
+codigop ::= codigosp:a{:RESULT = a;:}
+  |metodo:a{:RESULT = a;:}
+  |funcion:a{:RESULT = a;:}
+  |RETURN:a exp:b{:RESULT = "\nreturn "+b+";";:}
+  ;
+
+codigos ::= codigos:a codigosp:b{:RESULT = a+" "+b;:}
+  |codigosp:a{:RESULT = a;:}
+  ;
+
+codigosp ::= declaracion:a{:RESULT = a;:}
+  |asignacion:a{:RESULT = a;:}
+  |asignarreglos:a{:RESULT = a;:}
+  |declararreglos:a{:RESULT = a;:}
+  |impresion:a{:RESULT = a;:}
+  |sentenciascontrol:a{:RESULT = a;:}
+  |EXIT:a FOR:b{:RESULT = "\nBreak;";:}
+  |EXIT:a WHILE:b{:RESULT = "\nBreak;";:}
+  ;
+
+sentenciascontrol ::= ifelse:a{:RESULT = a;:}
+  |while:a{:RESULT = a;:}
+  |for:a{:RESULT = a;:}
+  |do:a{:RESULT = a;:}
+  |switch:a{:RESULT = a;:}
+  ;
+
+ifelse ::= IF:a exp:b THEN:c codigos:d elseif:e{:RESULT = "\n\nif("+b+"){\n"+d+"\n"+e;:}
+  ;
+
+elseif ::= ELSEIF:a exp:b THEN:c codigos:d elseif:e{:RESULT = "\n}else if("+b+"){\n"+d+"\n"+e;:}
+  |else:a{:RESULT = a;:}
+  ;
+
+else ::= ELSE:a codigos:b END:c IF:d{:RESULT = "\n}else{\n"+b+"\n\n}\n";:}
+  |END:a IF:b{:RESULT = "\n}\n";:}
+  ; 
+
+while ::= WHILE:a exp:b codigos:c END:d WHILE:e{:RESULT = "\n\nwhile("+b+"){\n"+c+"\n\n}\n";:}
+  ; 
+
+for ::= FOR:a ID:b AS:c INTEGER:d IGUAL:e NUMERO:f TO:g NUMERO:h STEP:i NUMERO:j codigos:k NEXT:l
+        {:int inicio,fin,salto;
+          inicio = Integer.parseInt(f);
+          fin = Integer.parseInt(h);
+          salto = Integer.parseInt(j);
+
+          if (inicio<fin && salto>0) {
+            RESULT = "\n\nfor(int "+b+" = "+inicio+"; "+b+"<"+fin+"; " +b+" = "+b+" + ("+salto+")){\n"+k+"\n\n}\n";
+          } else if(inicio>fin && salto<0){
+            RESULT = "\n\nfor(int "+b+" = "+inicio+"; "+b+">"+fin+"; " +b+" = "+b+" + ("+salto+")){\n"+k+"\n\n}\n";
+          }
+        :}
+  ;
+
+do ::= DO:a codigos:b LOOP:c UNTIL:d exp:e{:RESULT = "\n\ndo{\n"+b+"\n\n}while("+e+");\n";:}
+  ;
+
+switch ::= SELECT:a CASE:b ID:c cases:d caselse:e{:RESULT = "\n\nswitch( "+c+" ){"+d+" "+e;:}
+  ;
+cases ::= cases:a CASE:b caso:c codigos:d{:RESULT = a+"\n\ncase "+c+":\n"+d+"\n\nBreak;\n";:}
+  |CASE:a caso:b codigos:c{:RESULT = "\n\ncase "+b+":\n"+c+"\n\nBreak;\n";:}
+  ;
+
+caselse ::= CASE:a ELSE:b codigos:c END:d SELECT:e{:RESULT = "\n\ndefault:\n"+c+"\n\n}\n";:}
+  |END SELECT{:RESULT = "\n\n}\n";:}
+  ;
+
+metodo ::= main:a {:RESULT = a;:}
+  |norm:a {:RESULT = a;:}
+  ;
+
+main ::= SUB:a MAIN:b PAREA:c PAREC:d sentenciam:e{:RESULT = "\n\npublic static void main(String[] args){\n"+e;:}
+  ;
+
+norm ::= acceso:a SUB:b ID:c PAREA:d  parame:e{:RESULT = "\n\n"+a+" void "+c+"("+e;:} 
+  ;
+
+parame ::= param:a PAREC:b sentenciam:c{:RESULT = a+"){\n"+c ;:}
+  |PAREC:a sentenciam:b{:RESULT = "){\n"+b;:}
+  ;
+
+sentenciam ::= codigo:a END:b SUB:c{:RESULT = a+"\n\n}\n";:}
+  |END:a SUB:b{:RESULT = "\n\n}\n";:}
+  ;  
+
+funcion ::= acceso:a FUNCTION:b ID:c PAREA:d paramef:e AS:f tipodato:g sentenciaf:h{:RESULT = "\n\n"+a+" "+g+" "+c+"("+e+"{\n"+h;:}
+  ;
+
+paramef ::= param:a PAREC:b{:RESULT = a+""+b;:} 
+  |PAREC:a{:RESULT = a;:}
+  ;
+
+sentenciaf ::= codigo:a END:b FUNCTION:c{:RESULT = a+"\n\n}\n";:}
+  |END:a FUNCTION:b{:RESULT = "\n\n}\n";:}
+  ;
+
+cuerpo ::= codigo:a END:b MODULE:c{:RESULT = a+"\n\n}\n";:}
+  |END:a MODULE:b{:RESULT = "\n\n}\n";:}
+  ;
+
+
+

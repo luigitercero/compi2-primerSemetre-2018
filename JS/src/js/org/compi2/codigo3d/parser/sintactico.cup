@@ -1,0 +1,543 @@
+package js.org.compi2.codigo3d.parser;
+
+import java_cup.runtime.Symbol;
+import com.TreeParser.*;
+import java.util.ArrayList;
+import Simbol.Metodo.Metodo;
+//PARSER PARA EL ARCHIVO DE ESCENARIOS
+parser code
+{://Codigo visible
+ public ParserTree parserTree = new ParserTree("hola");
+public ArrayList<Symbol> error = new ArrayList<Symbol>();
+ public Metodo metodo = new Metodo();
+  public ArrayList<String> ejecucion = new ArrayList();
+   public ArrayList<ParserTree> declaracion = new ArrayList<ParserTree>();
+    String expresion = "";
+    public void syntax_error(Symbol s){
+    System.err.println("Error Sintactico en la Linea " + (s.right+1) +" Columna "+s.left+ ".  " +s.value + " no reconocido." );
+        this.error.add(s);
+        System.err.println(s);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+         System.err.println("Error Sintactico en la Linea " + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido.");
+        this.error.add(s);
+        System.err.println(s);
+    }
+
+:}
+
+action code
+{://Codigo de acciones
+      
+:}
+
+terminal String 
+MASMAS,
+MENOSMENOS,
+MAS,
+MENOS,
+POR,
+DIV,
+PAREA,
+ELEVA,
+PAREC,
+LLV1,
+LLV2,
+COMA,
+DOSP,
+PUNTOCOMA,
+OR,
+Y,
+NEL,
+PUNTO,
+MAYORQUE,
+MENORQUE,
+MAYORIGUAL,
+MENORIGUAL,
+IGUALIGUAL,
+NOIGUAL,
+VERDADERO,
+FALSO,
+DIMV,
+RETORNAR,
+SI,
+SINO,
+SELECCIONA,
+CASO,
+DEFECTO,
+PARA,
+MIENTRAS,
+TERMINAR,
+IMPRIMIR,
+FUNCION,
+MENSAJEV,
+DATE,
+DATETIME,
+NUMERO,
+NDECIMAL,
+CARACTER,
+ID,
+CADENA,
+MOD,DOSPUNTOS,DOCUMENTO
+;
+nonterminal Node valor;
+nonterminal ParserTree
+retornometodo, 
+titulo,
+inicial,
+graphick,
+encabezado,
+clase,
+visibilidad,
+cuerpo,
+cuerpo1,
+var_global,
+arreglo,
+retornar,
+if1,
+if2,
+funcion,
+control,
+parametro,
+tipo,
+ids,
+dimension,
+llamarmetodo,
+imprimir,
+var_globalasignar,
+exp,
+arreglo_global_asignar,
+arreglo_asignar,
+arre_global,
+arreglo_asignar1,
+arreglo_asignar2,
+principal,
+lista_sentencias,
+sentencia,
+variable,
+var_asignar,
+arreglo_declarar,
+sentecia,
+detener,
+continuar,
+var_declararcion,
+declaals,
+incluir,
+importar,
+herencia,
+switch,
+mientras,
+hacer,
+para,
+cuerpo2,
+ metodo,
+atributo,
+get_class,
+get_instancia,
+condicion,
+caso,
+defecto,
+swich_cuerpo,
+
+aumento,
+salida_grafica,
+arreglo_asignar_d,
+graficar_funcion,
+llamardatos,
+columna,
+procesar,
+ donde ,
+ dondecada ,
+ dondetodo ,
+llamarhk,
+tipo2,
+decparm,
+agregarvar,
+identi,
+corchetes,
+sentencia2,
+visibilidad1,swich_cuerpo1,parametroID,
+clase1,als_asignar,arr,datos,alsnuevo,js,getMetodo,param,declaracion,asignacion,asignar,valorVector,vector,asigna,listacuerpo;
+
+
+
+nonterminal Node dato,texto;
+
+precedence left OR;
+precedence left Y;
+precedence left MAYORQUE, MENORQUE, MAYORIGUAL, MENORIGUAL, IGUALIGUAL, NEL,NOIGUAL;
+precedence left MASMAS,MENOSMENOS;
+precedence left MAS, MENOS;
+precedence left POR, DIV, MOD;
+precedence left ELEVA;
+
+start with inicial;
+
+inicial ::= js:a{:this.parser.parserTree = a; RESULT = a;:};
+
+js ::= js:a principal:b{:a.addChildren(b); RESULT = a;:}
+    | principal:a{:ParserTree arbol = new ParserTree("principal"); arbol.addChildren(a);RESULT=arbol;:}
+    ;
+principal::=
+      metodo:a{:RESULT = a ;:}
+     |declaracion:a{:this.parser.declaracion.add(a); RESULT = a;:}
+     |getMetodo:a PUNTOCOMA{:if(a.root.childNode.size()>1)
+                this.parser.ejecucion.add(a.root.childNode.get(0).
+                        token.getValueString()+"_"+a.root.childNode.get(1).childNode.size());
+                else this.parser.ejecucion.add(a.root.childNode.get(0).
+                        token.getValueString()+"_0"); RESULT = a;:}
+     |imprimir:a PUNTOCOMA {:RESULT = a;:}
+     | control:a {:RESULT = a;:}
+     | asignacion:a {:RESULT = a;:}
+     |error
+     ;
+
+
+
+parametroID::= parametroID:b COMA ID:a{:Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+    b.addChildren(nodo); RESULT =b;:}
+  | ID:a{:
+    ParserTree arbol = new ParserTree("parametro");
+    Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+    arbol.addChildren(nodo); RESULT =arbol;:}
+  ;
+
+metodo::= 
+    FUNCION ID:a PAREA parametroID:b PAREC LLV1 cuerpo1:c
+    {:
+        
+        Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        ParserTree arbol = new ParserTree("metodo");
+        arbol.addChildren(nodo);
+        arbol.addChildren(b);
+        arbol.addChildren(c);
+        this.parser.metodo.insertar(a+"_"+b.root.childNode.size(), b.root,c.root);
+        RESULT = arbol;
+    :}
+    |FUNCION ID:a PAREA PAREC LLV1 cuerpo1:c
+    {:
+        
+        Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        ParserTree arbol = new ParserTree("metodo");
+        arbol.addChildren(nodo);
+        arbol.addChildren(c);
+        this.parser.metodo.insertar(a+"_"+0, null,c.root);
+        RESULT = arbol;
+    :}
+    ;
+
+if1::= SI PAREA exp:a PAREC LLV1 cuerpo1:b
+    {:ParserTree arbol = new ParserTree("if1");
+      arbol.addChildren(a);
+      arbol.addChildren(b);
+      RESULT =arbol;
+    :};
+if2::= SI PAREA exp:a PAREC LLV1 cuerpo1:b SINO LLV1 cuerpo1:c
+    {:ParserTree arbol = new ParserTree("if2");
+      arbol.addChildren(a);
+      arbol.addChildren(b);
+      arbol.addChildren(c);
+      RESULT =arbol;
+    :};
+switch::= SELECCIONA PAREA exp:a PAREC LLV1 swich_cuerpo:b
+    {:ParserTree arbol = new ParserTree("selecciona");
+      arbol.addChildren(a);
+      arbol.addChildren(b);
+      RESULT =arbol;
+    :}
+    ;
+defecto ::= 
+    DEFECTO DOSPUNTOS cuerpo:a LLV2{:ParserTree arbol = new ParserTree("defecto"); arbol.addChildren(a); RESULT =arbol;:}
+    |LLV2
+        {:
+           ParserTree arbol = new ParserTree("defecto"); 
+           RESULT = arbol;
+        :}
+    ;
+swich_cuerpo::= 
+    swich_cuerpo1:a defecto:b{:a.addChildren(b);RESULT =a;:}
+    |defecto:a{:ParserTree arbol = new ParserTree("cuerpo_switch"); arbol.addChildren(a); RESULT=arbol;:}
+    ;
+swich_cuerpo1 ::= 
+    swich_cuerpo1:a caso:b{:a.addChildren(b); RESULT=a;:} 
+    | caso:a{:ParserTree arbol = new ParserTree("cuerpo_switch"); arbol.addChildren(a); RESULT=arbol;:}
+    ;
+caso ::= 
+    CASO exp:a DOSPUNTOS cuerpo:b {:ParserTree arbol = new ParserTree("caso"); arbol.addChildren(a);arbol.addChildren(b); RESULT=arbol;:}
+    | CASO exp:a DOSPUNTOS {:ParserTree arbol = new ParserTree("caso"); arbol.addChildren(a); RESULT=arbol;:}
+    ;
+para::= PARA exp:a DOSPUNTOS exp:c DOSPUNTOS exp:d DOSPUNTOS LLV1 cuerpo1:b
+    {:ParserTree arbol = new ParserTree("para");
+      arbol.addChildren(a);
+      arbol.addChildren(c);
+      arbol.addChildren(d);
+      arbol.addChildren(b);
+      RESULT =arbol;
+    :}
+    ;
+mientras::= MIENTRAS PAREA exp:a PAREC LLV1 cuerpo1:b
+    {:ParserTree arbol = new ParserTree("mientras");
+      arbol.addChildren(a);
+      arbol.addChildren(b);
+      RESULT =arbol;
+    :}
+    ;
+cuerpo1 ::= cuerpo:a LLV2{:RESULT = a;:}
+    |LLV2 {:ParserTree arbol = new ParserTree("nada");RESULT =arbol;:}
+    | error LLV2
+    ;
+cuerpo ::= 
+    cuerpo:a listacuerpo:b {:a.addChildren(b);RESULT = a;:}
+    |listacuerpo:a {:ParserTree arbol = new ParserTree("cuerpo");  arbol.addChildren(a);RESULT = arbol;:}
+    ;
+listacuerpo ::= 
+     control:a{:RESULT = a; :} 
+    |declaracion:a{:RESULT = a; :}
+    |asignacion:a{:RESULT = a; :}
+    |imprimir:a PUNTOCOMA{:RESULT = a;:}
+    |TERMINAR:a PUNTOCOMA{:
+        ParserTree arbol = new ParserTree("TERMINAR");
+         RESULT = arbol; :}
+    | RETORNAR exp:a PUNTOCOMA{:ParserTree arbol = new ParserTree("retornar");  arbol.addChildren(a);RESULT = arbol;:}
+    |RETORNAR PUNTOCOMA{:ParserTree arbol = new ParserTree("retornar"); RESULT = arbol;:}
+    | error PUNTOCOMA
+    |getMetodo:a PUNTOCOMA{:if(a.root.childNode.size()>1)
+                this.parser.ejecucion.add(a.root.childNode.get(0).
+                        token.getValueString()+"_"+a.root.childNode.get(1).childNode.size());
+                else this.parser.ejecucion.add(a.root.childNode.get(0).
+                        token.getValueString()+"_0"); RESULT = a;:}
+    ;
+imprimir ::= IMPRIMIR:a PAREA exp:b PAREC {:ParserTree arbol = new ParserTree("imprimir"); Node nodo = new Node(new Term("imprimir"),new Token (new Location(aleft,aright),a,"imprimir")); arbol.addChildren(b); arbol.addChildren(nodo);RESULT = arbol;:}
+;
+    
+control::= 
+      if1:a{:ParserTree arbol = new ParserTree("control"); arbol.addChildren(a);RESULT =arbol;:}
+    | if2:a{:ParserTree arbol = new ParserTree ("control"); ; arbol.addChildren(a);RESULT =arbol;:}
+    | mientras:a{:ParserTree arbol = new ParserTree("control"); arbol.addChildren(a);RESULT =arbol;:}
+    | para:a{:ParserTree arbol = new ParserTree("control"); arbol.addChildren(a);RESULT =arbol;:}
+    | switch:a{:ParserTree arbol = new ParserTree("control"); arbol.addChildren(a);RESULT =arbol;:}
+    | hacer:a{:ParserTree arbol = new ParserTree("control"); arbol.addChildren(a);RESULT =arbol;:} 
+    ;
+declaracion ::= 
+    DIMV asignacion:a
+    {:ParserTree arbol = new ParserTree("declaracion");
+    arbol.addChildren(a); RESULT=arbol;
+    :}
+    ;
+asignacion ::= 
+    ID:a asignar:b
+        {:ParserTree arbol = new ParserTree("asignacion");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        arbol.addChildren(nodo);arbol.addChildren(b); RESULT=arbol;:}
+    | ID:a LLV1 exp:c LLV2 asignar:b 
+        {:ParserTree arbol = new ParserTree("asignacionll");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        arbol.addChildren(nodo);arbol.addChildren(c);arbol.addChildren(b); RESULT=arbol;
+        :}
+    |  ID:a MASMAS PUNTOCOMA
+        {:ParserTree arbol = new ParserTree("asignacion++");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        arbol.addChildren(nodo);RESULT=arbol;:}
+    |   ID:a MENOSMENOS PUNTOCOMA
+        {:ParserTree arbol = new ParserTree("asignacion--");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        arbol.addChildren(nodo); RESULT=arbol;:}
+    ;
+asignar ::= asigna:a PUNTOCOMA{:ParserTree arbol = new ParserTree("asignar"); arbol.addChildren(a); RESULT = arbol;:}
+    |PUNTOCOMA {: ParserTree arbol = new ParserTree("nada"); RESULT = arbol;:}
+  
+    ;
+asigna::=  
+    DOSPUNTOS exp:a
+        {:ParserTree arbol = new ParserTree("asigna"); arbol.addChildren(a); RESULT = arbol;:}
+    |DOSPUNTOS arreglo_asignar:a
+        {:ParserTree arbol = new ParserTree("asignall"); arbol.addChildren(a); RESULT = arbol;:}
+    ;
+exp::=  
+      exp:c MAS:a        exp:b
+        {:Node nodo = new Node(new Term("MAS"),       new Token(new Location(aleft,aright),a,"MAS"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c MENOS:a      exp:b
+        {:Node nodo = new Node(new Term("MENOS"),     new Token(new Location(aleft,aright),a,"MENOS"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c POR:a        exp:b
+        {:Node nodo = new Node(new Term("POR"),       new Token(new Location(aleft,aright),a,"POR"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c DIV:a       exp:b
+        {:Node nodo = new Node(new Term("DIV"),         new Token(new Location(aleft,aright),a,"DIV"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+
+    | exp:c MOD:a       exp:b
+        {:Node nodo = new Node(new Term("MOD"),         new Token(new Location(aleft,aright),a,"MOD"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c ELEVA:a      exp:b
+        {:Node nodo = new Node(new Term("ELEVA"),      new Token(new Location(aleft,aright),a,"ELEVA"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c MAYORQUE:a   exp:b
+        {:Node nodo = new Node(new Term("MAYORQUE"),   new Token(new Location(aleft,aright),a,"MAYORQUE"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c MENORQUE:a   exp:b
+        {:Node nodo = new Node(new Term("MENORQUE"),   new Token(new Location(aleft,aright),a,"MENORQUE"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c MAYORIGUAL:a exp:b
+        {:Node nodo = new Node(new Term("MAYORIGUAL"), new Token(new Location(aleft,aright),a,"MAYORIGUAL"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c MENORIGUAL:a exp:b
+        {:Node nodo = new Node(new Term("MENORIGUAL"), new Token(new Location(aleft,aright),a,"MENORIGUAL"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c IGUALIGUAL:a      exp:b
+        {:Node nodo = new Node(new Term("IGUAL"),      new Token(new Location(aleft,aright),a,"IGUAL"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c NOIGUAL:a    exp:b
+        {:Node nodo = new Node(new Term("NOIGUAL"),    new Token(new Location(aleft,aright),a,"NOIGUAL"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :} 
+    | exp:c OR:a         exp:b
+        {:Node nodo = new Node(new Term("OR"),         new Token(new Location(aleft,aright),a,"OR"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | exp:c Y:a          exp:b
+        {:Node nodo = new Node(new Term("AND"),          new Token(new Location(aleft,aright),a,"AND"));
+          ParserTree arbol = new ParserTree("exp");
+          arbol.addChildren(c);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b);
+          RESULT = arbol;
+        :}
+    | NEL:a    exp:b
+        {:Node nodo = new Node(new Term("NEL"),new Token(new Location(aleft,aright),a,"NEL"));
+        ParserTree arbol = new ParserTree("exp");
+         arbol.addChildren(nodo);
+         arbol.addChildren(b);
+         RESULT = arbol;
+        :}
+    | MENOS:a  exp:b
+        {:Node nodo = new Node(new Term("MENOS"),new Token (new Location(aleft,aright),a,"MENOS"));
+        ParserTree arbol = new ParserTree("exp");
+         arbol.addChildren(nodo);
+         arbol.addChildren(b);
+         RESULT = arbol;
+        :}
+    | exp:b MASMAS:a
+        {:Node nodo = new Node(new Term("MASMAS"),new Token (new Location(aleft,aright),a,"MASMAS"));
+        ParserTree arbol = new ParserTree("exp");
+         arbol.addChildren(b);
+         arbol.addChildren(nodo);
+         RESULT = arbol;
+        :}
+    | exp:b MENOSMENOS:a
+        {:Node nodo = new Node(new Term("MENOSMENOS"),new Token (new Location(aleft,aright),a,"MENOSMENOS"));
+        ParserTree arbol = new ParserTree("exp");
+         arbol.addChildren(b);
+         arbol.addChildren(nodo);
+         RESULT = arbol;
+        :}
+
+    | PAREA exp:c PAREC{:RESULT = c;:}
+    | valor:a {:ParserTree arbol = new ParserTree ("exp"); arbol.addChildren(a); RESULT = arbol;:}
+    | getMetodo:a {:ParserTree arbol = new ParserTree ("exp"); arbol.addChildren(a); RESULT = arbol;:}
+    | valorVector:a {:ParserTree arbol = new ParserTree("exp"); arbol.addChildren(a); RESULT =arbol;:}
+    ;
+valor ::= 
+      ID:a{:Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));RESULT=nodo;:}
+    | NUMERO:a{:Node nodo = new Node(new Term("NUMERO"),new Token (new Location(aleft,aright),a,"NUMERO"));RESULT=nodo;:}
+    | NDECIMAL:a{:Node nodo = new Node(new Term("NDECIMAL"),new Token (new Location(aleft,aright),a,"NDECIMAL"));RESULT=nodo;:}
+    | DATE:a{:Node nodo = new Node(new Term("DATE"),new Token (new Location(aleft,aright),a,"DATE"));RESULT=nodo;:}
+    | DATETIME:a{:Node nodo = new Node(new Term("DATETIME"),new Token (new Location(aleft,aright),a,"DATETIME"));RESULT=nodo;:}
+    | CARACTER:a{:Node nodo = new Node(new Term("CARACTER"),new Token (new Location(aleft,aright),a,"CARACTER"));RESULT=nodo;:}
+    | CADENA:a{:Node nodo = new Node(new Term("CADE"),new Token (new Location(aleft,aright),a,"CADE"));RESULT=nodo;:}
+    | VERDADERO:a{:Node nodo = new Node(new Term("VERDADERO"),new Token (new Location(aleft,aright),a,"VERDADERO"));RESULT=nodo;:}
+    | FALSO:a{:Node nodo = new Node(new Term("FALSO"),new Token (new Location(aleft,aright),a,"VERDADERO"));RESULT=nodo;:}
+    ;
+valorVector ::= vector:a LLV2{:RESULT =a ;:}
+    ;
+vector ::= 
+    ID:a LLV1 exp:b{:ParserTree arbol = new ParserTree("vector"); Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+    arbol.addChildren(nodo);
+    arbol.addChildren(b);      
+          RESULT=arbol;:}
+    ;
+
+arreglo_asignar::= arreglo:a LLV2 {:RESULT = a;:};
+
+arreglo ::= LLV1 exp:a {:ParserTree arbol = new ParserTree("arreglo"); arbol.addChildren(a);RESULT = arbol;:}
+    | arreglo:a COMA exp:b{:a.addChildren(b);RESULT = a;:}
+;
+getMetodo ::= 
+    ID:a  PAREA parametro:b PAREC{:ParserTree arbol = new ParserTree("getMetodo");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+           arbol.addChildren(nodo);arbol.addChildren(b); RESULT=arbol;:}
+    |ID:a PAREA PAREC{:ParserTree arbol = new ParserTree("getMetodo");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+           arbol.addChildren(nodo); RESULT=arbol;:}
+    |ID:a PUNTO ID:b PAREA PAREC{:ParserTree arbol = new ParserTree("getMetodo");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+          Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
+          arbol.addChildren(nodo,nodob); RESULT=arbol;:}
+    |ID:a PUNTO ID:b PAREA parametro:c PAREC{:ParserTree arbol = new ParserTree("getMetodo");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+          Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
+          arbol.addChildren(nodo,nodob);arbol.addChildren(c); RESULT=arbol;:}
+
+    ;
+parametro ::= parametro:b COMA exp:a{: b.addChildren(a); RESULT = b;:}
+    |exp:a {:ParserTree arbol = new ParserTree ("parametro"); arbol.addChildren(a); RESULT = arbol;:}
+    ;
+
+

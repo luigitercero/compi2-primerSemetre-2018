@@ -1,0 +1,626 @@
+SIN ARBOL
+
+
+action code
+
+
+
+
+terminal String numero, identificador, caracter,ndecimal;
+terminal String
+MAS,
+MENOS,
+POR,
+DIV,
+PAREA,
+ELEVA,
+PAREC,
+IGUAL,
+CORCHA,
+CORCHC,
+LLV1,
+LLV2,
+COMA,
+DOSP,
+PUNTOCOMA,
+ORR,
+XORR,
+ANDD,
+NOTT,
+MASMAS,
+MENOSMENOS,
+FINEXP,
+MAYORQUE,
+MENORQUE,
+MAYORIGUAL,
+MENORIGUAL,
+IGUALIGUAL,
+NOIGUAL,
+VERDADERO,
+FALSO,
+PUBLICO,
+PROTEGIDO,
+PRIVADO,
+ENTERO,
+DECIMAL,
+BOOL,
+CADENA,
+
+ALS,
+VACIO,
+IMPORTAR,
+HEREDA,
+VAR,
+NUEVO,
+RETORNAR,
+LLAMAR,
+SI,
+SINO,
+SELECCION,
+CASO,
+DEFECTO,
+PARA,
+MIENTRAS,
+HACER,
+CONTINUAR,
+TERMINAR,
+COLUMNA,
+PROCESAR,
+DONDE,
+DONDECADA,
+DONDETODO,
+IMPRIMIR,
+INCLUIR_HK,
+
+EXPRESION,
+INICIO,
+GRAPHIKAR_FUNCION,
+TCHAR,
+PUNTO,
+DATOS,
+LLAMARHK,
+TITULO, TITULO2
+
+;   
+
+non terminal NodeTree
+TITULO, 
+INICIO, 
+GRAPHICK, 
+ENCABEZADO,
+CLASE, 
+VISIBILIDAD,
+CUERPO,
+CUERPO1,
+VAR_GLOBAL,
+ARREGLO,
+RETORNAR,
+IF1,
+IF2,
+FUNCION,
+CONTROL,
+PARAMETRO,
+TIPO,
+IDS,
+DIMENSION,
+LLAMARMETODO,
+IMPRIMIR,
+VAR_GLOBALASIGNAR,
+EXP,
+ARREGLO_GLOBAL_ASIGNAR,
+ARREGLO_ASIGNAR,
+ARRE_GLOBAL, 
+ARREGLO_ASIGNAR1,
+ARREGLO_ASIGNAR2, 
+PRINCIPAL, 
+LISTA_SENTENCIAS,
+SENTENCIA,
+VARIABLE,
+VAR_ASIGNAR,
+ARREGLO_DECLARAR,
+SENTECIA,
+DETENER,
+CONTINUAR,
+VAR_DECLARARCION,
+DECLAALS,
+INCLUIR,
+IMPORTAR,
+HERENCIA,
+SWITCH,
+MIENTRAS,
+HACER, 
+PARA,
+CUERPO2,
+ METODO,
+ATRIBUTO,
+GET_CLASS,
+GET_INSTANCIA,
+CONDICION,
+CASO,
+DEFECTO,
+SWICH_CUERPO,
+VALOR,
+AUMENTO,
+SALIDA_GRAFICA,
+ARREGLO_ASIGNAR_D,
+GRAFICAR_FUNCION,
+LLAMARDATOS,
+COLUMNA,
+PROCESAR,
+ DONDE ,
+ DONDECADA ,
+ DONDETODO ,
+LLAMARHK,
+TIPO2,
+DECPARM,
+AgregarVar,
+Identi,
+Corchetes,
+SENTENCIA2,
+VISIBILIDAD1,
+CLASE1,ALS_ASIGNAR,ARR,DATOS,ALSNuevo
+
+
+;
+precedence left orr;
+precedence left xorr;
+precedence left andd;
+precedence left nott;
+precedence left igualIgual, noIgual;
+precedence left mayorque, menorque, mayorIgual, menorIgual;
+precedence left mas, menos;
+precedence left por, div;
+precedence left eleva;
+
+
+
+
+
+
+
+
+
+start with INICIO;
+
+INICIO ::= GRAPHICK:a ;
+
+GRAPHICK::= ENCABEZADO:a CLASE1:b  
+    | ENCABEZADO:a  
+    | CLASE1:a  
+        
+
+ ;
+
+
+ CLASE1::= CLASE1:a CLASE:b
+
+    | CLASE:a 
+    ; 
+
+ENCABEZADO::=   INCLUIR:a 
+    | ENCABEZADO:a INCLUIR:b 
+    | IMPORTAR:a 
+    | ENCABEZADO:a IMPORTAR:b 
+    ;
+INCLUIR ::= incluir_HK identificador:a finexp 
+;
+IMPORTAR ::= importar TITULO:a finexp ; 
+        TITULO::= 
+            titulo2:a
+            |expresion:a;
+CUERPO::= CUERPO:a CUERPO1:b 
+        | CUERPO1:a
+        ; 
+
+
+CLASE::=  als identificador:a  VISIBILIDAD:b llv1 CUERPO:c llv2 
+        | als identificador:a  VISIBILIDAD:b llv1 llv2  
+        | als identificador:a llv1 CUERPO:b llv2
+        | als identificador:a llv1 llv2
+        | als identificador:a  VISIBILIDAD:b HERENCIA:c llv1 CUERPO:d llv2
+        | als identificador:a  VISIBILIDAD:b HERENCIA:c llv1 llv2  
+        | als identificador:a HERENCIA:b llv1 CUERPO:c llv2
+        | als identificador:a HERENCIA:b llv1 llv2
+        ;
+HERENCIA::= hereda identificador:a
+    ;           
+
+
+CUERPO1::=  VAR_GLOBAL:a finexp 
+          | ARRE_GLOBAL:a finexp 
+          | VAR_GLOBALASIGNAR:a finexp
+          | ARREGLO_GLOBAL_ASIGNAR:a finexp 
+          | FUNCION:a
+          | PRINCIPAL:a 
+          | DATOS:a
+          | DECLAALS:a finexp
+          | error:a 
+          ;
+
+          
+
+
+VAR_GLOBALASIGNAR ::= VAR_GLOBAL:a igual EXP:b  
+
+;
+
+ARREGLO_GLOBAL_ASIGNAR ::= ARREGLO_DECLARAR:a igual ARREGLO_ASIGNAR_D:b  
+;
+
+
+VAR_GLOBAL::= VAR_DECLARARCION:a   
+
+    ;//ya
+                        
+ARRE_GLOBAL::= ARREGLO_DECLARAR:a /*dosp VISIBILIDAD:b*/ 
+/*  | ARREGLO_DECLARAR:a*/
+    ;//ya
+
+DIMENSION::= corcha EXP:a corchc 
+    | DIMENSION:a corcha EXP:b corchc 
+    ;
+
+
+//------------------------------------------------------------> fin de sentencias glombales
+
+//--------------------------------------------------------------> arreglo global -> { a,l,{3}}
+ARREGLO_ASIGNAR_D ::= llv1  ARREGLO_ASIGNAR1:a llv2
+                        ;
+                                                
+ARREGLO_ASIGNAR1 ::=  ARREGLO_ASIGNAR1:a coma ARREGLO_ASIGNAR2:b 
+    | ARREGLO_ASIGNAR2:a  
+    ;
+
+ARREGLO_ASIGNAR2::= EXP:a 
+    | llv1  ARREGLO_ASIGNAR1:a llv2  
+    ;
+//------------------------------------------------------------> fin de arreglo global 
+//------------------------------------------------------------> METODO PRINCIPAL
+PRINCIPAL::= vacio:b inicio:a parea parec llv1 llv2
+    | vacio:c inicio:a parea parec llv1 LISTA_SENTENCIAS:b llv2
+    ; 
+
+
+
+
+    DATOS::= vacio:b datos:a parea parec llv1 llv2
+    | vacio:c datos:a parea parec llv1 LISTA_SENTENCIAS:b llv2
+    ; 
+
+FUNCION::= TIPO2:b identificador:a parea parec llv1 llv2
+    | TIPO2:b identificador:a parea parec llv1 LISTA_SENTENCIAS:c llv2
+    | TIPO2:b identificador:a parea DECPARM:c parec llv1 LISTA_SENTENCIAS:d llv2
+
+    |TIPO2:b identificador:a parea DECPARM:c parec llv1  llv2  
+    | TIPO2:b identificador:a parea parec  VISIBILIDAD:c llv1 LISTA_SENTENCIAS:d llv2  
+    | TIPO2:b identificador:a parea DECPARM:c parec VISIBILIDAD:d llv1 LISTA_SENTENCIAS:e llv2  
+
+    | TIPO2:b identificador:a parea parec VISIBILIDAD:c llv1 llv2   
+    | TIPO2:b identificador:a parea DECPARM:c parec VISIBILIDAD:d llv1  llv2  
+    ;
+
+TIPO2::= TIPO:a 
+    | vacio:a
+    | identificador:a
+
+    ;   
+
+DECPARM::= TIPO2:b identificador:a 
+            | DECPARM:c  coma TIPO2:b identificador:a ;
+
+/*
+    TIPO2 id parentesiAbre parentesiCierra dospuntos VISIBILIDAD llaveAbre SENTENCIAS llaveCierra
+    | TIPO2 id parentesiAbre DECPARM parentesiCierra dospuntos VISIBILIDAD llaveAbre SENTENCIAS llaveCierra
+    | TIPO2 id parentesiAbre parentesiCierra llaveAbre SENTENCIAS llaveCierra
+    | TIPO2 id parentesiAbre DECPARM parentesiCierra llaveAbre SENTENCIAS llaveCierra;
+
+
+*/
+    
+LISTA_SENTENCIAS::= LISTA_SENTENCIAS:a SENTENCIA:b 
+    |SENTENCIA:a
+
+
+    ;
+
+SENTENCIA::= SENTENCIA2:a finexp //ya
+    | CONTROL:a
+    | error:a 
+    ;
+
+SENTENCIA2 ::= VARIABLE:a  //ya
+    | ARREGLO:a // ya
+    | DECLAALS:a //ya 
+    | IMPRIMIR:a //ya
+    
+    | LLAMARMETODO:a //ya
+    | DETENER:a //ya
+    | CONTINUAR:a //ya
+    | RETORNAR:a //ya
+    | AUMENTO:a 
+    | ALSNuevo:a
+    | SALIDA_GRAFICA:a 
+    | LLAMARHK:a 
+    ;
+
+
+CONTROL::= IF1:a
+    | IF2:a
+    | MIENTRAS:a
+    | PARA:a
+    | SWITCH:a
+    | HACER:a 
+    ;
+
+
+//controlo-----------------------------------------------------> control
+CUERPO2::= llv1 LISTA_SENTENCIAS:a llv2 
+        ;
+CONDICION::= parea EXP:a parec 
+        ;
+
+IF1::= si:a   CONDICION:b   CUERPO2:c
+        ;
+
+IF2::= si:a  CONDICION:b  CUERPO2:c sino CUERPO2:d
+        ;
+
+MIENTRAS::= mientras:a  CONDICION:b  CUERPO2:c
+        ;
+
+HACER::= hacer:a CUERPO2:b mientras CONDICION:c
+        ;
+PARA::= para:a parea AgregarVar:b  dosp EXP:c dosp AUMENTO:d parec CUERPO2:e;
+
+AgregarVar ::= var TIPO:b identificador:a igual EXP:c
+
+                | identificador:a igual EXP:c
+
+                ;       
+
+SWITCH::= seleccion:a CONDICION:b llv1 CASO:c DEFECTO:d 
+        ;
+
+CASO::= CASO:a SWICH_CUERPO:b
+        | SWICH_CUERPO:a
+        ;
+
+SWICH_CUERPO::= caso:a VALOR:b dosp LISTA_SENTENCIAS:c  
+        ;
+
+
+
+DEFECTO::= defecto:a dosp LISTA_SENTENCIAS:b llv2  
+            | llv2:a  
+        ;
+
+DETENER::= terminar:a
+;
+CONTINUAR::= continuar:a
+;
+RETORNAR::= retornar:a EXP:b
+            |retornar:a
+
+            ;
+//---------------------------------------------------------------> termina control
+//--------------------------------------------------------------> llamar metodo
+
+LLAMARMETODO::= llamar:a identificador:b parea parec
+    | llamar:a identificador:b parea PARAMETRO:c parec
+
+    | llamar:a GET_INSTANCIA:b
+    ;
+SALIDA_GRAFICA::= GRAFICAR_FUNCION:a
+    | LLAMARDATOS:a
+    | PROCESAR:a
+    | DONDE:a
+    | DONDECADA:a
+    | DONDETODO:a
+    | COLUMNA:a
+
+    ;
+
+GRAFICAR_FUNCION::= graphikar_funcion:a parea ARR:b coma ARR:c parec
+    ;
+
+
+ARR::= EXP:a
+    | ARREGLO_ASIGNAR_D:a;
+
+
+
+LLAMARDATOS::= llamar:a datos:b parea parec
+    ;
+COLUMNA ::= columna:a parea EXP:b parec
+    ;   
+PROCESAR::= procesar:a igual EXP:b 
+    ;   
+ DONDE ::= donde:a parea EXP:b parec igual EXP:c 
+    ;
+ DONDECADA ::= dondeCada:a parea     EXP:b parec
+    ;
+
+ DONDETODO ::= dondeTodo:a parea EXP:b parec     
+    ;
+
+LLAMARHK ::= llamarHK:a identificador:b parea PARAMETRO:c parec
+    | llamarHK:a identificador:b parea parec 
+    ;
+
+
+//--------------------------------------------------------------> fin llamar metodo
+
+//--------------------------------------------------------------> DECLARAR ALS
+DECLAALS::= var:a identificador:b IDS:c igual nuevo:d identificador:e parea parec
+
+    | var:a identificador:b IDS:c
+        
+    ;
+
+
+    ALSNuevo::=IDS:c igual nuevo:d identificador:e parea parec  
+
+     ;
+//--------------------------------------------------------------->
+IMPRIMIR::= imprimir:a parea EXP:b parec 
+    ;
+//--------------------------------------------------------------> variables 
+
+VARIABLE::= VAR_DECLARARCION:a 
+
+    | VAR_ASIGNAR:a  
+    ;
+
+
+
+VAR_DECLARARCION ::= var TIPO:a IDS:b  
+    ;
+
+VAR_ASIGNAR::= IDS:a igual EXP:b
+    | VAR_DECLARARCION:a igual EXP:b 
+   |ALS_ASIGNAR:a 
+                    
+
+    ;
+ALS_ASIGNAR::= Identi:a GET_CLASS:b ATRIBUTO:c igual EXP:d
+               |Identi:a punto Identi:c igual EXP:d
+
+                                    ;
+
+//---------------------------------------------------------------> fin variable
+
+//---------------------------------------------------------------> arreglo
+
+ARREGLO::= ARREGLO_DECLARAR:a
+    | ARREGLO_ASIGNAR:a
+    ;
+
+ARREGLO_DECLARAR::= var TIPO:a IDS:b DIMENSION:c ; 
+
+ARREGLO_ASIGNAR::= ARREGLO_DECLARAR:a igual ARREGLO_ASIGNAR_D:b
+    | IDS:a igual ARREGLO_ASIGNAR_D:b 
+
+    | identificador:a DIMENSION:b igual EXP:c
+
+        
+
+    ; 
+
+//---------------------------------------------------------------> fin arreglo
+
+VISIBILIDAD1::= protegido:a 
+            | privado:a  
+            | publico:a  ;
+
+VISIBILIDAD::=  dosp VISIBILIDAD1:a ;
+
+
+PARAMETRO::= PARAMETRO:a coma EXP:b 
+            | EXP:a;
+
+TIPO::= entero:a
+     | cadena:a
+     | decimal:a
+     | caracter:a
+     | bool:a
+     ;
+
+IDS::= IDS:b coma identificador:a VISIBILIDAD:c
+    
+
+
+    |IDS:b coma identificador:a   
+        | identificador:a VISIBILIDAD:b 
+        | identificador:a 
+
+
+
+            ;
+
+
+/*
+EXP::= EXP mas EXP 
+    | EXP menos EXP
+    | EXP por EXP 
+    | EXP div EXP
+    | EXP eleva EXP
+    | parea EXP parec
+    | menos EXP
+    | numero  | identificador |caracter|falso|verdadero ;
+*/
+      EXP::= 
+                // inicio de operaciones aritmeticas
+                EXP:c mas:a EXP:b
+                | EXP:c menos:a EXP:b
+                | EXP:c por:a EXP:b
+                | EXP:c div:a EXP:b
+                | EXP:c eleva:a EXP:b
+                // fin de operaciones aritmeticas
+                // inico de operaciones relacionales
+                | EXP:c mayorque :a  EXP:b
+                | EXP:c menorque :a  EXP:b
+                | EXP:c mayorIgual:a EXP:b
+                | EXP:c menorIgual:a EXP:b
+                | EXP:c igualIgual:a EXP:b
+                | EXP:c noIgual:a EXP:b 
+                //fin de operaciones relacionlaes
+                //inicio operaciones logicas
+                | EXP:c orr:a EXP:b
+                | EXP:c xorr:a EXP:b
+                | EXP:c andd:a EXP:b
+                | nott:a EXP:b
+                //fin de operanciones logicas
+                | parea  EXP:c  parec 
+                | menos:a EXP:b  
+                | VALOR:a 
+                | LLAMARMETODO:a  
+
+                 |LLAMARHK:a                      
+                                
+                | GET_INSTANCIA:a  
+                | Identi:a
+                | COLUMNA:a 
+                 ;
+
+ /*
+ ll
+ */  
+ VALOR::= numero:a 
+    | expresion:a 
+    | verdadero:a 
+    | falso:a 
+    | ndecimal:a 
+    | tchar:a
+
+
+                        ;
+                        /**/
+AUMENTO::= VALOR:b masmas:a
+| VALOR:b menosmenos:a 
+| Identi:b masmas:a 
+| Identi:b menosmenos:a
+                                    ;
+Identi ::= identificador:a 
+         | identificador:a DIMENSION:b 
+         ;
+
+//-------------------------------------------------------->instancias de metodos
+GET_INSTANCIA::= Identi:a GET_CLASS:b 
+
+          
+
+
+
+        ;
+GET_CLASS::= METODO:a
+        | ATRIBUTO:a
+        | GET_CLASS:a METODO:b
+
+
+        | GET_CLASS:a ATRIBUTO:b
+        ;       
+ METODO::= punto Identi:a parea parec 
+        | punto Identi:a parea PARAMETRO:b parec 
+        ;
+ATRIBUTO::= punto Identi:a  
+        ;
