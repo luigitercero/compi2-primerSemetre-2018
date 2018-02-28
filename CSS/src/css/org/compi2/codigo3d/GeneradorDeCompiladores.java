@@ -1,4 +1,4 @@
-package org.compi2.codigo3d;
+package css.org.compi2.codigo3d;
 
 /**
  *
@@ -12,7 +12,7 @@ public class GeneradorDeCompiladores {
     
     private static void generarCompilador(){
         try {
-            String ruta = "src/org/compi2/codigo3d/parser/";
+            String ruta = "src/css/org/compi2/codigo3d/parser/";
             String opcFlex[] = { ruta + "lexico.flex", "-d", ruta };
             jflex.Main.generate(opcFlex);
             String opcCUP[] = { "-destdir", ruta, "-parser", "parser", ruta + "sintactico.cup" };

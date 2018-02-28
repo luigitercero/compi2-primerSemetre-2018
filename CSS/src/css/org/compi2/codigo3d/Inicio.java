@@ -1,10 +1,14 @@
-package org.compi2.codigo3d;
+package css.org.compi2.codigo3d;
 
+import archivo.Archivo;
 import java.io.BufferedReader;
 import java.io.StringReader;
 
-import org.compi2.codigo3d.parser.css.parser;
-import org.compi2.codigo3d.parser.css.scanner;
+import css.org.compi2.codigo3d.parser.parser;
+import css.org.compi2.codigo3d.parser.scanner;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -82,20 +86,25 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton_GenerarC3DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_GenerarC3DActionPerformed
-        String texto = jTextArea_Codigo3Dgenerado1.getText();
-        if(texto.isEmpty()){
-            System.err.println("No es posible evaluar una cadena en blanco.");
-            return;
+         Archivo archivo = new Archivo();
+  archivo.abrirArchivo("/home/luigitercero/Escritorio/css.txt");
+        try {
+            jTextArea_Codigo3Dgenerado1.setText(
+                    
+                    archivo.getContenido()
+            );
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            jTextArea_Codigo3Dgenerado.setText("");
+           String texto = jTextArea_Codigo3Dgenerado1.getText();
             System.out.println("Inicia la generación de C3D...");
             scanner scan = new scanner(new BufferedReader( new StringReader(texto)));
             parser parser = new parser(scan);
             parser.parse();
            
             jTextArea_Codigo3Dgenerado.setText(
-           parser.parserTree.recorrerArbol());
+           parser.css.recorrer());
             
             //jTextArea_Codigo3Dgenerado.setText(ControlC3D.getC3D());
             System.out.println("Finaliza la generación de C3D...");

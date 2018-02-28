@@ -13,15 +13,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 
-
-/**
- *
- * @author luigitercero
- */
 public class Archivo  {
 
     private File archivo;
-    private String filtro;
 
     public File getArchivo() {
         return archivo;
@@ -29,13 +23,12 @@ public class Archivo  {
 
     
     
-    public Archivo(String Filtro) {
-        this.filtro = Filtro;
+    public Archivo() {
     }
 
     public void abrirArchivo() {//file choser
         JFileChooser selector = new JFileChooser();
-        selector.setFileFilter(new Filtro(this.filtro));
+        selector.setFileFilter(new Filtro("txt"));
         selector.setDialogTitle("Leer Archivo");
         selector.setFileSelectionMode(0);
         int opcion = selector.showOpenDialog(selector);
@@ -46,6 +39,11 @@ public class Archivo  {
             this.archivo = archivo;
 
         }
+
+    }
+    
+    public void abrirArchivo(String nombre) {//file choser
+      this.archivo  = new File(nombre);
 
     }
     public String muestraContenido(String archivo) throws FileNotFoundException, IOException {
