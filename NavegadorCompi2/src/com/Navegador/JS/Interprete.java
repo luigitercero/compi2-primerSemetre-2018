@@ -54,13 +54,13 @@ public class Interprete {
     }
 
     public void Principal(Node nodo) {
-        String inst = nodo.term.getName();
+        String inst = nodo.term.getName().toLowerCase();
         switch (inst) {
             case "metodo":
                 break;
             case "declaracion":
                 break;
-            case "getMetodo":
+            case "getmetodo":
                 com.Interprete.Metodo.Metodo m = new com.Interprete.Metodo.Metodo(this);
                 m.getMetodo(nodo);
                 break;
@@ -80,18 +80,13 @@ public class Interprete {
         for (Node nodeTree : nodo.childNode) {
             if (salida == 0) {
                 salida = cuerpo(nodeTree, ciclo);
-            } else if (salida == brea) {
-                salida = 0;
-                break;
-            } else if (salida == retu) {
-                return salida;
-            }
+            } 
         }
         return salida;
     }
 
     public int cuerpo(Node nodo, boolean ciclo) {
-        String inst = nodo.term.getName();
+        String inst = nodo.term.getName().toLowerCase();
         switch (inst) {
             case "control":
                 return control(nodo.childNode.get(0), ciclo);
@@ -112,7 +107,7 @@ public class Interprete {
                 }
                 return retu;
 
-            case "getMetodo":
+            case "getmetodo":
                 com.Interprete.Metodo.Metodo m = new com.Interprete.Metodo.Metodo(this);
                 m.getMetodo(nodo);
                 break;
@@ -131,14 +126,14 @@ public class Interprete {
             case "if2":
                 IF2 si2 = new IF2(nodo, this);
                 return si2.ejecutar(nodo, ciclo);
-            case "mienstras":
+            case "mientras":
                 While w = new While(nodo, this);
-                w.ejecutar(nodo, ciclo);
-                break;
+                return w.ejecutar(nodo, ciclo);
+                
             case "para":
                 For f = new For(nodo, this);
-                f.ejecutar(nodo, ciclo);
-                break;
+                return f.ejecutar(nodo, ciclo);
+                
             case "switch":
                 Switch s = new Switch(nodo, this);
                 return s.ejecutar(nodo, ciclo);

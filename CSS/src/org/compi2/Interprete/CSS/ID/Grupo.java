@@ -13,10 +13,16 @@ import java.util.ArrayList;
  */
 public class Grupo {
 
-    String ID;
-    ArrayList<Propiedad> propiedades;
+    public String ID;
+    public ArrayList<Propiedad> propiedades;
 
-    public Grupo(String ID) {
+    public Grupo(String ID,String tipo) {
+        this.ID = ID+"_"+tipo;
+        propiedades = new ArrayList<Propiedad>();
+
+    }
+    
+       public Grupo(String ID) {
         this.ID = ID;
         propiedades = new ArrayList<Propiedad>();
 

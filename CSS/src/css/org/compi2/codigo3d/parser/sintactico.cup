@@ -65,7 +65,8 @@ MAYUSCULA,
 MINUSCULA,
 CAPITAL,
 GRUPO,
-ENTER
+ENTER,
+IDE
 ;
 
 
@@ -88,6 +89,7 @@ definir::=definir:a definicion:b{:a.addID(b); RESULT = a;:}
 
 definicion::= elemento:a CORCHC{:RESULT = a;:}
             | elemento:a group:b CORCHC{:a.grupo = b.grupo; RESULT = a;:}
+            | error definicion:a{:RESULT = a;:}
     ;
 
 elemento ::=
@@ -95,19 +97,23 @@ elemento ::=
     |elemento:a propiedad:b DOSPI exp:c PUNTOCOMA{:a.agregarPropiedad(b,c);RESULT =a;:}   
     |elemento:a BORDE DOSPI CORCHA exp:b COMA exp:c COMA exp:d CORCHC PUNTOCOMA{:a.agregarPropiedad("borde",b,c,d);RESULT =a;:}  
     |elemento:a AUTOREDIMENSION DOSPI CORCHA exp:b COMA exp:c CORCHC PUNTOCOMA{:a.agregarPropiedad("autoredimension",b,c);RESULT =a;:}
+    |elemento:a error:b{:RESULT = a;:}
     ;
 group::= grupo:a{:RESULT = new ID(a);:}
     |group:a grupo:b{:a.addGrupo(b); RESULT = a;:}
     ;
 
-grupo::= GRUPO PAREA ID:a PAREC PUNTOCOMA{:RESULT = new Grupo(a);:}
+grupo::= GRUPO PAREA ID:a PAREC PUNTOCOMA{:RESULT = new Grupo(a,"GRUPO");:}
+    | IDE PAREA ID:a PAREC PUNTOCOMA{:RESULT = new Grupo(a,"ID");:}
     |grupo:a propiedades:c PUNTOCOMA{:a.agregarPropiedad(c); RESULT = a;:}
     |grupo:a BORDE DOSPI CORCHA exp:b COMA exp:c COMA exp:d CORCHC PUNTOCOMA{:a.agregarPropiedad("borde",b,c,d);RESULT =a;:}  
     |grupo:a AUTOREDIMENSION DOSPI CORCHA exp:b COMA exp:c CORCHC PUNTOCOMA{:a.agregarPropiedad("autoredimension",b,c);RESULT =a;:}
+    |grupo:a error:b{:RESULT = a;:}
     ;
 
 propiedades::= propiedad:b DOSPI exp:c {:RESULT = new Propiedad(b,c);:}
     | propiedades:c COMA exp:b {:c.addValor(b); RESULT = c;:}
+    
     ;
 
 exp ::= exp:a MAS exp:b{:RESULT = suma.Sumar(a,b);:}
@@ -168,7 +174,7 @@ valor ::=
     ;
 
 propiedad ::=
-  ALINEADO:a
+     ALINEADO:a
         {:RESULT = a;:}    
     | COLORTEXT:a
         {:RESULT = a;:}
@@ -188,6 +194,7 @@ propiedad ::=
         {:RESULT = a;:}
     |ID:a
         {:RESULT = a;:}
+    
     ;
 /*
 reservada::=

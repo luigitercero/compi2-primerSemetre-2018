@@ -33,7 +33,10 @@ public class Metodo extends Instruccion {
         if (nodo.childNode.size() == 2) {
             tamanio = nodo.childNode.get(1).childNode.size();
             parametro = nodo.childNode.get(1);
-
+            
+            if (parametro.getNezt() == 0){
+            System.out.println("siguiente nodo "+parametro.getNezt());
+            }
         }
         nombre = nombre + "_" + tamanio;
         Estructura estructura = inter.metodo.geMetodo(nombre);
@@ -41,12 +44,16 @@ public class Metodo extends Instruccion {
             TablaSimbolo tablaMetodo = new TablaSimbolo(inter.tabla.ambitoGlobal);
             tablaMetodo.aumentarAmbito();
             tablaMetodo.addVariable("retorno", null, -1);
-            if (estructura.parametro.childNode != null) {
+            if (estructura.parametro != null) {
                 for (Node node : estructura.parametro.childNode) {
-                    Object value = inter.exp.evaluar(parametro.nextChlid());
+                    
+                    Node par = parametro.nextChlid();
+                    Object value = inter.exp.evaluar(par);
+                    //System.out.println("iteracion" + value);
                     TipoObjeto tipo = new TipoObjeto();
                     tablaMetodo.addVariable(node.token.valueString, value, tipo.tipoObjecto(value));
                 }
+                parametro.nextChlidReset();
             }
 
             inter.tabla = tablaMetodo;
@@ -58,7 +65,8 @@ public class Metodo extends Instruccion {
             return retorno;
 
         } catch (Exception e) {
-            System.out.println("error al ejecutar metodo");
+            
+            System.err.println("error al ejecutar metodo " + e);
         }
 
         inter.tabla = temp;

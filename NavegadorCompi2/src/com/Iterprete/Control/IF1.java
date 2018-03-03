@@ -41,7 +41,8 @@ public class IF1 extends Instruccion {
                 inter.tabla.disminuirAmbito();
             }
         } catch (Exception e) {
-            System.out.println("error");
+            System.err.println("error en el if1 "+ nodo.posl+ " " +nodo.posr);
+             salida = 2;
             //errorhtml.agregarError(Semantic, "error con operador booleano ", nameArchivo, nodo);
         }
 

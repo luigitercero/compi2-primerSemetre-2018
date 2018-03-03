@@ -5,6 +5,9 @@
  */
 package com.Interprete.EXP;
 
+import com.Interprete.EXP.Funcion.IgualIgual;
+import com.Interprete.EXP.Funcion.MenorIgual;
+import com.Interprete.EXP.Funcion.Restar;
 import com.Interprete.EXP.Funcion.Sumar;
 import static com.Interprete.EXP._Token.*;
 import com.Iterprete.Control.Instruccion;
@@ -20,7 +23,6 @@ public class EvaluarEXP extends Instruccion {
 
     public Object valor;
     private String tipo;
-   
 
     public EvaluarEXP() {
         this.valor = null;
@@ -57,13 +59,15 @@ public class EvaluarEXP extends Instruccion {
         switch (operador) {
             case mas:
                 return evaluarMas(nodo.childNode.get(0), nodo.childNode.get(2));
+            case menos:
+                return evaluarMenos(nodo.childNode.get(0), nodo.childNode.get(2));
+            case igual:
+                return evaluarIgual(nodo.childNode.get(0), nodo.childNode.get(2));
+            case menorIgual:
+                return evaluarMenorIgual(nodo.childNode.get(0), nodo.childNode.get(2));
         }
+        System.err.println("no se encontro operador para evaluar");
         return null;
-    }
-
-    private Object evaluarMas(Node izq, Node der) {
-        Sumar suma = new Sumar(izq, der,this);
-        return suma.evaluar();
     }
 
     private Object evaluarDato(Node nodo) {
@@ -108,5 +112,27 @@ public class EvaluarEXP extends Instruccion {
             return Double.parseDouble(nodo.token.valueString);
         }
     }
+
+    private Object evaluarIgual(Node get, Node get0) {
+        IgualIgual igualar = new IgualIgual(get, get0, this);
+        return igualar.evaluar(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Object evaluarMas(Node izq, Node der) {
+        Sumar suma = new Sumar(izq, der, this);
+        return suma.evaluar();
+    }
+
+    private Object evaluarMenorIgual(Node get, Node get0) {
+        MenorIgual v = new MenorIgual(get, get0, this);
+//To change body of generated methods, choose Tools | Templates.
+        return v.evaluar();
+    }
+
+    private Object evaluarMenos(Node get, Node get0) {
+     Restar re = new Restar(get, get0, this);
+        return re.evaluar();
+    }//To change body of generated methods, choose Tools | Templates.
+    
 
 }

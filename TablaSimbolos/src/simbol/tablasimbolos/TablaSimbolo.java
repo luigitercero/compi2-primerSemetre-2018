@@ -30,7 +30,7 @@ public class TablaSimbolo {
     public TablaSimbolo(HashMap<String, Variable> ambitoGlobal) {
         listaAmbito = new LinkedList<HashMap<String, Variable>>();
         ambitoActual = ambitoGlobal;
-        ambitoGlobal = ambitoActual;
+        this.ambitoGlobal = ambitoActual;
 
         listaAmbito.addFirst(ambitoActual);
     }
@@ -120,9 +120,10 @@ public class TablaSimbolo {
             if (v != null) {
                 return v.valor;
             } else {
-                
+            
             }
         }
+          System.err.println("no se eencotro variable " + nombre);
         return null;
     }
 

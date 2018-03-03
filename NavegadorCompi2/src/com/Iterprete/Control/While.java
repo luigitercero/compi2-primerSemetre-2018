@@ -14,38 +14,41 @@ import com.TreeParser.Node;
  */
 public class While extends Instruccion {
 
-
-
     public While(Node nodo, Interprete aThis) {
-       inter = aThis;
+        inter = aThis;
     }
 
-
     public int ejecutar(Node nodo, boolean estoyEnCiclo) {
-        
-        
-              //---------------------> Hijo 0, condicion
+        int ex = 0;
+        int interator = 0;
+        //---------------------> Hijo 0, condicion
         //---------------------> Hijo 1, accion si condicion true
         Object a = inter.exp.evaluar(nodo.childNode.get(0));
         try {
-              while ((boolean) a) {
-                 inter.tabla.aumentarAmbito();
+            while ((boolean) a) {
+                inter.tabla.aumentarAmbito();
                 if (nodo.childNode.get(1).childNode.size() > 0) {
-                    int ex = inter.listacuerpo(nodo.childNode.get(01), true);
-                    if (ex == 0 || ex == 1) {
-
+                    ex = inter.listacuerpo(nodo.childNode.get(01), true);
+                    if (ex == 2) {
+                        ex = 0;
+                        inter.tabla.disminuirAmbito();
+                        break;
+                    } else if (ex == 1) {
+                        ex = 1;
+                        inter.tabla.disminuirAmbito();
                         break;
                     }
                 }
-               inter.tabla.disminuirAmbito();
+                inter.tabla.disminuirAmbito();
                 a = inter.exp.evaluar(nodo.childNode.get(0));
+                interator++;
             }
         } catch (Exception e) {
+           System.err.println("error en el while "+ nodo.posl+ " " +nodo.posr);
+             ex = 2;
         }
-          
-    
 
-        return 0;
+        return ex;
 
     }
 

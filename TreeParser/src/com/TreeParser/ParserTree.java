@@ -26,6 +26,10 @@ public class ParserTree {
     public ParserTree(String nodo) {
         root = new Node (new Term(nodo));
     }
+    public ParserTree(String nodo,int left,int right) {
+        root = new Node (new Term(nodo),left,right);
+    }
+    
     public void addChild(Node pa, Node child) {
         pa.childNode.add(child);
 

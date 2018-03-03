@@ -227,21 +227,21 @@ metodo::=
     :}
     ;
 
-if1::= SI PAREA exp:a PAREC LLV1 cuerpo1:b
-    {:ParserTree arbol = new ParserTree("if1");
+if1::= SI:e PAREA exp:a PAREC LLV1 cuerpo1:b
+    {:ParserTree arbol = new ParserTree("if1",eleft,eright);
       arbol.addChildren(a);
       arbol.addChildren(b);
       RESULT =arbol;
     :};
-if2::= SI PAREA exp:a PAREC LLV1 cuerpo1:b SINO LLV1 cuerpo1:c
-    {:ParserTree arbol = new ParserTree("if2");
+if2::= SI:e PAREA exp:a PAREC LLV1 cuerpo1:b SINO LLV1 cuerpo1:c
+    {:ParserTree arbol = new ParserTree("if2",eleft,eright);
       arbol.addChildren(a);
       arbol.addChildren(b);
       arbol.addChildren(c);
       RESULT =arbol;
     :};
-switch::= SELECCIONA PAREA exp:a PAREC LLV1 swich_cuerpo:b
-    {:ParserTree arbol = new ParserTree("selecciona");
+switch::= SELECCIONA:e PAREA exp:a PAREC LLV1 swich_cuerpo:b
+    {:ParserTree arbol = new ParserTree("selecciona",eleft,eright);
       arbol.addChildren(a);
       arbol.addChildren(b);
       RESULT =arbol;
@@ -267,7 +267,7 @@ caso ::=
     CASO exp:a DOSPUNTOS cuerpo:b {:ParserTree arbol = new ParserTree("caso"); arbol.addChildren(a);arbol.addChildren(b); RESULT=arbol;:}
     | CASO exp:a DOSPUNTOS {:ParserTree arbol = new ParserTree("caso"); arbol.addChildren(a); RESULT=arbol;:}
     ;
-para::= PARA exp:a DOSPUNTOS exp:c DOSPUNTOS exp:d DOSPUNTOS LLV1 cuerpo1:b
+para::= PARA:e exp:a DOSPUNTOS exp:c DOSPUNTOS exp:d DOSPUNTOS LLV1 cuerpo1:b
     {:ParserTree arbol = new ParserTree("para");
       arbol.addChildren(a);
       arbol.addChildren(c);
@@ -276,8 +276,8 @@ para::= PARA exp:a DOSPUNTOS exp:c DOSPUNTOS exp:d DOSPUNTOS LLV1 cuerpo1:b
       RESULT =arbol;
     :}
     ;
-mientras::= MIENTRAS PAREA exp:a PAREC LLV1 cuerpo1:b
-    {:ParserTree arbol = new ParserTree("mientras");
+mientras::= MIENTRAS:e PAREA exp:a PAREC LLV1 cuerpo1:b
+    {:ParserTree arbol = new ParserTree("mientras",eleft,eright);
       arbol.addChildren(a);
       arbol.addChildren(b);
       RESULT =arbol;
