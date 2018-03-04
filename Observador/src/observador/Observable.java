@@ -5,10 +5,14 @@
  */
 package observador;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author luigitercero
  */
 public interface Observable {
     public void notificar();
+public void enlazarObservador(Observador o);
+   
 }

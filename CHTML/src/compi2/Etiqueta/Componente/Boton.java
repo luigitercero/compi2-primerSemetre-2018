@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import observador.Observador;
 import org.compi2.Interprete.CSS.ID.CSS;
 import org.compi2.Interprete.CSS.ID.Grupo;
 import org.compi2.Interprete.CSS.ID.ID;
@@ -23,15 +24,21 @@ import org.compi2.Interprete.CSS.ID.Propiedad;
  *
  * @author luigitercero
  */
-public class Boton extends JButton implements ActionListener {
-
+public class Boton extends JButton implements observador.Observable {
+private ArrayList<Observador> observadores;
     private String ruta;
-    private String id;
+    public String id;
     private String click;
     private String grupo;
 
     public Boton(String nombre) {
         this.setPreferredSize(new Dimension(100, 100));
+        observadores = new ArrayList<>();
+        this.ruta = "";
+        this.id = "";
+        this.click = "";
+        this.grupo = "";
+        
     }
 
     public Boton() {
@@ -39,6 +46,12 @@ public class Boton extends JButton implements ActionListener {
         this.setSize(10, 10);
         this.setPreferredSize(new Dimension(10, 10));
         this.ClickAction();
+        observadores = new ArrayList<>();
+          this.ruta = "";
+        this.id = "";
+        this.click = "";
+        this.grupo = "";
+        
     }
 
     public void addText(String b) {
@@ -49,15 +62,15 @@ public class Boton extends JButton implements ActionListener {
 
     public void ClickAction() {
         this.addActionListener((ActionEvent e) -> {
-            System.out.println("esto es un click");
+            notificar();
         });
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("sdfasdfaskjdkfasdjfalsdf;");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+     public void enlazarObservador(Observador o) {
+        observadores.add(o);
     }
+
+ 
 
     public void addAtributo(String atributo, String valor, ArrayList<CSS> css) {
         switch (atributo.toLowerCase()) {
@@ -132,17 +145,17 @@ public class Boton extends JButton implements ActionListener {
                 break;
             case "LETRA":
                 this.setFont(new Font(propiedade.valor.toString(), this.getFont().getStyle(), this.getFont().getSize()));
-                System.out.println(this.getFont().getName());
-                this.repaint();
+               
+                
                 break;
             case "FORMATO":
                 addFormato(propiedade.valor.toString());
                 break;
             case "TEXTO":
-                System.err.println(this.getText());
+               
                 this.setText(propiedade.valor.toString());
-                System.err.println(this.getText());
-                this.repaint();
+               
+                
                 break;
             case "COLORTEXT":
                 try {
@@ -221,5 +234,12 @@ public class Boton extends JButton implements ActionListener {
                 return Color.yellow;
         }
         return Color.darkGray;
+    }
+
+    @Override
+    public void notificar() {
+        for (Observador observador : observadores) {
+            observador.update(id);
+        } //To change body of generated methods, choose Tools | Templates.
     }
 }

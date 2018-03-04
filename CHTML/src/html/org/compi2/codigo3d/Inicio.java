@@ -132,7 +132,7 @@ public class Inicio extends javax.swing.JFrame {
            // parser.parserTree.recorrerArbol());
             
             //jTextArea_Codigo3Dgenerado.setText(ControlC3D.getC3D());
-            parser.css.forEach(a->System.out.println(a.recorrer()));
+            parser.chtml.css.forEach(a->System.out.println(a.recorrer()));
             Pagina marco = new Pagina(parser.chtml);
             
             

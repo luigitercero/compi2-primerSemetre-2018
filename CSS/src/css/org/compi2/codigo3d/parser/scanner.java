@@ -870,7 +870,7 @@ String expresion="";
             }
           case 48: break;
           case 2: 
-            { System.out.println("DIV");return new Symbol(sym.DIV	          , yyline, yycolumn, yytext());
+            { /*System.out.println("DIV");*/return new Symbol(sym.DIV	          , yyline, yycolumn, yytext());
             }
           case 49: break;
           case 3: 
@@ -878,59 +878,59 @@ String expresion="";
             }
           case 50: break;
           case 4: 
-            { System.out.println("POR");return new Symbol(sym.POR	          , yyline, yycolumn, yytext());
+            { /*System.out.println("POR");*/return new Symbol(sym.POR	          , yyline, yycolumn, yytext());
             }
           case 51: break;
           case 5: 
-            { System.out.println("MAYORQUE");return new Symbol(sym.MAYORQUE       , yyline, yycolumn, yytext());
+            { /*System.out.println("MAYORQUE");*/return new Symbol(sym.MAYORQUE       , yyline, yycolumn, yytext());
             }
           case 52: break;
           case 6: 
-            { System.out.println("IGUAL");return new Symbol(sym.IGUAL	      , yyline, yycolumn, yytext());
+            { /*System.out.println("IGUAL");*/return new Symbol(sym.IGUAL	      , yyline, yycolumn, yytext());
             }
           case 53: break;
           case 7: 
-            { System.out.println("MENORQUE");return new Symbol(sym.MENORQUE       , yyline, yycolumn, yytext());
+            { /*System.out.println("MENORQUE");*/return new Symbol(sym.MENORQUE       , yyline, yycolumn, yytext());
             }
           case 54: break;
           case 8: 
-            { System.out.println("PAREA");return new Symbol(sym.PAREA	      , yyline, yycolumn, yytext());
+            { /*System.out.println("PAREA");*/return new Symbol(sym.PAREA	      , yyline, yycolumn, yytext());
             }
           case 55: break;
           case 9: 
-            { System.out.println("PAREC");return new Symbol(sym.PAREC	      , yyline, yycolumn, yytext());
+            { /*System.out.println("PAREC");*/return new Symbol(sym.PAREC	      , yyline, yycolumn, yytext());
             }
           case 56: break;
           case 10: 
-            { System.out.println("PUNTOCOMA");return new Symbol(sym.PUNTOCOMA      , yyline, yycolumn, yytext());
+            { /*System.out.println("PUNTOCOMA");*/return new Symbol(sym.PUNTOCOMA      , yyline, yycolumn, yytext());
             }
           case 57: break;
           case 11: 
-            { System.out.println("MENOS");return new Symbol(sym.MENOS	      , yyline, yycolumn, yytext());
+            { /*System.out.println("MENOS");*/return new Symbol(sym.MENOS	      , yyline, yycolumn, yytext());
             }
           case 58: break;
           case 12: 
-            { System.out.println("MAS");return new Symbol(sym.MAS	          , yyline, yycolumn, yytext());
+            { /*System.out.println("MAS");*/return new Symbol(sym.MAS	          , yyline, yycolumn, yytext());
             }
           case 59: break;
           case 13: 
-            { System.out.println("CORCHA");return new Symbol(sym.CORCHA	      , yyline, yycolumn, yytext());
+            { /*System.out.println("CORCHA");*/return new Symbol(sym.CORCHA	      , yyline, yycolumn, yytext());
             }
           case 60: break;
           case 14: 
-            { System.out.println("CORCHC");return new Symbol(sym.CORCHC	      , yyline, yycolumn, yytext());
+            { /*System.out.println("CORCHC");*/return new Symbol(sym.CORCHC	      , yyline, yycolumn, yytext());
             }
           case 61: break;
           case 15: 
-            { System.out.println("COMA");return new Symbol(sym.COMA           , yyline, yycolumn, yytext());
+            { /*System.out.println("COMA");*/return new Symbol(sym.COMA           , yyline, yycolumn, yytext());
             }
           case 62: break;
           case 16: 
-            { System.out.println("ID");return new Symbol(sym.ID 	      , yyline, yycolumn, yytext());
+            { /*System.out.println("ID");*/return new Symbol(sym.ID 	      , yyline, yycolumn, yytext());
             }
           case 63: break;
           case 17: 
-            { System.out.println("ENTERO");return new Symbol(sym.ENTERO	      , yyline, yycolumn, yytext());
+            { /*System.out.println("ENTERO");*/return new Symbol(sym.ENTERO	      , yyline, yycolumn, yytext());
             }
           case 64: break;
           case 18: 
@@ -954,107 +954,107 @@ String expresion="";
             }
           case 68: break;
           case 22: 
-            { System.out.println("DOSPI");return new Symbol(sym.DOSPI	      , yyline, yycolumn, yytext());
+            { /*System.out.println("DOSPI");*/return new Symbol(sym.DOSPI	      , yyline, yycolumn, yytext());
             }
           case 69: break;
           case 23: 
-            { System.out.println("ids ");return new Symbol(sym.IDE, yyline,yycolumn, yytext());
+            { /*System.out.println("ids ");*/return new Symbol(sym.IDE, yyline,yycolumn, yytext());
             }
           case 70: break;
           case 24: 
-            { System.out.println("DECIMAL");return new Symbol(sym.DECIMAL        , yyline, yycolumn, yytext());
+            { /*System.out.println("DECIMAL");*/return new Symbol(sym.DECIMAL        , yyline, yycolumn, yytext());
             }
           case 71: break;
           case 25: 
-            { System.out.println("TRUE");return new Symbol(sym.TRUE           , yyline,yycolumn, yytext());
+            { /*System.out.println("TRUE");*/return new Symbol(sym.TRUE           , yyline,yycolumn, yytext());
             }
           case 72: break;
           case 26: 
-            { System.out.println("TEXT");return new Symbol(sym.TEXT            , yyline,yycolumn, yytext());
+            { /*System.out.println("TEXT");*/return new Symbol(sym.TEXT            , yyline,yycolumn, yytext());
             }
           case 73: break;
           case 27: 
-            { System.out.println("GRUPO");return new Symbol(sym.GRUPO  , yyline,yycolumn, yytext());
+            { /*System.out.println("GRUPO");*/return new Symbol(sym.GRUPO  , yyline,yycolumn, yytext());
             }
           case 74: break;
           case 28: 
-            { System.out.println("LETRA");return new Symbol(sym.LETRA           , yyline,yycolumn, yytext());
+            { /*System.out.println("LETRA");*/return new Symbol(sym.LETRA           , yyline,yycolumn, yytext());
             }
           case 75: break;
           case 29: 
-            { System.out.println("BORDE");return new Symbol(sym.BORDE           , yyline,yycolumn, yytext());
+            { /*System.out.println("BORDE");*/return new Symbol(sym.BORDE           , yyline,yycolumn, yytext());
             }
           case 76: break;
           case 30: 
-            { System.out.println("FALSE");return new Symbol(sym.FALSE          , yyline,yycolumn, yytext());
+            { /*System.out.println("FALSE");*/return new Symbol(sym.FALSE          , yyline,yycolumn, yytext());
             }
           case 77: break;
           case 31: 
-            { System.out.println("OPAQUE");return new Symbol(sym.OPAQUE , yyline,yycolumn, yytext());
+            { /*System.out.println("OPAQUE");*/return new Symbol(sym.OPAQUE , yyline,yycolumn, yytext());
             }
           case 78: break;
           case 32: 
-            { System.out.println("DERECHA");return new Symbol(sym.DERECHA        , yyline,yycolumn, yytext());
+            { /*System.out.println("DERECHA");*/return new Symbol(sym.DERECHA        , yyline,yycolumn, yytext());
             }
           case 79: break;
           case 33: 
-            { System.out.println("CURSIVA");return new Symbol(sym.CURSIVA        , yyline,yycolumn, yytext());
+            { /*System.out.println("CURSIVA");*/return new Symbol(sym.CURSIVA        , yyline,yycolumn, yytext());
             }
           case 80: break;
           case 34: 
-            { System.out.println("TAMTEXT");return new Symbol(sym.TAMTEXT         , yyline,yycolumn, yytext());
+            { /*System.out.println("TAMTEXT");*/return new Symbol(sym.TAMTEXT         , yyline,yycolumn, yytext());
             }
           case 81: break;
           case 35: 
-            { System.out.println("VISIBLE");return new Symbol(sym.VISIBLE         , yyline,yycolumn, yytext());
+            { /*System.out.println("VISIBLE");*/return new Symbol(sym.VISIBLE         , yyline,yycolumn, yytext());
             }
           case 82: break;
           case 36: 
-            { System.out.println("FORMATO");return new Symbol(sym.FORMATO         , yyline,yycolumn, yytext());
+            { /*System.out.println("FORMATO");*/return new Symbol(sym.FORMATO         , yyline,yycolumn, yytext());
             }
           case 83: break;
           case 37: 
-            { System.out.println("CENTRADO");return new Symbol(sym.CENTRADO       , yyline,yycolumn, yytext());
+            { /*System.out.println("CENTRADO");*/return new Symbol(sym.CENTRADO       , yyline,yycolumn, yytext());
             }
           case 84: break;
           case 38: 
-            { System.out.println("ALINEADO");return new Symbol(sym.ALINEADO        , yyline,yycolumn, yytext());
+            { /*System.out.println("ALINEADO");*/return new Symbol(sym.ALINEADO        , yyline,yycolumn, yytext());
             }
           case 85: break;
           case 39: 
-            { System.out.println("NEGRILLA");return new Symbol(sym.NEGRILLA       , yyline,yycolumn, yytext());
+            { /*System.out.println("NEGRILLA");*/return new Symbol(sym.NEGRILLA       , yyline,yycolumn, yytext());
             }
           case 86: break;
           case 40: 
-            { System.out.println("IZQUIERDA");return new Symbol(sym.IZQUIERDA      , yyline,yycolumn, yytext());
+            { /*System.out.println("IZQUIERDA");*/return new Symbol(sym.IZQUIERDA      , yyline,yycolumn, yytext());
             }
           case 87: break;
           case 41: 
-            { System.out.println("COLORTEXT");return new Symbol(sym.COLORTEXT, yyline,yycolumn, yytext());
+            { /*System.out.println("COLORTEXT");*/return new Symbol(sym.COLORTEXT, yyline,yycolumn, yytext());
             }
           case 88: break;
           case 42: 
-            { System.out.println("CAPITAL");return new Symbol(sym.CAPITAL        , yyline,yycolumn, yytext());
+            { /*System.out.println("CAPITAL");*/return new Symbol(sym.CAPITAL        , yyline,yycolumn, yytext());
             }
           case 89: break;
           case 43: 
-            { System.out.println("MINUSCULA");return new Symbol(sym.MINUSCULA      , yyline,yycolumn, yytext());
+            { /*System.out.println("MINUSCULA");*/return new Symbol(sym.MINUSCULA      , yyline,yycolumn, yytext());
             }
           case 90: break;
           case 44: 
-            { System.out.println("MAYUSCULA");return new Symbol(sym.MAYUSCULA      , yyline,yycolumn, yytext());
+            { /*System.out.println("MAYUSCULA");*/return new Symbol(sym.MAYUSCULA      , yyline,yycolumn, yytext());
             }
           case 91: break;
           case 45: 
-            { System.out.println("JUSTIFICADO");return new Symbol(sym.JUSTIFICADO    , yyline,yycolumn, yytext());
+            { /*System.out.println("JUSTIFICADO");*/return new Symbol(sym.JUSTIFICADO    , yyline,yycolumn, yytext());
             }
           case 92: break;
           case 46: 
-            { System.out.println("FONDOELEMENTO");return new Symbol(sym.FONDOELEMENTO   , yyline,yycolumn, yytext());
+            { /*System.out.println("FONDOELEMENTO");*/return new Symbol(sym.FONDOELEMENTO   , yyline,yycolumn, yytext());
             }
           case 93: break;
           case 47: 
-            { System.out.println("AUTOREDIMENSION");return new Symbol(sym.AUTOREDIMENSION , yyline,yycolumn,yytext());
+            { /*System.out.println("AUTOREDIMENSION");*/return new Symbol(sym.AUTOREDIMENSION , yyline,yycolumn,yytext());
             }
           case 94: break;
           default:

@@ -17,7 +17,6 @@ parser code
  public ParserTree parserTree;
 public ArrayList<Symbol> error = new ArrayList<Symbol>();
 public CHTML chtml = new CHTML();
-public ArrayList<org.compi2.Interprete.CSS.ID.CSS > css = new ArrayList<org.compi2.Interprete.CSS.ID.CSS >();
 
 
     String expresion = "";
@@ -96,15 +95,14 @@ encabezado::= ENCABEZADO  MAYORQUE archivos FINCHTML  MAYORQUE
 cuerpo ::=   Lcuerpo FINCUERPO MAYORQUE
     ;
 
-Lcuerpo::= Acuerpo:a  MAYORQUE{:this.parser.chtml = a; RESULT= a; :}
+Lcuerpo::= Acuerpo:a  MAYORQUE{: RESULT= a; :}
     | Lcuerpo cuerpoTerminal
     | Lcuerpo:b panel:a {:b.addPanel(a); RESULT = b;:}
     | Lcuerpo:b SALTOFIN MAYORQUE {:b.addSalto();RESULT = b;:}
     ;
 
 
-
-Acuerpo::= CUERPO{:  RESULT = new CHTML(); :}
+Acuerpo::= CUERPO{:RESULT = this.parser.chtml;:}
          | Acuerpo:a ID IGUAL CADENA:c PUNTOCOMA  {:a.setBackground(color.getColor(c)); RESULT = a;:}
          ;
 
@@ -120,7 +118,7 @@ panelCuerpo ::= PANEL {:RESULT = new Panel();:}
     | panelCuerpo:a ID:b IGUAL CADENA:c PUNTOCOMA {:a.addAtributo(b,c);RESULT =a;:}
     ;
 cuerpoTerminal::=
-     boton:a MAYORQUE ID:b FINBOTON MAYORQUE  {:a.addText(b); RESULT = a;:}
+     boton:a MAYORQUE ID:b FINBOTON MAYORQUE  {:a.addText(b); this.parser.chtml.componentes.add(new ControlComponente(a.id,a,"boton")); RESULT = a;:}
     |textoc:a FINTEXTO:b MAYORQUE              {:a.addText(b); RESULT = a;:}
     |cajatexto:a FINCAJATEXTO:b MAYORQUE      {:a.addText(b); RESULT = a;:}
     |CAJA         FINCAJA
@@ -130,8 +128,8 @@ cuerpoTerminal::=
     |tabla
 ;
     
-boton ::=  BOTON {:RESULT = new Boton();:}
-    | boton:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c,this.parser.css); RESULT = a ;:}
+boton ::=  BOTON {:Boton a = new Boton(); a.enlazarObservador(this.parser.chtml); RESULT = a;:}
+    | boton:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c,this.parser.chtml.css); RESULT = a ;:}
     ;
 textoc::=TEXTO{:RESULT = new Texto();:}
     |textoc:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT =a;:}
@@ -166,7 +164,7 @@ archivo ::=
                 CompilarCSS c;
                 try {
                   c = new CompilarCSS(a);
-                  this.parser.css.add(c.getParser().css);
+                  this.parser.chtml.css.add(c.getParser().css);
                 } catch (Exception e) {
                     System.err.println("error al compilar arcihivo " + a);
                 }

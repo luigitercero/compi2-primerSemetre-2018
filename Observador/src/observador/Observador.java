@@ -11,4 +11,7 @@ package observador;
  */
 public interface Observador {
     public void update(); //SE ACTUALIZA CUNADO EL SUJETO L
+
+    public void update(String id);
+
 }

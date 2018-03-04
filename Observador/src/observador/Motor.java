@@ -15,5 +15,10 @@ public class Motor implements observador.Observador{
     public void update() {
         System.out.println(" subir potencia");
     }
+
+    @Override
+    public void update(String id) {
+         System.out.println(" subir potencia " + id); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

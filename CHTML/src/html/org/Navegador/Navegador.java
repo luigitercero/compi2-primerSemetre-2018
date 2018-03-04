@@ -158,6 +158,7 @@ public class Navegador extends javax.swing.JPanel {
             GridBagConstraints gbc = new GridBagConstraints();
             CHTML panel = parser.chtml;
             JScrollPane scroll = new JScrollPane(panel);
+            
 
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -170,16 +171,12 @@ public class Navegador extends javax.swing.JPanel {
            
             this.Navegador.add(scroll, gbc);
             this.Navegador.setVisible(true);
-            this.Navegador.repaint();
-             /*
-            this.Navegador.add(new JButton("hola"));
-            this.Navegador.repaint();
+            this.Navegador.updateUI();
+           
             
-            */
-           // Pagina pag = new Pagina(panel);
-            //pag.setVisible(true);
+          
             
-            
+
             System.out.println("termina");
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -196,4 +193,6 @@ public class Navegador extends javax.swing.JPanel {
     private javax.swing.JPanel Navegador;
     private javax.swing.JTextField jLURL;
     // End of variables declaration//GEN-END:variables
+
+
 }
