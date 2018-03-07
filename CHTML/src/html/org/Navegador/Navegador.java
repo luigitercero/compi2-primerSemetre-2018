@@ -127,6 +127,7 @@ public class Navegador extends javax.swing.JPanel {
     }//GEN-LAST:event_JbRegresarActionPerformed
 
     private void JbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbActualizarActionPerformed
+       this.Navegador.removeAll();
         this.Navegador.setLayout(new GridBagLayout());
         
         

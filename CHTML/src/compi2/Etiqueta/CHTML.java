@@ -5,6 +5,7 @@
  */
 package compi2.Etiqueta;
 
+import observador.CSSI;
 import compi2.Etiqueta.Componente.Panel;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -16,18 +17,21 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+import observador.Observador;
 
 /**
  *
  * @author luigitercero
  */
-public class CHTML extends JPanel implements observador.Observador {
-
+public class CHTML extends JPanel implements observador.Observador,observador.Observable{
+ 
     GridBagConstraints gbc;
     private int fila;
     public ArrayList<org.compi2.Interprete.CSS.ID.CSS> css;
     public ArrayList<ControlComponente> componentes;
-
+    public ArrayList<CSSI> componetesCSSI;
+    public ArrayList<Observador> observadores;
+    public ArrayList<Observador> Observadorrutas;
     public CHTML() {
         super();
         initi();
@@ -39,6 +43,8 @@ public class CHTML extends JPanel implements observador.Observador {
         gbc = new GridBagConstraints();
         this.setLayout(new MigLayout());
         componentes = new ArrayList<>();
+        observadores =new ArrayList<>();
+        componetesCSSI = new ArrayList<>();
 
     }
 
@@ -64,9 +70,44 @@ public class CHTML extends JPanel implements observador.Observador {
 
     public void update(String id) {
         System.out.println("hola estoy Observando " + id );
-        this.componentes.forEach(x->System.out.println(" componente"+x.id));
+        //this.componentes.forEach(x->System.out.println(" componente"+x.id));
      
 
+    }
+
+    @Override
+    public void Observar(String id, String tipo) {
+         //To change body of generated methods, choose Tools | Templates.
+    
+    }
+
+    
+    
+    @Override
+    public void notificar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void enlazarObservador(Observador o) {
+       observadores.add(o);//To change body of generated methods, choose Tools | Templates.
+    }
+
+    //@Override
+    public void notificar(String id, String tipo) {
+        for (Observador observadore : observadores) {
+            observadore.Observar(id, tipo);
+        }
+    }
+
+    @Override
+    public void UpdateMetodo(String metodo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void UpdateRuta(String ruta) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

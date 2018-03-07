@@ -28,14 +28,13 @@ import java_cup.runtime.Symbol;
 String expresion="";
 %}
 
-Comentario      =[#][/] [^]* [/][#]
-Comentario2     =[#] [^\n]* [\n]
+Comentario      =['][/] [^]* [/][']
+Comentario2     ="'" [^\n]* [\n]
 NUMERO          =[0-9]+
 NDECIMAL        = {NUMERO}"."{NUMERO}
 ID              =([a-zA-Z0-9]|_)+
 DATE            = [\'][0-3]?[0-9][/][0-1]?[0-9][/][0-2][0-9][0-9][0-9][\']
 DATETIME        =  [\'][0-3]?[0-9][/][0-1]?[0-9][/][0-2][0-9][0-9][0-9] [0-2]?[0-9][:][0-5][0-9][:][0-5][0-9][\']
-CARACTER        = "'"[^\n]"'"
 
 
 SPACE           = [\ \r\t\f\t]
@@ -86,16 +85,15 @@ ENTER           = [\ \n]
 "Mientras"  { return new Symbol(sym.MIENTRAS    ,yychar,yyline, yytext()); }
 "Detener"   { return new Symbol(sym.TERMINAR    ,yychar,yyline, yytext()); }
 "imprimir"  { return new Symbol(sym.IMPRIMIR    ,yychar,yyline, yytext()); }
-"funcion"   { return new Symbol(sym.FUNCION     ,yychar,yyline, yytext());}
-"mensaje"   { return new Symbol(sym.MENSAJEV    ,yychar,yyline, yytext());}
-
+"funcion"   { return new Symbol(sym.FUNCION     ,yychar,yyline, yytext()); }
+"mensaje"   { return new Symbol(sym.MENSAJEV    ,yychar,yyline, yytext()); }
+"documento" { return new Symbol(sym.DOCUMENTO   ,yychar,yyline, yytext()); }
 
 /*RETORNO DE EXPRESIONES REGULARES*/
 {DATETIME} {return new Symbol(sym.DATETIME     ,yychar,yyline,new String(yytext()));}
 {DATE}     {return new Symbol(sym.DATE         ,yychar,yyline,new String(yytext()));}
 {NUMERO}   {return new Symbol(sym.NUMERO       ,yychar,yyline,new String(yytext()));}
 {NDECIMAL} {return new Symbol(sym.NDECIMAL     ,yychar, yyline, new String(yytext()));}  
-{CARACTER} {return new Symbol(sym.CARACTER     ,yychar,yyline,new String(yytext()));}
 {ID}       {return new Symbol(sym.ID           ,yychar,yyline, new String(yytext()));}
 
 {Comentario}    {}

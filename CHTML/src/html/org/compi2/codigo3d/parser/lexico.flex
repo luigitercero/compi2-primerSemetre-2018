@@ -60,7 +60,7 @@ ENTER   = [\ \n]
 <YYINITIAL> "<chtml"		  { /*System.out.println("    chtml");     */return new Symbol(sym.CHTML     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<fin-chtml"	  { /*System.out.println("    FINchtml");  */return new Symbol(sym.FINCHTML     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<encabezado"	  { /*System.out.println("    ENCABEZADO");*/return new Symbol(sym.ENCABEZADO     , yyline, yycolumn, yytext()); }
-<YYINITIAL> "<fin-encabezado" { /*System.out.println("    FINENCABEZADO");*/return new Symbol(sym.FINENCABEZADO     , yyline, yycolumn, yytext()); }
+<YYINITIAL> "<fin-encabezado" { /*System.out.println(" FINENCABEZADO");*/return new Symbol(sym.FINENCABEZADO     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<titulo"         { /*System.out.println("    titulo");    */return new Symbol(sym.TITULO     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<fin-titulo"     { /*System.out.println("    FINtitulo"); */return new Symbol(sym.FINTITULO     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<ccss"           { /*System.out.println("    CCSS");      */return new Symbol(sym.CCSS     , yyline, yycolumn, yytext()); }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import compi2.Etiqueta.Componente.*;
 import css.org.compi2.codigo3d.CompilarCSS;
 //PARSER PARA EL ARCHIVO DE ESCENARIOS
-parser code
+parser code 
 {://Codigo visible
  public ParserTree parserTree;
 public ArrayList<Symbol> error = new ArrayList<Symbol>();
@@ -81,7 +81,7 @@ precedence left MAYORQUE;
 
 start with inicial;
 
-inicial ::= html;
+inicial ::= html{:this.parser.chtml.notificar("fin", "listo");:};
 
 html::= chtml  encabezado  ;
 
@@ -118,7 +118,7 @@ panelCuerpo ::= PANEL {:RESULT = new Panel();:}
     | panelCuerpo:a ID:b IGUAL CADENA:c PUNTOCOMA {:a.addAtributo(b,c);RESULT =a;:}
     ;
 cuerpoTerminal::=
-     boton:a MAYORQUE ID:b FINBOTON MAYORQUE  {:a.addText(b); this.parser.chtml.componentes.add(new ControlComponente(a.id,a,"boton")); RESULT = a;:}
+     boton:a MAYORQUE ID:b FINBOTON MAYORQUE  {:a.addText(b); this.parser.chtml.notificar(a.id, "listo");this.parser.chtml.componetesCSSI.add(a); RESULT = a;:}
     |textoc:a FINTEXTO:b MAYORQUE              {:a.addText(b); RESULT = a;:}
     |cajatexto:a FINCAJATEXTO:b MAYORQUE      {:a.addText(b); RESULT = a;:}
     |CAJA         FINCAJA
@@ -128,8 +128,8 @@ cuerpoTerminal::=
     |tabla
 ;
     
-boton ::=  BOTON {:Boton a = new Boton(); a.enlazarObservador(this.parser.chtml); RESULT = a;:}
-    | boton:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c,this.parser.chtml.css); RESULT = a ;:}
+boton ::=  BOTON {:Boton a = new Boton(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);   RESULT = a;:}
+    | boton:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT = a ;:}
     ;
 textoc::=TEXTO{:RESULT = new Texto();:}
     |textoc:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT =a;:}
@@ -159,7 +159,20 @@ Larchivo ::= Larchivo:b archivo:a{:RESULT = a+b;:}
             |  archivo:a {:RESULT = a;:} ;
 
 archivo ::= 
-       CJS ID IGUAL CADENA:a PUNTOCOMA MAYORQUE FINCJS MAYORQUE {:System.out.println("cargar cjs " + a); RESULT ="";:}
+       CJS ID IGUAL CADENA:a PUNTOCOMA MAYORQUE FINCJS MAYORQUE {:
+            
+
+                try {
+                  com.Navegador.JS.JS c = new  com.Navegador.JS.JS(a);
+                    this.parser.chtml.enlazarObservador(c.js);
+                    c.add
+                    
+                } catch (Exception e) {
+                    System.err.println("error al compilar arcihivo " + a);
+                }
+                
+
+            System.out.println("cargar cjs " + a); RESULT ="";:}
     | CCSS ID IGUAL CADENA:a PUNTOCOMA  MAYORQUE FINCCSS MAYORQUE{:  
                 CompilarCSS c;
                 try {

@@ -5,6 +5,11 @@
  */
 package compi2.Etiqueta.Componente;
 
+import observador.CSSI;
+import java.util.ArrayList;
+import observador.Observador;
+import org.compi2.Interprete.CSS.ID.Propiedad;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -15,6 +20,7 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import observador.Observador;
+;
 import org.compi2.Interprete.CSS.ID.CSS;
 import org.compi2.Interprete.CSS.ID.Grupo;
 import org.compi2.Interprete.CSS.ID.ID;
@@ -24,12 +30,18 @@ import org.compi2.Interprete.CSS.ID.Propiedad;
  *
  * @author luigitercero
  */
-public class Boton extends JButton implements observador.Observable {
-private ArrayList<Observador> observadores;
+
+
+public class Boton extends JButton implements CSSI, observador.Observable {
+
+    private ArrayList<Observador> observadores;
+    private ArrayList<Observador> Observadorrutas;
     private String ruta;
     public String id;
     private String click;
     private String grupo;
+    private ArrayList<CSS> css;
+    private ObtenerPropiedades propiedades;
 
     public Boton(String nombre) {
         this.setPreferredSize(new Dimension(100, 100));
@@ -38,20 +50,22 @@ private ArrayList<Observador> observadores;
         this.id = "";
         this.click = "";
         this.grupo = "";
-        
+
     }
 
-    public Boton() {
+    public Boton(ArrayList<CSS> css, ArrayList<Observador> observadores, ArrayList<Observador> rutas) {
         super();
         this.setSize(10, 10);
         this.setPreferredSize(new Dimension(10, 10));
         this.ClickAction();
-        observadores = new ArrayList<>();
-          this.ruta = "";
+        this.observadores = observadores;
+        this.ruta = "";
         this.id = "";
         this.click = "";
         this.grupo = "";
-        
+        this.css = css;
+        propiedades = new ObtenerPropiedades();
+        this.Observadorrutas = rutas;
     }
 
     public void addText(String b) {
@@ -65,46 +79,43 @@ private ArrayList<Observador> observadores;
             notificar();
         });
     }
-    
-     public void enlazarObservador(Observador o) {
-        observadores.add(o);
-    }
 
- 
+    public void addAtributo(String atributo, String valor) {
 
-    public void addAtributo(String atributo, String valor, ArrayList<CSS> css) {
         switch (atributo.toLowerCase()) {
             case "ancho":
-                this.setSize(Integer.parseInt(valor), this.getSize().height);
-                this.setPreferredSize(new Dimension(Integer.parseInt(valor), this.getSize().height));
+                ActualizarAncho(Integer.parseInt(valor));
                 break;
             case "alto":
-                this.setSize(this.getSize().width, Integer.parseInt(valor));
-                this.setPreferredSize(new Dimension(this.getSize().width, Integer.parseInt(valor)));
+                ActualizarAlto(Integer.parseInt(valor));
                 break;
             case "alineado":
             case "grupo":
-                this.grupo = valor;
-                agregarAtributo(css, valor, "GRUPO");
+                ActualizarGrupo(valor);
                 break;
             case "id":
-                this.id = valor;
-                agregarAtributo(css, valor, "ID");
+                ActualiarID(valor);
+
                 break;
             case "ruta":
-                this.ruta = valor;
+                ActualizaRuta(valor);
+
                 break;
             case "click":
+                this.click = valor;
+                break;
+            case "clic":
                 this.click = valor;
                 break;
             case "valor":
                 break;
             default:
-                System.err.println("no son parametros validosf");
+                System.err.println("no son parametros validos");
         }
     }
 
-    private void agregarAtributo(ArrayList<CSS> css, String valor, String tipo) {
+    public void agregarAtributo(String valor, String tipo) {
+
         for (CSS cs : css) {
             for (Map.Entry<String, ID> entry : cs.css.entrySet()) {
                 String key = entry.getKey();
@@ -120,24 +131,24 @@ private ArrayList<Observador> observadores;
         //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void addAtributo(Propiedad propiedade) {
+    public void addAtributo(Propiedad propiedade) {
         //To change body of generated methods, choose Tools | Templates.
 
         switch (propiedade.Propiedad.toUpperCase()) {
             case "ALINEADO":
                 break;
             case "OPAQUE":
-                this.setOpaque(getLogico(propiedade.valor.toString()));
+                this.setOpaque(propiedades.getLogico(propiedade.valor.toString()));
                 break;
             case "VISIBLE":
-                this.setVisible(getLogico(propiedade.valor.toString()));
+                this.setVisible(propiedades.getLogico(propiedade.valor.toString()));
                 break;
             case "FONDOELEMENTO":
                 this.setContentAreaFilled(false);
                 try {
                     this.setBackground(java.awt.Color.decode(propiedade.valor.toString()));
                 } catch (Exception e) {
-                    this.setBackground(getColor(propiedade.valor.toString()));
+                    this.setBackground(propiedades.getColor(propiedade.valor.toString()));
                 }
                 break;
             case "TAMTEXT":
@@ -145,23 +156,21 @@ private ArrayList<Observador> observadores;
                 break;
             case "LETRA":
                 this.setFont(new Font(propiedade.valor.toString(), this.getFont().getStyle(), this.getFont().getSize()));
-               
-                
+
                 break;
             case "FORMATO":
                 addFormato(propiedade.valor.toString());
                 break;
             case "TEXTO":
-               
+
                 this.setText(propiedade.valor.toString());
-               
-                
+
                 break;
             case "COLORTEXT":
                 try {
                     this.setForeground(java.awt.Color.decode(propiedade.valor.toString()));
                 } catch (Exception e) {
-                    this.setForeground(getColor(propiedade.valor.toString()));
+                    this.setForeground(propiedades.getColor(propiedade.valor.toString()));
                 }
                 break;
             case "BORDE":
@@ -170,16 +179,16 @@ private ArrayList<Observador> observadores;
         }
     }
 
-    private void addBorde(Propiedad pro) {
+    public void addBorde(Propiedad pro) {
         try {
-            this.setBorder(BorderFactory.createLineBorder(java.awt.Color.decode(pro.color), pro.tam, getLogico(pro.curva)));
+            this.setBorder(BorderFactory.createLineBorder(java.awt.Color.decode(pro.color), pro.tam, propiedades.getLogico(pro.curva)));
         } catch (Exception e) {
-            this.setBorder(BorderFactory.createLineBorder(getColor(pro.color), pro.tam, getLogico(pro.curva)));
+            this.setBorder(BorderFactory.createLineBorder(propiedades.getColor(pro.color), pro.tam, propiedades.getLogico(pro.curva)));
         }
 
     }
 
-    private void addFormato(String Formato) {
+    public void addFormato(String Formato) {
         switch (Formato.toLowerCase()) {
             case "negrilla":
                 this.setFont(new Font(this.getFont().getFontName(), Font.BOLD, this.getFont().getSize()));
@@ -196,50 +205,81 @@ private ArrayList<Observador> observadores;
 
     }
 
-    private boolean getLogico(String valor) {
-        if (valor.equalsIgnoreCase("true")) {
-            return true;
-        }
+    @Override
+    public void notificar() {
 
-        return false;
+        if (!this.click.equals("") || !this.id.equals("")) {
+            for (Observador observador : observadores) {
+                observador.UpdateMetodo(click);
+                observador.Observar(id, "click");
+
+            } //To change body of generated methods, choose Tools | Templates.
+        }
+        if (!this.ruta.equals("")) {
+            for (Observador Observadorruta : Observadorrutas) {
+                Observadorruta.UpdateRuta(ruta);
+            }
+        }
     }
 
-    private Color getColor(String color) {
-        switch (color.toLowerCase()) {
-            case "black":
-                return Color.black;
-            case "blue":
-                return Color.blue;
-            case "cyan":
-                return Color.cyan;
-            case "darkgray":
-                return Color.darkGray;
-            case "gray":
-                return Color.gray;
-            case "green":
-                return Color.green;
-            case "lightgray":
-                return Color.lightGray;
-            case "magenta":
-                return Color.magenta;
-            case "orange":
-                return Color.orange;
-            case "pink":
-                return Color.pink;
-            case "red":
-                return Color.red;
-            case "white":
-                return Color.white;
-            case "yellow":
-                return Color.yellow;
-        }
-        return Color.darkGray;
+    //@Override
+    @Override
+    public void ActualizarAncho(int ancho) {
+        this.setSize(ancho, this.getSize().height);
+        this.setPreferredSize(new Dimension(ancho, this.getSize().height));
     }
 
     @Override
-    public void notificar() {
-        for (Observador observador : observadores) {
-            observador.update(id);
-        } //To change body of generated methods, choose Tools | Templates.
+    public void ActualizarAlto(int alto) {
+        this.setSize(this.getSize().width, alto);
+        this.setPreferredSize(new Dimension(this.getSize().width, alto));
     }
+
+    @Override
+    public void ActualizarGrupo(String grupo) {
+        this.grupo = grupo;
+        agregarAtributo(grupo, "GRUPO"); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void ActualiarID(String id) {
+        this.id = id;
+        agregarAtributo(id, "ID"); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void ActualizaRuta(String ruta) {
+        this.ruta = ruta;
+    }
+
+    @Override
+    public void ActualizarClick(String ruta) {
+        this.click = ruta; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void ActualizarValori(String valor) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void enlazarObservador(Observador o) {
+        observadores.add(o);
+    }
+
+    // @Override
+    public void notificar(String id, String tipo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getID() {
+        return this.id; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void repitar() {
+        this.updateUI(); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

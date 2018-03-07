@@ -31,5 +31,10 @@ public class Acelerador implements observador.Observable {
     public void  accion(){
             notificar();
     }
+
+    @Override
+    public void notificar(String id, String tipo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

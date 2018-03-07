@@ -18,27 +18,27 @@ public class Node {
     public Term term;
     public Token token;
     public ArrayList<Node> childNode;
-    private int next=-1;
+    private int next = -1;
 
-    
-    
     public Node(Term term, Token token) {
         this.term = term;
         this.token = token;
         this.childNode = new ArrayList<Node>();
         this.next = -1;
     }
-public int getNezt(){
 
-return this.next;
-}
+    public int getNezt() {
+
+        return this.next;
+    }
+
     public Node(Term term, int left, int right) {
         this.term = term;
         this.childNode = new ArrayList<Node>();
         this.next = -1;
         this.posl = left;
         this.posr = right;
-          this.next = -1;
+        this.next = -1;
     }
 
     public Node(Term term) {

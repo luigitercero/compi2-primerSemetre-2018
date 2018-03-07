@@ -12,7 +12,9 @@ import java.util.ArrayList;
  * @author luigitercero
  */
 public interface Observable {
+
     public void notificar();
-public void enlazarObservador(Observador o);
-   
+public void notificar(String id, String tipo);
+    public void enlazarObservador(Observador o);
+
 }

@@ -1032,7 +1032,7 @@ String expresion="";
             }
           case 79: break;
           case 39: 
-            { /*System.out.println("    FINENCABEZADO");*/return new Symbol(sym.FINENCABEZADO     , yyline, yycolumn, yytext());
+            { /*System.out.println(" FINENCABEZADO");*/return new Symbol(sym.FINENCABEZADO     , yyline, yycolumn, yytext());
             }
           case 80: break;
           case 40: 
