@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.Interprete.Metodo;
+package observador.consola;
 
 /**
  *
  * @author luigitercero
  */
-public class Documento {
-    
+public interface recibirMensaje {
+    public void recibirMensaje(String mensaje);
 }

@@ -17,9 +17,8 @@ import com.TreeParser.Node;
 public class IgualIgual extends ValorBooleano {
 
     public IgualIgual(Node izq, Node der, EvaluarEXP exp) {
-        super(izq, der,exp);
+        super(izq, der, exp);
     }
-
 
     @Override
     protected boolean booleanDouble() {
@@ -96,31 +95,31 @@ public class IgualIgual extends ValorBooleano {
 
     @Override
     protected boolean stringString() {
-        return (val1).toString() .equals((val2).toString()); //To change body of generated methods, choose Tools | Templates.
+        return (val1).toString().equals((val2).toString()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean stringFechahora() {
         DateTime fecha = (DateTime) val2;
-        return val1.toString() .equals(fecha.date); //To change body of generated methods, choose Tools | Templates.
+        return val1.toString().equals(fecha.date); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean fechahoraString() {
         DateTime fecha = (DateTime) val1;
-        return fecha.date .equals( val2.toString()); //To change body of generated methods, choose Tools | Templates.
+        return fecha.date.equals(val2.toString()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean stringFecha() {
         Date fecha = (Date) val2;
-        return val1.toString() .equals( fecha.date); //To change body of generated methods, choose Tools | Templates.
+        return val1.toString().equals(fecha.date); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean fechaString() {
         Date fecha = (Date) val1;
-        return fecha.date .equals( val2.toString()); //To change body of generated methods, choose Tools | Templates.
+        return fecha.date.equals(val2.toString()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -128,6 +127,33 @@ public class IgualIgual extends ValorBooleano {
         return super.evaluar(); //To change body of generated methods, choose Tools | Templates.
     }
 
+    protected boolean dateDate() {
+        Date fecha2 = (Date) val2;
+        Date fecha1 = (Date) val1;
+        return (fecha1.date.equals(fecha2.date));
 
+    }
+
+    protected boolean vDatevDate() {
+        DateTime fecha2 = (DateTime) val2;
+        DateTime fecha1 = (DateTime) val1;
+        return (fecha1.date.equals(fecha2.date));//To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringNumber() {
+        return val1.toString().length() == (long) val2; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringDouble() {
+        return val1.toString().length() == (double) val2;
+    }
+
+    protected boolean numberString() {
+        return (long) val1 == val2.toString().length();//To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean doubleString() {
+        return (double) val1 == val2.toString().length(); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

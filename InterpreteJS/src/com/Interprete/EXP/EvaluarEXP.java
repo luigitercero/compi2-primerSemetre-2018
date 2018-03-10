@@ -7,13 +7,16 @@ package com.Interprete.EXP;
 
 import com.Interprete.EXP.Funcion.IgualIgual;
 import com.Interprete.EXP.Funcion.MenorIgual;
+import com.Interprete.EXP.Funcion.*;
 import com.Interprete.EXP.Funcion.Restar;
 import com.Interprete.EXP.Funcion.Sumar;
 import static com.Interprete.EXP._Token.*;
 import com.Iterprete.Control.Instruccion;
 import com.Navegador.JS.Interprete;
 import com.TreeParser.Node;
+import java.util.ArrayList;
 import simbol.tablasimbolos.TablaSimbolo;
+import simbol.tablasimbolos.Variable;
 
 /**
  *
@@ -43,30 +46,56 @@ public class EvaluarEXP extends Instruccion {
                 this.valor = evaluarOperacion(nodo);
                 return valor;
             case 2:
-
-                break;
+                this.valor = evaluarSolito(nodo);
+                return valor;
             case 1:
                 this.valor = evaluarDato(nodo.childNode.get(0));
                 return valor;
 
             default:
+                this.inter.enviarError("Error de semantica: no es posible evaluar operacion");
         }
         return null;
     }
 
     private Object evaluarOperacion(Node nodo) {
         String operador = nodo.childNode.get(1).term.name;
-        switch (operador) {
-            case mas:
-                return evaluarMas(nodo.childNode.get(0), nodo.childNode.get(2));
-            case menos:
-                return evaluarMenos(nodo.childNode.get(0), nodo.childNode.get(2));
-            case igual:
-                return evaluarIgual(nodo.childNode.get(0), nodo.childNode.get(2));
-            case menorIgual:
-                return evaluarMenorIgual(nodo.childNode.get(0), nodo.childNode.get(2));
+        try {
+            switch (operador) {
+                case mas:
+                    return evaluarMas(nodo.childNode.get(0), nodo.childNode.get(2));
+                case menos:
+                    return evaluarMenos(nodo.childNode.get(0), nodo.childNode.get(2));
+                case igual:
+                    return evaluarIgual(nodo.childNode.get(0), nodo.childNode.get(2));
+                case menorIgual:
+                    return evaluarMenorIgual(nodo.childNode.get(0), nodo.childNode.get(2));
+                case andd:
+                    return evaluarAnd(nodo.childNode.get(0), nodo.childNode.get(2));
+                case div:
+                    return evaluarDividir(nodo.childNode.get(0), nodo.childNode.get(2));
+                case mayorIgual:
+                    return evaluarMayorIgual(nodo.childNode.get(0), nodo.childNode.get(2));
+                case mayorque:
+                    return evaluaMayoruque(nodo.childNode.get(0), nodo.childNode.get(2));
+                case menorque:
+                    return evaluarMenorque(nodo.childNode.get(0), nodo.childNode.get(2));
+                case "MOD":
+                    return evaluarModular(nodo.childNode.get(0), nodo.childNode.get(2));
+                case por:
+                    return evaluarMultipliacion(nodo.childNode.get(0), nodo.childNode.get(2));
+                case noIgual:
+                    return evaluarNoIgual(nodo.childNode.get(0), nodo.childNode.get(2));
+                case orr:
+                    return evaluarOR(nodo.childNode.get(0), nodo.childNode.get(2));
+                case eleva:
+                    return evaluaEleva(nodo.childNode.get(0), nodo.childNode.get(2));
+            }
+        } catch (Exception e) {
+            this.inter.enviarError("Error de semantica: error al castear numero");
         }
-        System.err.println("no se encontro operador para evaluar");
+           this.inter.enviarError("Error de semantica: operador no progrmamado "+ operador);
+        
         return null;
     }
 
@@ -98,12 +127,43 @@ public class EvaluarEXP extends Instruccion {
                 }
                 break;
             case "getMetodo":
-                com.Interprete.Metodo.Metodo m = new com.Interprete.Metodo.Metodo(inter,nodo);
+                com.Interprete.Metodo.Metodo m = new com.Interprete.Metodo.Metodo(inter, nodo);
                 return m.Ejecutar();
             case "getComponente":
-                return new Component(nodo.childNode.get(0).token.valueString,
-                        nodo.childNode.get(1).token.valueString);
+                
+                
+                return new Component(nodo.childNode.get(0).token.valueString, nodo.childNode.get(1),inter);
+            case "Vectorconteo":
+                try {
+                    return vectorConteo(nodo);
+                } catch (Exception e) {
+                    System.err.println("error al querer trabajar con arreglos " + nodo.childNode.get(0).posl + " " + nodo.childNode.get(0).posr);
+                }
+                break;
+            case "arreglo":
+                try {
+                    return arreglo(nodo);
+                } catch (Exception e) {
+                    System.err.println("error al querer trabajar con arreglos " + nodo.childNode.get(0).posl + " " + nodo.childNode.get(0).posr);
+                }
+                break;
+            case "VectorAtexto":
+                try {
+                    return vectoTexto(nodo);
+                } catch (Exception e) {
+                    System.err.println("error al querer trabajar con arreglos " + nodo.childNode.get(0).posl + " " + nodo.childNode.get(0).posr);
+                }
+                break;
+            case "vectorMetodo":
+                try {
+                    return vectorMetodo(nodo);
+                } catch (Exception e) {
+                    System.err.println("error al querer trabajar con arreglos " + nodo.childNode.get(0).posl + " " + nodo.childNode.get(0).posr);
+
+                }
+                break;
         }
+        this.inter.enviarError("Error de semantica: no es posible evaluar dato "+ termino);
         return null;
     }
 
@@ -136,4 +196,132 @@ public class EvaluarEXP extends Instruccion {
         return re.evaluar();
     }//To change body of generated methods, choose Tools | Templates.
 
+    private long vectorConteo(Node nodo) {
+        Object ve = inter.exp.evaluarDato(nodo.childNode.get(0));
+
+        ArrayList vector = (ArrayList) ve;
+        return vector.size();
+
+    }
+
+    private Object arreglo(Node datos) {
+
+        ArrayList lista = new ArrayList();
+
+        TipoObjeto t = new TipoObjeto();
+        Object valFinal;
+        for (Node node : datos.childNode) {
+            valFinal = inter.exp.evaluar(node);
+            lista.add(new Variable("returnoLista", valFinal, t.tipoObjecto(valFinal))
+            );
+        }
+        return lista;
+        //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private String vectoTexto(Node nodo) {
+        Object ve = inter.exp.evaluarDato(nodo.childNode.get(0));
+        ArrayList vector = (ArrayList) ve;
+        String salida = "";
+        for (Object object : vector) {
+            Variable val = (Variable) object;
+            salida = salida + val.valor +",";
+        }
+        return "{"+ salida +"}";
+    }
+
+    public Object vectorMetodo(Node nodo) {
+        Object val = inter.exp.evaluarDato(nodo.childNode.get(0));
+        Object pos = inter.exp.evaluar(nodo.childNode.get(1));
+        ArrayList arra = (ArrayList) val;
+        Long poss = (long) pos;
+        Variable vari = (Variable) arra.get(poss.intValue());
+        return vari.valor;
+    }
+
+    private Object evaluarOR(Node get, Node get0) {
+        Or operador = new Or(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarNoIgual(Node get, Node get0) {
+        NoIgual operador = new NoIgual(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarMultipliacion(Node get, Node get0) {
+        Multiplicar operador = new Multiplicar(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarModular(Node get, Node get0) {
+        Modulo operador = new Modulo(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarMenorque(Node get, Node get0) {
+        MenorQue operador = new MenorQue(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluaMayoruque(Node get, Node get0) {
+        MayorQue operador = new MayorQue(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarMayorIgual(Node get, Node get0) {
+        MayorIgual operador = new MayorIgual(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarDividir(Node get, Node get0) {
+        Dividir operador = new Dividir(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarAnd(Node get, Node get0) {
+        And operador = new And(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluaEleva(Node get, Node get0) {
+        Eleva operador = new Eleva(get, get0, this);
+        return operador.evaluar();
+    }
+
+    private Object evaluarSolito(Node nodo) {
+        String termino = nodo.term.getName();
+
+        if (nodo.childNode.get(0).term.getName().equals(menos)) {
+            Object val1 = inter.exp.evaluar(nodo.childNode.get(1));
+
+            TipoObjeto t = new TipoObjeto();
+            int tipo = t.tipoObjecto(val1);
+            if (tipo == _v_Double) {
+                return (Double) val1 * -1;
+            } else if (tipo == _v_Number) {
+                return (long) val1 * -1;
+            }
+        } else if (nodo.childNode.get(0).term.getName().equals("NEL")) {
+            return evaluarNOT(nodo);
+        }
+        return null;
+
+    }
+
+    private Object evaluarNOT(Node nodo) {
+          Node der = nodo.childNode.get(1);
+        Boolean val;
+   
+            val = (boolean) (inter.exp.evaluar(der));
+            return !val;
+        
+            
+           // errorhtml.agregarError(Semantic, "recibe sola vaolores boooleanos " + evaluarEXP(der).toString() + " no es booleano", nameArchivo, nodo.childNode.get(0));
+      
+
+        //ejecutarIMPRIMIRERROR("! solo recibe booleano como parametro");
+      
+        
+    }
 }

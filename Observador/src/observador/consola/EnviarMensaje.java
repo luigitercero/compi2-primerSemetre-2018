@@ -3,19 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.TreeParser;
+package observador.consola;
 
 /**
  *
  * @author luigitercero
  */
-public class TreeParser {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
-    
+public interface EnviarMensaje {
+    public void enviarMensaje(String mensaje);
+    public void enviarErrores(String mensaje);
 }

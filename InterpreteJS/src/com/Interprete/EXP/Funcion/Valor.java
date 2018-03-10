@@ -78,7 +78,7 @@ public class Valor{
         } else if (tipo1 == _v_Boolean && tipo2 == _v_Boolean) {
             return booleanBoolean();
         }
-
+        System.err.println("error al querer castear operadores ");
         return null;
     }
 

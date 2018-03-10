@@ -37,13 +37,27 @@ public class ValorBooleano {
             return fechaString();
         } else if (tipo1 == _v_String && tipo2 == _v_date) {
             return stringFecha();
+        }else if(tipo1 == _v_date && tipo2 == _v_date){
+            return dateDate(); 
+        }else if (tipo1 == _v_DateTime&& tipo2 == _v_DateTime){
+           return vDatevDate();
+        }else if(tipo1 == _v_String &&tipo2 == _v_Number){
+            return stringNumber();
+        }else if(tipo1 == _v_String &&tipo2 ==_v_Double){
+            return stringDouble();
+        } if(tipo2 == _v_String &&tipo1 == _v_Number){
+            return numberString();
+        }else if(tipo2 == _v_String &&tipo1 ==_v_Double){
+            return doubleString();
         }
+        
+        
         if (tipo1 == _v_DateTime && tipo2 == _v_String) {
             return fechahoraString();
         } else if (tipo1 == _v_String && tipo2 == _v_DateTime) {
             return stringFechahora();
         }
-        if (tipo1 == _v_String || tipo2 == _v_String) {
+        if (tipo1 == _v_String && tipo2 == _v_String) {
             return stringString();
         }
         if (tipo1 == _v_Double && tipo2 == _v_Caracter) {
@@ -157,6 +171,30 @@ public class ValorBooleano {
     }
 
     protected boolean caracterDouble() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean dateDate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean vDatevDate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringNumber() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringDouble() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean numberString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean doubleString() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

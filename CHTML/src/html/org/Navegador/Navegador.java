@@ -8,32 +8,36 @@ package html.org.Navegador;
 import archivo.Archivo;
 import compi2.Etiqueta.CHTML;
 import html.org.compi2.codigo3d.Inicio;
-import html.org.compi2.codigo3d.Pagina;
+
 import html.org.compi2.codigo3d.parser.parser;
 import html.org.compi2.codigo3d.parser.scanner;
-import java.awt.Component;
+
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.BufferedReader;
 import java.io.StringReader;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+
 import javax.swing.JScrollPane;
 
 /**
  *
  * @author luigitercero
  */
-public class Navegador extends javax.swing.JPanel {
+public class Navegador extends javax.swing.JPanel implements observador.Observador {
+
+    private Historial historial;
 
     /**
      * Creates new form Navegador
      */
     public Navegador() {
         initComponents();
-
+        historial = new Historial();
     }
 
     /**
@@ -50,6 +54,7 @@ public class Navegador extends javax.swing.JPanel {
         JbActualizar = new javax.swing.JButton();
         JbRegresar = new javax.swing.JButton();
         JbAdelante = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         jLURL.setText("/home/luigitercero/Escritorio/html.txt");
         jLURL.addActionListener(new java.awt.event.ActionListener() {
@@ -84,6 +89,18 @@ public class Navegador extends javax.swing.JPanel {
         });
 
         JbAdelante.setText("->");
+        JbAdelante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JbAdelanteActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("consola");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -100,7 +117,10 @@ public class Navegador extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(JbActualizar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLURL, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)))
+                        .addComponent(jLURL, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addGap(0, 10, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -111,7 +131,8 @@ public class Navegador extends javax.swing.JPanel {
                     .addComponent(jLURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JbActualizar)
                     .addComponent(JbRegresar)
-                    .addComponent(JbAdelante))
+                    .addComponent(JbAdelante)
+                    .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addComponent(Navegador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -119,23 +140,64 @@ public class Navegador extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLURLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLURLActionPerformed
-        // TODO add your handling code here:
+        //  historial.getActual().getChtm()
     }//GEN-LAST:event_jLURLActionPerformed
 
     private void JbRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbRegresarActionPerformed
         // TODO add your handling code here:
+        this.Navegador.removeAll();
+        this.Navegador.setLayout(new GridBagLayout());
+        html.org.Navegador.Pagina a = historial.atras();
+        if (a != null) {
+            this.jLURL.setText(a.getRuta());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridheight = 0;
+            gbc.gridwidth = 0;
+            gbc.weightx = 1.0;
+            gbc.weighty = 1.0;
+            gbc.fill = GridBagConstraints.BOTH;
+            this.Navegador.add(a.getChtm(), gbc);
+
+            this.Navegador.setVisible(true);
+            this.Navegador.updateUI();
+        }
     }//GEN-LAST:event_JbRegresarActionPerformed
 
     private void JbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbActualizarActionPerformed
-       this.Navegador.removeAll();
-        this.Navegador.setLayout(new GridBagLayout());
-        
-        
-        Archivo archivo = new Archivo();
-        archivo.abrirArchivo(this.jLURL.getText());
-        String texto = null;
 
+        String texto = this.jLURL.getText();
+
+        cargarPagina(texto);
+    }//GEN-LAST:event_JbActualizarActionPerformed
+
+    private void JbAdelanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbAdelanteActionPerformed
+
+        this.Navegador.removeAll();
+        this.Navegador.setLayout(new GridBagLayout());
+        html.org.Navegador.Pagina a = historial.siguiente();
+
+        this.jLURL.setText(a.getRuta());
+
+        this.Navegador.add(a.getChtm(), a.getGbc());
+
+        this.Navegador.setVisible(true);
+        this.Navegador.updateUI();      // TODO add your handling code here:
+    }//GEN-LAST:event_JbAdelanteActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        this.historial.getActual().getChtml().consola.setVisible(true);
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+    public void cargarPagina(String texto) {
+        this.Navegador.removeAll();
+        this.Navegador.setLayout(new GridBagLayout());
         try {
+            Archivo archivo = new Archivo();
+            archivo.abrirArchivo(this.jLURL.getText());
             texto = archivo.getContenido();
         } catch (Exception e) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, e);
@@ -151,16 +213,13 @@ public class Navegador extends javax.swing.JPanel {
             System.out.println("Inicia lector html");
             scanner scan = new scanner(new BufferedReader(new StringReader(texto)));
             parser parser = new parser(scan);
+            parser.ruta = this.jLURL.getText();
             parser.parse();
-            // jTextArea_Codigo3Dgenerado.setText(
-            // parser.parserTree.recorrerArbol());
 
-            //jTextArea_Codigo3Dgenerado.setText(ControlC3D.getC3D());
-            GridBagConstraints gbc = new GridBagConstraints();
             CHTML panel = parser.chtml;
+            panel.Observadorrutas.add(this);
             JScrollPane scroll = new JScrollPane(panel);
-            
-
+            GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.gridheight = 0;
@@ -168,32 +227,53 @@ public class Navegador extends javax.swing.JPanel {
             gbc.weightx = 1.0;
             gbc.weighty = 1.0;
             gbc.fill = GridBagConstraints.BOTH;
-            
-           
+            historial.agregarHistorial(this.jLURL.getText(), scroll, panel, gbc);
             this.Navegador.add(scroll, gbc);
+
             this.Navegador.setVisible(true);
             this.Navegador.updateUI();
-           
-            
-          
-            
 
             System.out.println("termina");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-
-    }//GEN-LAST:event_JbActualizarActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JbActualizar;
     private javax.swing.JButton JbAdelante;
     private javax.swing.JButton JbRegresar;
     private javax.swing.JPanel Navegador;
+    private javax.swing.JButton jButton1;
     private javax.swing.JTextField jLURL;
     // End of variables declaration//GEN-END:variables
 
+    @Override
+    public void update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Observar(String id, String tipo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void UpdateMetodo(String metodo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void UpdateRuta(String ruta) {
+        this.jLURL.setText(ruta);
+        this.cargarPagina(ruta);
+        //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

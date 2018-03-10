@@ -105,6 +105,35 @@ public class NoIgual extends ValorBooleano {
         return!( val1.toString() .equals(fecha.date)); //To change body of generated methods, choose Tools | Templates.
     }
 
+      protected boolean dateDate() {
+          Date fecha2 =(Date) val2; 
+          Date fecha1 =(Date) val1;
+          return !(fecha1.date.equals(fecha2.date));
+        
+    }
+
+    protected boolean vDatevDate() {
+        DateTime fecha2 =(DateTime) val2; 
+          DateTime fecha1 =(DateTime) val1;
+          return !(fecha1.date.equals(fecha2.date));//To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringNumber() {
+        return val1.toString().length() != (long) val2; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringDouble() {
+        return val1.toString().length() != (double) val2;
+    }
+
+    protected boolean numberString() {
+       return (long)val1 != val2.toString().length();//To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean doubleString() {
+        return (double)val1 != val2.toString().length(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     @Override
     protected boolean fechahoraString() {
         DateTime fecha = (DateTime) val1;

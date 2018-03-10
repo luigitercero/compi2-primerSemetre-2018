@@ -79,6 +79,9 @@ ENTER   = [\ \n]
 <YYINITIAL> "<CAJA_TEXTO"     { /*System.out.println("    CAJATEXTO"); */return new Symbol(sym.CAJATEXTO     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<imagen"         { /*System.out.println("    Imagen");    */return new Symbol(sym.IMAGEN     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<FIN-imagen"     { /*System.out.println("    FINIMAGEN"); */return new Symbol(sym.FINIMAGEN     , yyline, yycolumn, yytext()); }
+<YYINITIAL> "<ENLACE"         { /*System.out.println("    ENLACE");    */return new Symbol(sym.ENLACE     , yyline, yycolumn, yytext()); }
+<YYINITIAL> "<FIN-ENLACE"     { /*System.out.println("    FINENLACE"); */return new Symbol(sym.FINENLACE     , yyline, yycolumn, yytext()); }
+
 <YYINITIAL> {ID}              { /*System.out.println("    ID");        */return new Symbol(sym.ID     , yyline, yycolumn, yytext()); }
 <YYINITIAL> {AID}             { /*System.out.println("    AID");       */return new Symbol(sym.AID     , yyline, yycolumn, yytext()); }
 <YYINITIAL> {FIN}             { /*System.out.println("    FIN");       */return new Symbol(sym.FIN    , yyline, yycolumn, yytext()); }

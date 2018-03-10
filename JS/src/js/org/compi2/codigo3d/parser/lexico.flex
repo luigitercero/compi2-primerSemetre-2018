@@ -28,18 +28,18 @@ import java_cup.runtime.Symbol;
 String expresion="";
 %}
 
-Comentario      =['][/] [^]* [/][']
-Comentario2     ="'" [^\n]* [\n]
+
 NUMERO          =[0-9]+
 NDECIMAL        = {NUMERO}"."{NUMERO}
 ID              =([a-zA-Z0-9]|_)+
-DATE            = [\'][0-3]?[0-9][/][0-1]?[0-9][/][0-2][0-9][0-9][0-9][\']
-DATETIME        =  [\'][0-3]?[0-9][/][0-1]?[0-9][/][0-2][0-9][0-9][0-9] [0-2]?[0-9][:][0-5][0-9][:][0-5][0-9][\']
+DATE            = ['][0-3][0-9][/][0-1][0-9][/][0-2][0-9][0-9][0-9][']
+DATETIME        = ['][0-3][0-9][/][0-1][0-9][/][0-2][0-9][0-9][0-9][ ][0-2][0-9][:][0-5][0-9][:][0-5][0-9][']
 
 
 SPACE           = [\ \r\t\f\t]
 ENTER           = [\ \n]
-
+Comentario      =['][/] [^]* [/][']
+Comentario2     =['][^\n']+
 
  
 %%
@@ -86,7 +86,7 @@ ENTER           = [\ \n]
 "Detener"   { return new Symbol(sym.TERMINAR    ,yychar,yyline, yytext()); }
 "imprimir"  { return new Symbol(sym.IMPRIMIR    ,yychar,yyline, yytext()); }
 "funcion"   { return new Symbol(sym.FUNCION     ,yychar,yyline, yytext()); }
-"mensaje"   { return new Symbol(sym.MENSAJEV    ,yychar,yyline, yytext()); }
+"mensaje"   { return new Symbol(sym.MENSAJE    ,yychar,yyline, yytext()); }
 "documento" { return new Symbol(sym.DOCUMENTO   ,yychar,yyline, yytext()); }
 
 /*RETORNO DE EXPRESIONES REGULARES*/
@@ -96,13 +96,13 @@ ENTER           = [\ \n]
 {NDECIMAL} {return new Symbol(sym.NDECIMAL     ,yychar, yyline, new String(yytext()));}  
 {ID}       {return new Symbol(sym.ID           ,yychar,yyline, new String(yytext()));}
 
-{Comentario}    {}
-{Comentario2}   {}
+{Comentario}    {System.err.println("comentario ignorado1");}
+{Comentario2}    {System.err.println("comentario ignorado2");}
 {ENTER} {}
 {SPACE} {}
 
 
-/* ERRORES LEXICOS */
+/* ERRORES LEXICOS  */
 . {System.out.println("Error lexico: "+yytext());}
 
 }

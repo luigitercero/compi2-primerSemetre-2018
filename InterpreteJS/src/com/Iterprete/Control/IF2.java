@@ -40,7 +40,8 @@ public class IF2 extends Instruccion {
                 inter.tabla.disminuirAmbito();
             }
         } catch (Exception e) {
-            System.err.println("error en el if2 " + nodo.posl + " " + nodo.posr);
+            inter.  enviarError("error de semantica: no es posible ejecutar el if else resultado de declaracion  : " + a +" "+ (nodo.posl+1)+ " " +(nodo.posr+1));
+           
             salida = 2;
             // errorhtml.agregarError(Semantic, "error con operador booleano ", nameArchivo, nodo);
         }

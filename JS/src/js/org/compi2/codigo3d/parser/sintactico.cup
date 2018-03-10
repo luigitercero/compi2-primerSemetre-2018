@@ -13,16 +13,25 @@ public ArrayList<Symbol> error = new ArrayList<Symbol>();
   public ArrayList<String> ejecucion = new ArrayList();
    public ArrayList<ParserTree> declaracion = new ArrayList<ParserTree>();
     String expresion = "";
+    public String ruta ="";
+
+   public observador.errores.RecibirError enviar;
+    public String enviarError(String s){
+        if (enviar != null){
+            enviar.recibirError(ruta +"\n   "+s);
+        }
+    return s;
+    }
+    
     public void syntax_error(Symbol s){
-    System.err.println("Error Sintactico en la Linea " + (s.right+1) +" Columna "+s.left+ ".  " +s.value + " no reconocido." );
-        this.error.add(s);
-        System.err.println(s);
+    System.err.println( enviarError("Error Sintactico en la Linea  " + (s.right+1) +" Columna "+s.left+ ". Simbolo \'" +s.value + "\' no reconocido." ));
+
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-         System.err.println("Error Sintactico en la Linea " + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido.");
-        this.error.add(s);
-        System.err.println(s);
+         System.err.println(enviarError("Error Sintactico en la Linea no se logro recuperar de error" + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido."));
+        //this.error.add(s);
+        //System.err.println(s);
     }
 
 :}
@@ -79,11 +88,11 @@ NDECIMAL,
 CARACTER,
 ID,
 CADENA,
-MOD,DOSPUNTOS,DOCUMENTO
+MOD,DOSPUNTOS,DOCUMENTO,MENSAJE
 ;
 nonterminal Node valor;
 nonterminal ParserTree
-retornometodo, 
+retornometodo, mensaje,
 titulo,
 inicial,
 graphick,
@@ -182,7 +191,7 @@ js ::= js:a principal:b{:a.addChildren(b); RESULT = a;:}
     ;
 principal::=
       metodo:a{:RESULT = a ;:}
-     |declaracion:a{:this.parser.declaracion.add(a); RESULT = a;:}
+     |declaracion:a PUNTOCOMA{:this.parser.declaracion.add(a); RESULT = a;:}
      |getMetodo:a PUNTOCOMA{:if(a.root.childNode.size()>1)
                 this.parser.ejecucion.add(a.root.childNode.get(0).
                         token.getValueString()+"_"+a.root.childNode.get(1).childNode.size());
@@ -190,77 +199,102 @@ principal::=
                         token.getValueString()+"_0"); RESULT = a;:}
      |imprimir:a PUNTOCOMA {:RESULT = a;:}
      | control:a {:RESULT = a;:}
-     | asignacion:a {:RESULT = a;:}
-     |error
-     | observador:a PUNTOCOMA {:RESULT = a;:}
-     | setelemento:a PUNTOCOMA {:RESULT = a;:}
+     |mensaje:a PUNTOCOMA {:RESULT = a;:}
+     | asignacion:a PUNTOCOMA {:RESULT = a;:}
+     | error:e {: RESULT = new ParserTree("error"); :}
+     | setelemento:a PUNTOCOMA {:ParserTree arbol = new ParserTree("observador"); arbol.addChildren(a); RESULT = arbol;:}
      ;
 
 
-documento::=DOCUMENTO PUNTO ID:a PAREA CADENA:b PAREC{:
+documento::=DOCUMENTO PUNTO ID:a PAREA exp:b PAREC{:
           ParserTree arbol = new ParserTree("getComponente");
           Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
-          Node nodob = new Node(new Term("CADENA"),new Token (new Location(bleft,bright),b,"CADENA"));
-          arbol.addChildren(nodo,nodob);
-          
+          //Node nodob = new Node(new Term("CADENA"),new Token (new Location(bleft,bright),b,"CADENA"));
+          //arbol.addChildren(nodo,nodob);
+          //arbol.addChildren(nodo,exp.root);
+          arbol.addChildren(nodo,b.root);
           RESULT=arbol;
           :}
 
  ;
-setelemento::= documento:a PUNTO ID:b PAREA CADENA:c COMA CADENA:d PAREC
-          {:
-          ParserTree arbol = new ParserTree("setelemento");
-          Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
-          Node nodoc = new Node(new Term("CADENA"),new Token (new Location(cleft,cright),c,"CADENA"));
-          Node nodod = new Node(new Term("CADENA"),new Token (new Location(dleft,dright),d,"CADENA"));
-          arbol.addChildren(a);
-          arbol.addChildren(nodob,nodoc,nodod);
+setelemento::=
+  DOCUMENTO PUNTO ID:a PAREA exp:b COMA funcion:c PAREC{:
+          ParserTree arbol = new ParserTree("observadorUniversal");
+          Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+          //Node nodob = new Node(new Term("CADENA"),new Token (new Location(bleft,bright),b,"CADENA"));
+          //arbol.addChildren(nodo,nodob);
+          //arbol.addChildren(nodo,exp.root);
+          arbol.addChildren(nodo);
+          arbol.addChildren(b,c);
           RESULT=arbol;
           :}
-  | ID:a PUNTO ID:b PAREA CADENA:c COMA CADENA:d PAREC{:
-          ParserTree arbol = new ParserTree("setelemento");
+  |documento:a PUNTO ID:b PAREA exp:c COMA funcion:d PAREC
+          {:
+          ParserTree arbol = new ParserTree("setelementoDocumento");
+          Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
+          //Node nodoc = new Node(new Term("CADENA"),new Token (new Location(cleft,cright),c,"CADENA"));
+          arbol.addChildren(a);
+          arbol.addChildren(nodob);
+          arbol.addChildren(c);
+          arbol.addChildren(d);
+          RESULT=arbol;
+          :}
+  | ID:a PUNTO ID:b PAREA exp:c COMA funcion:d PAREC{:
+          ParserTree arbol = new ParserTree("setelementoID");
           Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
           Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
-          Node nodoc = new Node(new Term("CADENA"),new Token (new Location(cleft,cright),c,"CADENA"));
-          Node nodod = new Node(new Term("CADENA"),new Token (new Location(dleft,dright),d,"CADENA"));
-          arbol.addChildren(nodo,nodob,nodoc,nodod);
+          
+          arbol.addChildren(nodo,nodob);
+          arbol.addChildren(c,d);
+          RESULT=arbol;
+          :}
+  | getMetodo:a PUNTO ID:b PAREA exp:c COMA funcion:d PAREC 
+        {:
+          ParserTree arbol = new ParserTree("setelementoConfuncion");
+          Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
+          arbol.addChildren(a);
+          arbol.addChildren(nodob);
+          arbol.addChildren(c,d);
+          RESULT=arbol;
+          :}
+
+ | ID:a LLV1 exp:e LLV2 PUNTO ID:b PAREA exp:c COMA funcion:d PAREC{:
+          ParserTree arbol = new ParserTree("setelementoConIDVector");
+          Node nodoa = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+          Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
+          ParserTree arbol2 = new ParserTree("vector");
+          //Node nodoc = new Node(new Term("CADENA"),new Token (new Location(cleft,cright),c,"CADENA"));
+          //Node nodod = new Node(new Term("CADENA"),new Token (new Location(dleft,dright),d,"CADENA"));
+          arbol2.addChildren(nodoa);
+          arbol2.addChildren(e);
+          arbol.addChildren(arbol2); 
+          arbol.addChildren(nodob);
+                   
+          arbol.addChildren(c,d);
+          RESULT=arbol;
+          :}
+  | getMetodo:a LLV1 exp:e LLV2 PUNTO ID:b PAREA exp:c COMA funcion:d PAREC 
+        {:
+          ParserTree arbol = new ParserTree("setelementoConfuncionVector");
+          Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
+          ParserTree arbol2 = new ParserTree("vector");
+          //Node nodoc = new Node(new Term("CADENA"),new Token (new Location(cleft,cright),c,"CADENA"));
+          //Node nodod = new Node(new Term("CADENA"),new Token (new Location(dleft,dright),d,"CADENA"));
+          arbol2.addChildren(a,e);
+          arbol.addChildren(arbol2);
+          arbol.addChildren(nodob);
+          arbol.addChildren(c,d);
           RESULT=arbol;
           :}
   ;
-observador::=ID:a PUNTO ID:b PAREA CADENA:c COMA funcion:d PAREC{:
-    ParserTree arbol = new ParserTree("observador");
-     Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
-     Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
-     Node nodoc = new Node(new Term("CADENA"),new Token (new Location(cleft,cright),c,"CADENA"));
-     arbol.addChildren(nodo,nodob,nodoc);
-     arbol.addChildren(d);
-     RESULT = arbol;
-    :}
-  | documento:a PUNTO ID:b PAREA CADENA:c COMA funcion:d PAREC  {:
-      ParserTree arbol = new ParserTree("observador");
-    
-     Node nodob = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));
-     Node nodoc = new Node(new Term("CADENA"),new Token (new Location(cleft,cright),c,"CADENA"));
-     arbol.addChildren(a);
-     arbol.addChildren(nodob,nodoc);
-     arbol.addChildren(d);
-     RESULT = arbol;
-    :}
-  | DOCUMENTO PUNTO ID:a PAREA CADENA:b COMA funcion:c PAREC  {:
-    ParserTree arbol = new ParserTree("observadorFin");
-     Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
-     Node nodob = new Node(new Term("CADENA"),new Token (new Location(bleft,bright),b,"CADENA"));
-     arbol.addChildren(nodo,nodob);
-     arbol.addChildren(c);
-     RESULT = arbol;
-    :}
-  ;
 
-funcion::= FUNCION PAREA PAREC LLV1 cuerpo1:a{:ParserTree arbol = new ParserTree("funcion");
+
+funcion::=  FUNCION PAREA PAREC LLV1 cuerpo1:a {:ParserTree arbol = new ParserTree("funcion");
    arbol.addChildren(a);
    RESULT =a;
   :}
-  | getMetodo:a {:RESULT = a ;:}
+  |  exp:a {:RESULT = a ;:}
+
   ;
 
 
@@ -336,7 +370,7 @@ caso ::=
     CASO exp:a DOSPUNTOS cuerpo:b {:ParserTree arbol = new ParserTree("caso"); arbol.addChildren(a);arbol.addChildren(b); RESULT=arbol;:}
     | CASO exp:a DOSPUNTOS {:ParserTree arbol = new ParserTree("caso"); arbol.addChildren(a); RESULT=arbol;:}
     ;
-para::= PARA:e exp:a DOSPUNTOS exp:c DOSPUNTOS exp:d DOSPUNTOS LLV1 cuerpo1:b
+para::= PARA:e PAREA asignacion:a PUNTOCOMA exp:c PUNTOCOMA asignacion:d PAREC LLV1 cuerpo1:b
     {:ParserTree arbol = new ParserTree("para");
       arbol.addChildren(a);
       arbol.addChildren(c);
@@ -354,7 +388,6 @@ mientras::= MIENTRAS:e PAREA exp:a PAREC LLV1 cuerpo1:b
     ;
 cuerpo1 ::= cuerpo:a LLV2{:RESULT = a;:}
     |LLV2 {:ParserTree arbol = new ParserTree("nada");RESULT =arbol;:}
-    | error LLV2
     ;
 cuerpo ::= 
     cuerpo:a listacuerpo:b {:a.addChildren(b);RESULT = a;:}
@@ -362,26 +395,31 @@ cuerpo ::=
     ;
 listacuerpo ::= 
      control:a{:RESULT = a; :} 
-    |declaracion:a{:RESULT = a; :}
-    |asignacion:a{:RESULT = a; :}
+    |declaracion:a PUNTOCOMA {:RESULT = a; :}
+    |asignacion:a PUNTOCOMA {:RESULT = a; :}
     |imprimir:a PUNTOCOMA{:RESULT = a;:}
+    |mensaje:a PUNTOCOMA{:RESULT = a;:}
     |TERMINAR:a PUNTOCOMA{:
         ParserTree arbol = new ParserTree("TERMINAR");
          RESULT = arbol; :}
     | RETORNAR exp:a PUNTOCOMA{:ParserTree arbol = new ParserTree("retornar");  arbol.addChildren(a);RESULT = arbol;:}
+    | RETORNAR arreglo_asignar:a PUNTOCOMA{:ParserTree arbol = new ParserTree("retornar");  ParserTree arbol2 = new ParserTree("retoronoArreglo"); arbol2.addChildren(a);arbol.addChildren(arbol2);RESULT = arbol;:}
     |RETORNAR PUNTOCOMA{:ParserTree arbol = new ParserTree("retornar"); RESULT = arbol;:}
-    | error PUNTOCOMA
+    | error:e {:  RESULT = new ParserTree("error"); :}
+    //| error:e PUNTOCOMA{:System.err.println("error en  "+ e);:}
     |getMetodo:a PUNTOCOMA{:if(a.root.childNode.size()>1)
                 this.parser.ejecucion.add(a.root.childNode.get(0).
                         token.getValueString()+"_"+a.root.childNode.get(1).childNode.size());
                 else this.parser.ejecucion.add(a.root.childNode.get(0).
                         token.getValueString()+"_0"); RESULT = a;:}
     | observador:a PUNTOCOMA {:RESULT = a;:}
-    | setelemento:a PUNTOCOMA {:RESULT = a;:}
+    | setelemento:a PUNTOCOMA {:ParserTree arbol = new ParserTree("observador"); arbol.addChildren(a); RESULT = arbol;:}
     ;
 imprimir ::= IMPRIMIR:a PAREA exp:b PAREC {:ParserTree arbol = new ParserTree("imprimir"); Node nodo = new Node(new Term("imprimir"),new Token (new Location(aleft,aright),a,"imprimir")); arbol.addChildren(b); arbol.addChildren(nodo);RESULT = arbol;:}
 ;
     
+mensaje ::= MENSAJE:a PAREA exp:b PAREC {:ParserTree arbol = new ParserTree("mensaje"); Node nodo = new Node(new Term("imprimir"),new Token (new Location(aleft,aright),a,"imprimir")); arbol.addChildren(b); arbol.addChildren(nodo);RESULT = arbol;:}
+;
 control::= 
       if1:a{:ParserTree arbol = new ParserTree("control"); arbol.addChildren(a);RESULT =arbol;:}
     | if2:a{:ParserTree arbol = new ParserTree ("control"); ; arbol.addChildren(a);RESULT =arbol;:}
@@ -404,15 +442,22 @@ asignacion ::=
         {:ParserTree arbol = new ParserTree("asignacionll");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
         arbol.addChildren(nodo);arbol.addChildren(c);arbol.addChildren(b); RESULT=arbol;
         :}
-    |  ID:a MASMAS PUNTOCOMA
+    |  ID:a MASMAS 
         {:ParserTree arbol = new ParserTree("asignacion++");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
         arbol.addChildren(nodo);RESULT=arbol;:}
-    |   ID:a MENOSMENOS PUNTOCOMA
+    |   ID:a MENOSMENOS 
         {:ParserTree arbol = new ParserTree("asignacion--");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
         arbol.addChildren(nodo); RESULT=arbol;:}
+
+    | ID:a 
+        {:ParserTree arbol = new ParserTree("asignacion");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        arbol.addChildren(nodo);arbol.addChildren(new ParserTree("nada")); RESULT=arbol;:}
+    | ID:a LLV1 exp:c LLV2 
+        {:ParserTree arbol = new ParserTree("asignacionll");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+        arbol.addChildren(nodo);arbol.addChildren(c);arbol.addChildren(new ParserTree("nada")); RESULT=arbol;
+        :}
     ;
-asignar ::= asigna:a PUNTOCOMA{:ParserTree arbol = new ParserTree("asignar"); arbol.addChildren(a); RESULT = arbol;:}
-    |PUNTOCOMA {: ParserTree arbol = new ParserTree("nada"); RESULT = arbol;:}
+asignar ::= asigna:a{:ParserTree arbol = new ParserTree("asignar"); arbol.addChildren(a); RESULT = arbol;:}
   
     ;
 asigna::=  
@@ -568,7 +613,7 @@ exp::=
     | getMetodo:a {:ParserTree arbol = new ParserTree ("exp"); arbol.addChildren(a); RESULT = arbol;:}
     | valorVector:a {:ParserTree arbol = new ParserTree("exp"); arbol.addChildren(a); RESULT =arbol;:}
     | documento:a {:ParserTree arbol = new ParserTree("documento"); arbol.addChildren(a); RESULT =arbol;:}
-    |funcioVector:a {:ParserTree arbol = new ParserTree("documento"); arbol.addChildren(a); RESULT =arbol;:}
+    |funcioVector:a {:ParserTree arbol = new ParserTree("FuncionVector"); arbol.addChildren(a); RESULT =arbol;:}
     ;
 valor ::= 
       ID:a{:Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));RESULT=nodo;:}
@@ -602,22 +647,19 @@ arreglo ::= LLV1 exp:a {:ParserTree arbol = new ParserTree("arreglo"); arbol.add
     | arreglo:a COMA exp:b{:a.addChildren(b);RESULT = a;:}
 ;
 
-funcioVector::= parVerctor:a PUNTO ID:b PAREA PAREC{:ParserTree arbol = new ParserTree("funcioVector"); Node nodo = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));arbol.addChildren(nodo); RESULT = arbol;:}
-              | parVerctor:a  PUNTO ID:b{:ParserTree arbol = new ParserTree("funcioVector"); Node nodo = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));arbol.addChildren(nodo); RESULT = arbol;:}
+funcioVector::= parVerctor:a PUNTO ID:b PAREA PAREC{:ParserTree arbol = new ParserTree("VectorAtexto"); Node nodo = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));arbol.addChildren(a);arbol.addChildren(nodo); RESULT = arbol;:}
+              | parVerctor:a  PUNTO ID:b{:ParserTree arbol = new ParserTree("Vectorconteo"); Node nodo = new Node(new Term("ID"),new Token (new Location(bleft,bright),b,"ID"));arbol.addChildren(a);arbol.addChildren(nodo); RESULT = arbol;:}
 
               ;
 
-parVerctor::= ID:a{:Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID")); ParserTree arbol = new ParserTree("ID"); arbol.addChildren(nodo); RESULT = arbol;:}
+parVerctor::= ID:a{:Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID")); ParserTree arbol = new ParserTree(nodo);  RESULT = arbol;:}
           |getMetodo:a {:RESULT =a;:}
         ;
 getMetodo ::= 
-    ID:a  PAREA parametro:b PAREC{:ParserTree arbol = new ParserTree("getMetodo");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+    ID:a  PAREA parametro:b PAREC{:ParserTree arbol = new ParserTree("getMetodo",aright,aleft);Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
            arbol.addChildren(nodo);arbol.addChildren(b); RESULT=arbol;:}
-    |ID:a PAREA PAREC{:ParserTree arbol = new ParserTree("getMetodo");Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
+    |ID:a PAREA PAREC{:ParserTree arbol = new ParserTree("getMetodo",aright,aleft);Node nodo = new Node(new Term("ID"),new Token (new Location(aleft,aright),a,"ID"));
            arbol.addChildren(nodo); RESULT=arbol;:}
-
-    
-    
     ;
 
 

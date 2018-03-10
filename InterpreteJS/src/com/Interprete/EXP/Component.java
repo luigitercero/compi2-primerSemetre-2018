@@ -5,6 +5,9 @@
  */
 package com.Interprete.EXP;
 
+import com.Navegador.JS.Interprete;
+import com.TreeParser.Node;
+
 /**
  *
  * @author luigitercero
@@ -17,5 +20,20 @@ public class Component {
     public Component(String id, String cadena) {
         this.id = id;
         this.cadena = cadena;
+    }
+
+    public Component(String id, Node cadena) {
+        this.id = id;
+
+    }
+
+    Component(String valueString, Node get, Interprete inter) {
+        this.id = id;
+        Object valor
+                = inter.exp.evaluar(get);
+        
+        cadena = valor.toString();
+        
+//To change body of generated methods, choose Tools | Templates.
     }
 }

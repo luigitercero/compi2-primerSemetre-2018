@@ -10,6 +10,7 @@ import Simbol.Metodo.Metodo;
 import com.Interprete.EXP.EvaluarEXP;
 import com.Interprete.EXP.TipoObjeto;
 import com.Interprete.Metodo.Imprimir;
+import com.Interprete.Metodo.Mensaje;
 import com.Interprete.Observadores.Observadores_Componentes;
 import com.Interprete.Observadores.SetElemento;
 import com.Iterprete.Control.For;
@@ -22,6 +23,9 @@ import com.TreeParser.Node;
 import com.TreeParser.ParserTree;
 
 import java.util.ArrayList;
+
+import observador.consola.recibirMensaje;
+import observador.errores.RecibirError;
 import simbol.tablasimbolos.TablaSimbolo;
 import simbol.tablasimbolos.Variable;
 
@@ -29,7 +33,7 @@ import simbol.tablasimbolos.Variable;
  *
  * @author luigitercero
  */
-public class Interprete implements observador.Observador {
+public class Interprete implements observador.Observador, observador.errores.EnviarError, observador.consola.EnviarMensaje {
 
     public final int LISTA = 3, brea = 2, retu = 1;
     public TablaSimbolo tabla;
@@ -40,6 +44,21 @@ public class Interprete implements observador.Observador {
     public ArrayList<Observadores_Componentes> clickO;
     public ArrayList<Observadores_Componentes> modificarO;
     public ArrayList<Observadores_Componentes> listoO;
+    private recibirMensaje mensaje;
+    private RecibirError error;
+    private String ruta;
+
+    Interprete(recibirMensaje mensajes, RecibirError error, String ruta) {
+        this.mensaje = mensajes;
+        this.error = error;
+        tabla = new TablaSimbolo();
+        exp = new EvaluarEXP(this);
+        clickO = new ArrayList<>();
+        modificarO = new ArrayList<>();
+        listoO = new ArrayList<>();
+        this.consola = ""; //To change body of generated methods, choose Tools | Templates.
+        this.ruta = ruta;
+    }
 
     public void agregarComponenteCSSi(ArrayList<observador.CSSI> cssi) {
         this.cssi = cssi;
@@ -60,8 +79,9 @@ public class Interprete implements observador.Observador {
 
     public void iniciar(ArrayList<ParserTree> declaracion, Metodo metodo, ParserTree nodo) {
         //To change body of generated methods, choose Tools | Templates.
-        declaracion.forEach(e -> declarar(e.root));
         this.metodo = metodo;
+        declaracion.forEach(e -> declarar(e.root));
+
         nodo.root.childNode.forEach(e -> Principal(e));
         //update();
     }
@@ -76,12 +96,13 @@ public class Interprete implements observador.Observador {
                 // addObservador(b);//b.agreagarObservador();
                 break;
             case "observador":
-                Observadores_Componentes r = new Observadores_Componentes(this, nodo);
+                elegirObservador(nodo);
+                //Observadores_Componentes r = new Observadores_Componentes(this, nodo);
                 //Observadores_Componentes a = new Observadores_Componentes(this,nodo);
                 //a.agreagarObservador();
                 break;
             case "setelemento":
-                new SetElemento(this,nodo);
+                new SetElemento(this, nodo);
                 break;
             case "metodo":
                 break;
@@ -93,10 +114,25 @@ public class Interprete implements observador.Observador {
                 m.Ejecutar();
                 break;
             case "imprimir":
-                new Imprimir(nodo, this);
+                try {
+                    new Imprimir(nodo, this);
+                } catch (Exception e) {
+                    enviarError("error de semantica al ejecutar metodo imprimir " + (nodo.childNode.get(1).token.Location.Line + 1));
+                   // System.err.println("al imprimir " + (nodo.childNode.get(1).token.Location.Line + 1));
+                }
+                break;
+            case "mensaje":
+                try {
+                    new Mensaje(nodo, this);
+                } catch (Exception e) {
+                    enviarError("error de semantica: ejecutar metodomensaje " + (nodo.childNode.get(1).token.Location.Line + 1));
+                   // System.err.println("al enviar mensaje " + (nodo.childNode.get(1).token.Location.Line + 1));
+                }
                 break;
             case "control":
                 control(nodo.childNode.get(0), false);
+                break;
+            case "error":
                 break;
             default:
                 asignarValor(nodo);
@@ -117,13 +153,29 @@ public class Interprete implements observador.Observador {
         String inst = nodo.term.getName().toLowerCase();
         switch (inst) {
             case "setelemento":
-                new SetElemento(this,nodo);
+                new SetElemento(this, nodo);
                 return 0;
-                
+            case "observador":
+                elegirObservador(nodo);
+                break;
             case "control":
                 return control(nodo.childNode.get(0), ciclo);
             case "imprimir":
-                new Imprimir(nodo, this);
+                try {
+                    new Imprimir(nodo, this);
+                } catch (Exception e) {
+                     enviarError("error de semantica: ejecutar metodo imprimir " + (nodo.childNode.get(1).token.Location.Line + 1));
+                   // System.err.println("al imprimir " + (nodo.childNode.get(1).token.Location.Line + 1));
+                }
+                return 0;
+
+            case "mensaje":
+                try {
+                    new Mensaje(nodo, this);
+                } catch (Exception e) {
+                     enviarError("error de semantica: ejecutar metodo mensaje " + (nodo.childNode.get(1).token.Location.Line + 1));
+                   // System.err.println("al enviar mensaje " + (nodo.childNode.get(1).token.Location.Line + 1));
+                }
                 return 0;
             case "terminar":
                 if (ciclo) {
@@ -144,6 +196,9 @@ public class Interprete implements observador.Observador {
                 com.Interprete.Metodo.Metodo m = new com.Interprete.Metodo.Metodo(this, nodo);
                 m.Ejecutar();
                 break;
+            case "error":
+                break;
+
             default:
                 asignarValor(nodo);
         }
@@ -198,14 +253,16 @@ public class Interprete implements observador.Observador {
                 }
                 tabla.addVariable(nombre, spacio, LISTA);
             } else {
-                System.err.println("no es posible crear arreglo");
+                
+                 enviarError("error de semantica: no es posible crear el arreglo " +  (asignacion.childNode.get(0).token.Location.Line + 1 ));
+               // System.err.println("no es posible crear arreglo");
             }
 
         }
 
     }
 
-    private void asignarValor(Node val) {
+    public void asignarValor(Node val) {
         String tipoAsig = val.term.name;
         String nombre = val.childNode.get(0).token.valueString;
         simbol.tablasimbolos.Variable var = tabla.getVariable(nombre);
@@ -227,8 +284,8 @@ public class Interprete implements observador.Observador {
                 }
             }
         } catch (Exception e) {
-
-            System.err.println(nombre + " error al declarar la variable " + val.childNode.get(0).token.Location.Column + " " + val.childNode.get(0).token.Location.Line);
+            enviarError("error de semantica: no es posible declarar variable con el nombre de " + nombre + " "+  val.childNode.get(0).token.Location.Column + " " + val.childNode.get(0).token.Location.Line);
+           // System.err.println(nombre + " error al declarar la variable " + val.childNode.get(0).token.Location.Column + " " + val.childNode.get(0).token.Location.Line);
         }
 
     }
@@ -317,13 +374,15 @@ public class Interprete implements observador.Observador {
                 break;
             case "listo":
                 for (Observadores_Componentes a : listoO) {
+                   // System.err.println(a.getIdObtener());
                     if (a.getIdObtener().equalsIgnoreCase(id)) {
+
                         a.metodo.Ejecutar();
                     }
                 }
                 break;
             case "modificado":
-                  for (Observadores_Componentes a : modificarO) {
+                for (Observadores_Componentes a : modificarO) {
                     if (a.getIdObtener().equalsIgnoreCase(id)) {
                         a.metodo.Ejecutar();
                     }
@@ -335,11 +394,77 @@ public class Interprete implements observador.Observador {
 
     @Override
     public void UpdateMetodo(String metodo) {
-        System.out.println("Se ejecuta el Metodo " + metodo); //To change body of generated methods, choose Tools | Templates.
+        String nom = metodo.replace("(", "");
+        String bre = nom.replace(")", "");
+        Estructura m = this.metodo.geMetodo(bre + "_0");
+        if (m != null) {
+            com.Interprete.Metodo.Metodo me = new com.Interprete.Metodo.Metodo(this);
+            me.estructura = m;
+            me.Ejecutar();
+        } else {
+
+        }
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void UpdateRuta(String ruta) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void elegirObservador(Node nodo) {
+        String nombre = nodo.childNode.get(0).term.name;
+        Observadores_Componentes r = new Observadores_Componentes();
+        switch (nombre) {
+            case "observadorUniversal":
+                r.Observadoruniversal(this, nodo.childNode.get(0));
+                break;
+            case "setelementoDocumento":
+                r.documentoObtener(this, nodo.childNode.get(0));
+                break;
+            case "setelementoID":
+                r.elementoID(this, nodo.childNode.get(0));
+                break;
+            case "setelementoConfuncion":
+                r.elementoFuncion(this, nodo.childNode.get(0));
+                break;
+            case "setelementoConIDVector":
+                r.elementoIDVector(this, nodo.childNode.get(0));
+                break;
+            case "setelementoConfuncionVector":
+                r.elementoMetodoVector(this, nodo.childNode.get(0));
+                break;
+
+        }
+
+        //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void enviarError(String error) {
+        if (this.error != null) {
+            this.error.recibirError(this.ruta +"\n      " +error);
+        } //To change body of generated methods, choose Tools | Templates.
+        else {
+            System.out.println(error);
+            System.err.println("no hay consola de errores");
+        }
+    }
+
+    @Override
+    public void enviarMensaje(String mensaje) {
+
+        if (this.mensaje != null) {
+            this.mensaje.recibirMensaje(mensaje);
+        } //To change body of generated methods, choose Tools | Templates.
+        else {
+            System.out.println(mensaje);
+            System.err.println("no hay consola de salida");
+        }
+    }
+
+    @Override
+    public void enviarErrores(String mensaje) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

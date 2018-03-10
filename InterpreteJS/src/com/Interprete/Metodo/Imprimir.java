@@ -17,8 +17,8 @@ public class Imprimir extends Instruccion {
 
     public Imprimir(Node get, Interprete aThis) {
        Object value = aThis.exp.evaluar(get.childNode.get(0));
-        aThis.consola =aThis.consola + "\n"+ value.toString() ;
-        System.out.println("    imprimiendo '"+value.toString()+"' poss: "+(get.childNode.get(1).token.Location.Line+1)+"\n");
+       
+       aThis.enviarMensaje("    enviando imprimiendo '" + value.toString() + "' poss: " + (get.childNode.get(1).token.Location.Line + 1) + "\n");
     }
 
 

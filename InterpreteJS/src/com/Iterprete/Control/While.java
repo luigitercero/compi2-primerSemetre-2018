@@ -44,7 +44,8 @@ public class While extends Instruccion {
                 interator++;
             }
         } catch (Exception e) {
-           System.err.println("error en el while "+ nodo.posl+ " " +nodo.posr);
+          inter.  enviarError("error de semantica: no es posible ejecutar el while resultado de declaracion  : " + a +" "+ (nodo.posl+1)+ " " +(nodo.posr+1));
+           
              ex = 2;
         }
 

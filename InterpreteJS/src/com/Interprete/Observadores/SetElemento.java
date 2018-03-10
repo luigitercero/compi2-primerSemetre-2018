@@ -28,7 +28,8 @@ public class SetElemento {
             buscarComponente(idAbuscar,atributo,nuevoValor,aThis);
              //To change body of generated methods, choose Tools | Templates.
         } else {
-            System.err.println("no es un componente valido");
+            aThis.enviarError("error de semantica: hacer un set elemento  : " +nodo.childNode.get(2).token.Location.Line +1);
+           
         }
         
     }

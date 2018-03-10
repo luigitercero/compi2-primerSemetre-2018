@@ -27,22 +27,21 @@ public class NavegadorCompi2 {
     public static void main(String[] args) throws IOException {
 
         Archivo archivo = new Archivo();
-        archivo.abrirArchivo("/home/luigitercero/Escritorio/js.txt");
+        archivo.abrirArchivo("/home/luigitercero/Escritorio/js3.txt");
 
         try {
             String texto = archivo.getContenido();
             js.org.compi2.codigo3d.parser.scanner scan = new js.org.compi2.codigo3d.parser.scanner(new BufferedReader(new StringReader(texto)));
             js.org.compi2.codigo3d.parser.parser parser = new js.org.compi2.codigo3d.parser.parser(scan);
             parser.parse();
-            System.out.println(
-                    parser.parserTree.recorrerArbol());
+            System.out.println(      parser.parserTree.recorrerArbol());
             Interprete js = new Interprete();
             js.iniciar(parser.declaracion, parser.metodo, parser.parserTree);
 
-            parser.metodo.metodo.forEach((k, v) -> System.out.println("esto es un metodo guardado: "+k));
+            //parser.metodo.metodo.forEach((k, v) -> System.out.println("esto es un metodo guardado: "+k));
 
         } catch (Exception e) {
-            System.err.println("error"+e);
+            System.err.println("error"+e.getLocalizedMessage());
         }
 
         // TODO code application logic here

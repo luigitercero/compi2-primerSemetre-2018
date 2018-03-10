@@ -28,5 +28,8 @@ public class Or extends ValorBooleano {
     public Object evaluar() {
         return super.evaluar(); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
+    
 
 }

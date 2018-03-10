@@ -6,15 +6,11 @@
 package compi2.Etiqueta.Componente;
 
 import observador.CSSI;
-import java.util.ArrayList;
-import observador.Observador;
-import org.compi2.Interprete.CSS.ID.Propiedad;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
@@ -43,15 +39,7 @@ public class Boton extends JButton implements CSSI, observador.Observable {
     private ArrayList<CSS> css;
     private ObtenerPropiedades propiedades;
 
-    public Boton(String nombre) {
-        this.setPreferredSize(new Dimension(100, 100));
-        observadores = new ArrayList<>();
-        this.ruta = "";
-        this.id = "";
-        this.click = "";
-        this.grupo = "";
 
-    }
 
     public Boton(ArrayList<CSS> css, ArrayList<Observador> observadores, ArrayList<Observador> rutas) {
         super();
@@ -148,8 +136,14 @@ public class Boton extends JButton implements CSSI, observador.Observable {
                 try {
                     this.setBackground(java.awt.Color.decode(propiedade.valor.toString()));
                 } catch (Exception e) {
-                    this.setBackground(propiedades.getColor(propiedade.valor.toString()));
+                    try {
+                        this.setBackground(propiedades.getColor(propiedade.valor.toString()));
+                    } catch (Exception a) {
+                        System.out.println("no salen colores");
+                    }
+                    
                 }
+                
                 break;
             case "TAMTEXT":
                 this.setFont(new Font(this.getFont().getFontName(), this.getFont().getStyle(), Integer.parseInt(propiedade.valor.toString())));

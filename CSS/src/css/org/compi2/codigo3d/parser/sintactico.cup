@@ -19,16 +19,25 @@ parser code
 public ArrayList<Symbol> error = new ArrayList<Symbol>();
  public CSS css = new CSS();
     String expresion = "";
+    public String ruta ="";
+
+   public observador.errores.RecibirError enviar;
+    public String enviarError(String s){
+        if (enviar != null){
+            enviar.recibirError(ruta +"\n   "+s);
+        }
+    return s;
+    }
+    
     public void syntax_error(Symbol s){
-    System.err.println("Error Sintactico en la Linea " + (s.right+1) +" Columna "+s.left+ ".  " +s.value + " no reconocido." );
-        this.error.add(s);
-        System.err.println(s);
+    System.err.println( enviarError("Error Sintactico en la Linea  " + (s.right+1) +" Columna "+s.left+ ". Simbolo \'" +s.value + "\' no reconocido." ));
+
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-         System.err.println("Error Sintactico en la Linea " + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido.");
-        this.error.add(s);
-        System.err.println(s);
+         System.err.println(enviarError("Error Sintactico en la Linea no se logro recuperar de error" + (s.right+1)+ "Columna "+s.left+". " + s.value + " no reconocido."));
+        //this.error.add(s);
+        //System.err.println(s);
     }
 
 :}

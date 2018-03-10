@@ -20,7 +20,7 @@ public class MenorQue extends ValorBooleano {
         super(izq, der, exp);
     }
 
-       @Override
+    @Override
     protected boolean booleanDouble() {
         boolean a = (boolean) (val1);
         int b = a ? 1 : 0;
@@ -95,36 +95,65 @@ public class MenorQue extends ValorBooleano {
 
     @Override
     protected boolean stringString() {
-        return (val1).toString().length()<((val2).toString().length()); //To change body of generated methods, choose Tools | Templates.
+        return (val1).toString().length() < ((val2).toString().length()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean stringFechahora() {
         DateTime fecha = (DateTime) val2;
-        return val1.toString().length()<(fecha.date.toString().length()); //To change body of generated methods, choose Tools | Templates.
+        return val1.toString().length() < (fecha.date.toString().length()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean fechahoraString() {
         DateTime fecha = (DateTime) val1;
-        return fecha.date.length()<(val2.toString().length()); //To change body of generated methods, choose Tools | Templates.
+        return fecha.date.length() < (val2.toString().length()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean stringFecha() {
         Date fecha = (Date) val2;
-        return val1.toString().length()<(fecha.date.length()); //To change body of generated methods, choose Tools | Templates.
+        return val1.toString().length() < (fecha.date.length()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected boolean fechaString() {
         Date fecha = (Date) val1;
-        return fecha.date.length()<(val2.toString().length()); //To change body of generated methods, choose Tools | Templates.
+        return fecha.date.length() < (val2.toString().length()); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Object evaluar() {
         return super.evaluar(); //To change body of generated methods, choose Tools | Templates.
     }
- 
+
+    protected boolean dateDate() {
+        Date fecha2 = (Date) val2;
+        Date fecha1 = (Date) val1;
+        return (fecha1.date.length() < fecha2.date.length());
+
+    }
+
+    protected boolean vDatevDate() {
+        DateTime fecha2 = (DateTime) val2;
+        DateTime fecha1 = (DateTime) val1;
+        return (fecha1.date.length() < fecha2.date.length());//To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringNumber() {
+        return val1.toString().length() < (long) val2; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean stringDouble() {
+        return val1.toString().length() < (double) val2;
+    }
+
+    protected boolean numberString() {
+        return (long) val1 < val2.toString().length();//To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected boolean doubleString() {
+        return (double) val1 < val2.toString().length(); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -20,7 +20,7 @@ public class Metodo extends Instruccion {
 
     public Object retorno;
     Node parametro;
-
+    private String nombre;
     TablaSimbolo tablaMetodo;
     public Estructura estructura;
 
@@ -32,7 +32,7 @@ public class Metodo extends Instruccion {
         GetEstructura(nodo);
     }
 
-        public Metodo(Interprete aThis) {
+    public Metodo(Interprete aThis) {
         inter = aThis;
         retorno = null;
         parametro = null;
@@ -40,9 +40,8 @@ public class Metodo extends Instruccion {
         //GetEstructura(nodo);
     }
 
-    
     private Estructura GetEstructura(Node nodo) {
-        String nombre = nodo.childNode.get(0).token.valueString;
+        nombre = nodo.childNode.get(0).token.valueString;
 
         int tamanio = 0;
         if (nodo.childNode.size() == 2) {
@@ -84,9 +83,8 @@ public class Metodo extends Instruccion {
 
     public Object Ejecutar() {
         TablaSimbolo temp = inter.tabla;
-
+        aumetarAmbito();
         try {
-            aumetarAmbito();
 
             CargarParametros(estructura.parametro);
 
@@ -98,8 +96,10 @@ public class Metodo extends Instruccion {
             return retorno;
 
         } catch (Exception e) {
+            inter.enviarError("error de semantica: no es posible encontrar el mentodo que se va a ejecutar  : "
+                    + " " + this.nombre);
 
-            System.err.println("error al ejecutar metodo " + e);
+            disminuirAmbito(temp);
         }
 
         inter.tabla = temp;

@@ -23,7 +23,7 @@ import observador.Observador;
  *
  * @author luigitercero
  */
-public class CHTML extends JPanel implements observador.Observador,observador.Observable{
+public class CHTML extends JPanel implements observador.Observador,observador.Observable,observador.consola.recibirMensaje,observador.errores.RecibirError{
  
     GridBagConstraints gbc;
     private int fila;
@@ -32,6 +32,8 @@ public class CHTML extends JPanel implements observador.Observador,observador.Ob
     public ArrayList<CSSI> componetesCSSI;
     public ArrayList<Observador> observadores;
     public ArrayList<Observador> Observadorrutas;
+    public Consolas consola;
+   
     public CHTML() {
         super();
         initi();
@@ -45,7 +47,9 @@ public class CHTML extends JPanel implements observador.Observador,observador.Ob
         componentes = new ArrayList<>();
         observadores =new ArrayList<>();
         componetesCSSI = new ArrayList<>();
-
+        Observadorrutas = new ArrayList<>();
+        consola = new Consolas();
+        
     }
 
     public void addPanel(Panel jpanel) {
@@ -108,6 +112,19 @@ public class CHTML extends JPanel implements observador.Observador,observador.Ob
     @Override
     public void UpdateRuta(String ruta) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void recibirMensaje(String mensaje) {
+        
+        consola.jTextAreaSalida.setText(consola.jTextAreaSalida.getText() +"\n" +mensaje);
+        //System.out.println("ser recibio un mensaje"); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void recibirError(String error) {
+        consola.jTextAreaErrores.setText(consola.jTextAreaErrores.getText()+"\n" + error);
+       
     }
 
 }
