@@ -5,18 +5,17 @@
  */
 package compi2.Etiqueta.Componente;
 
-import observador.CSSI;
 
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import observador.CSSI;
 import observador.Observador;
-;
 import org.compi2.Interprete.CSS.ID.CSS;
 import org.compi2.Interprete.CSS.ID.Grupo;
 import org.compi2.Interprete.CSS.ID.ID;
@@ -26,10 +25,7 @@ import org.compi2.Interprete.CSS.ID.Propiedad;
  *
  * @author luigitercero
  */
-
-
-public class Boton extends JButton implements CSSI, observador.Observable {
-
+public class Caja extends JComboBox<String> implements CSSI, observador.Observable{
     private ArrayList<Observador> observadores;
     private ArrayList<Observador> Observadorrutas;
     private String ruta;
@@ -38,14 +34,12 @@ public class Boton extends JButton implements CSSI, observador.Observable {
     private String grupo;
     private ArrayList<CSS> css;
     private ObtenerPropiedades propiedades;
-
-
-
-    public Boton(ArrayList<CSS> css, ArrayList<Observador> observadores, ArrayList<Observador> rutas) {
+    private String seleccion;
+    
+    public Caja(ArrayList<CSS> css, ArrayList<Observador> observadores, ArrayList<Observador> rutas) {
         super();
-        this.setSize(10, 10);
-        this.setPreferredSize(new Dimension(10, 10));
-        this.ClickAction();
+     
+        ClickAction();
         this.observadores = observadores;
         this.ruta = "";
         this.id = "";
@@ -55,15 +49,22 @@ public class Boton extends JButton implements CSSI, observador.Observable {
         propiedades = new ObtenerPropiedades();
         this.Observadorrutas = rutas;
     }
+    
+    
 
     public void addText(String b) {
        
-            this.setText(b);
+            //this.setText(b);
         
     }
 
     public void ClickAction() {
         this.addActionListener((ActionEvent e) -> {
+            JComboBox cb = (JComboBox) e.getSource();
+            
+            String mensaje = (String)cb.getSelectedItem();
+            this.seleccion = mensaje;
+            
             notificar();
         });
     }
@@ -83,11 +84,9 @@ public class Boton extends JButton implements CSSI, observador.Observable {
                 break;
             case "id":
                 ActualiarID(valor);
-
                 break;
             case "ruta":
                 ActualizaRuta(valor);
-
                 break;
             case "click":
                 this.click = valor;
@@ -132,7 +131,7 @@ public class Boton extends JButton implements CSSI, observador.Observable {
                 this.setVisible(propiedades.getLogico(propiedade.valor.toString()));
                 break;
             case "FONDOELEMENTO":
-                this.setContentAreaFilled(false);
+                //this.setContentAreaFilled(false);
                 try {
                     this.setBackground(java.awt.Color.decode(propiedade.valor.toString()));
                 } catch (Exception e) {
@@ -143,22 +142,16 @@ public class Boton extends JButton implements CSSI, observador.Observable {
                     }
                     
                 }
-                
                 break;
             case "TAMTEXT":
                 this.setFont(new Font(this.getFont().getFontName(), this.getFont().getStyle(), Integer.parseInt(propiedade.valor.toString())));
                 break;
             case "LETRA":
                 this.setFont(new Font(propiedade.valor.toString(), this.getFont().getStyle(), this.getFont().getSize()));
-
                 break;
             case "FORMATO":
-                addFormato(propiedade.valor.toString());
                 break;
             case "TEXTO":
-
-                this.setText(propiedade.valor.toString());
-
                 break;
             case "COLORTEXT":
                 try {
@@ -182,26 +175,20 @@ public class Boton extends JButton implements CSSI, observador.Observable {
 
     }
 
-    public void addFormato(String Formato) {
-        switch (Formato.toLowerCase()) {
-            case "negrilla":
-                this.setFont(new Font(this.getFont().getFontName(), Font.BOLD, this.getFont().getSize()));
-            case "cursiva":
-                this.setFont(new Font(this.getFont().getFontName(), Font.ITALIC, this.getFont().getSize()));
-                break;
-            case "mayuscula":
-                this.setText(this.getText().toUpperCase());
-                break;
-            case "minuscula":
-                this.setText(this.getText().toLowerCase());
-                break;
-        }
 
-    }
 
     @Override
     public void notificar() {
 
+        
+        if (!this.seleccion.equals("")) {
+            for (Observador observador : observadores) {
+                observador.UpdateMetodo(click);
+                observador.Observar(seleccion, "click");
+
+            } //To change body of generated methods, choose Tools | Templates.
+        }
+        
         if (!this.click.equals("") || !this.id.equals("")) {
             for (Observador observador : observadores) {
                 observador.UpdateMetodo(click);
@@ -276,4 +263,15 @@ public class Boton extends JButton implements CSSI, observador.Observable {
         this.updateUI(); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public void add(String b) {
+        this.add(new JButton(b)); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
+    
+    
+    
+    
+    
+    
+ 

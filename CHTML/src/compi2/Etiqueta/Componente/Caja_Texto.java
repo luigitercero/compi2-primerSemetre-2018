@@ -33,7 +33,7 @@ public class Caja_Texto extends JLabel implements CSSI, observador.Observable {
     private String grupo;
     private ArrayList<CSS> css;
     private ObtenerPropiedades propiedades;
-    
+
     public Caja_Texto(String texto) {
         super();
         String a = texto.replaceFirst(">", "");
@@ -56,12 +56,20 @@ public class Caja_Texto extends JLabel implements CSSI, observador.Observable {
         this.grupo = "";
         this.css = css;
         propiedades = new ObtenerPropiedades();
-        this.Observadorrutas = rutas;}
-    
-        public void addText(String b) {
-        if (this.getText().equals("")) {
-            this.setText(b);
-        }
+        this.Observadorrutas = rutas;
+    }
+
+    public void addText(String b) {
+
+        this.setText(b);
+
+    }
+
+    public void addTexta(String texto) {
+        String a = texto.replaceFirst(">", "");
+        String b = a.replaceAll("[<][Ff][Ii][Nn][-][Cc][Aa][Jj][Aa][_][Tt][Ee][Xx][Tt][Oo]", "");
+        this.setText(b);
+
     }
 
     public void ClickAction() {
@@ -143,9 +151,9 @@ public class Caja_Texto extends JLabel implements CSSI, observador.Observable {
                     } catch (Exception a) {
                         System.out.println("no salen colores");
                     }
-                    
+
                 }
-                
+
                 break;
             case "TAMTEXT":
                 this.setFont(new Font(this.getFont().getFontName(), this.getFont().getStyle(), Integer.parseInt(propiedade.valor.toString())));

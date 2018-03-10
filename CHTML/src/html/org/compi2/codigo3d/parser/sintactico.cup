@@ -65,13 +65,15 @@ nonterminal Node dato,texto,chtml,encabezado,cuerpo,archivos,tabla;
 terminal String ID, ENTERO, DECIMAL, FIN, IGUAL, PAREA, PAREC,AID,HOLA;
 terminal String  MAYORQUE,DOSPUNTOS,CADENA,MENOS,EXPRESION,CUALQUIERA;
 terminal String SALTOFIN,PUNTOCOMA,FINCHTML,CHTML,CAJATEXTO,FINCAJATEXTO,
-FINCHTM,ENCABEZADO,FINENCABEZADO,CJS,FINCJS,CCSS,FINCCSS,CUERPO,FINCUERPO,TITULO,FINTITULO,PANEL,FINPANEL,TEXTO,FINTEXTO,CAJA,FINCAJA,IMAGEN,FINIMAGEN,BOTON,FINBOTON,ENLACE,FINENLACE,TABLA,FINTABLA,FIL,FINFIL,CB,FINCB,CT,FINCT,TEXTOA,FINTEXTOA;
+FINCHTM,ENCABEZADO,FINENCABEZADO,CJS,FINCJS,CCSS,FINCCSS,CUERPO,FINCUERPO,TITULO,FINTITULO,PANEL,FINPANEL,TEXTO,FINTEXTO,CAJA,FINCAJA,IMAGEN,FINIMAGEN,BOTON,FINBOTON,ENLACE,FINENLACE,TABLA,FINTABLA,FIL,FINFIL,CB,FINCB,CT,FINCT,TEXTOA,
+FINTEXTOA,OPCION,
 
+FINOPCION;
 nonterminal String chtmlAtributos,componente,fila,columna,
 Larchivo;
-
+nonterminal Caja caja,cajaCuerpo,cajaAtributo;
 nonterminal Boton boton;
-nonterminal Texto textoc;
+nonterminal Texto textoc,atributoOpcion;
 nonterminal Imagen imagena;
 nonterminal Enlace enlace;
 nonterminal Texto_A textoa;
@@ -82,7 +84,7 @@ nonterminal CHTML Lcuerpo,Acuerpo;
 nonterminal String archivo;
 nonterminal String inicial,fin,textos,expresion,otra,html,arbolo,arbol,atributos,latributos,atributo,cualquier;
 nonterminal String dato,texto,chtml,encabezado,cuerpo,archivos,tabla;
-nonterminal String enlaceCuerpo,botonCuerpo;
+nonterminal String enlaceCuerpo,botonCuerpo,cuepoOpcion,opcion;
 precedence left MAYORQUE;
 
 
@@ -99,7 +101,10 @@ encabezado::= ENCABEZADO  MAYORQUE archivos FINCHTML  MAYORQUE
               | FINCHTML MAYORQUE
               |ENCABEZADO  MAYORQUE archivos cuerpo FINCHTML  MAYORQUE
               |cuerpo FINCHTML  MAYORQUE
-              |error
+              |error:a {:Texto t = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);
+
+
+        :}
               ;
 
 cuerpo ::=   Lcuerpo FINCUERPO MAYORQUE
@@ -109,6 +114,9 @@ Lcuerpo::= Acuerpo:a  MAYORQUE{: RESULT= a; :}
     | Lcuerpo cuerpoTerminal
     | Lcuerpo:b panel:a {:b.addPanel(a); RESULT = b;:}
     | Lcuerpo:b SALTOFIN MAYORQUE {:b.addSalto();RESULT = b;:}
+     |error:a {:Texto t = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);
+        t.addText(a.toString());
+        :}
     ;
 
 
@@ -118,26 +126,33 @@ Acuerpo::= CUERPO{:RESULT = this.parser.chtml;:}
 
 panel::= LcuerpoTerminal:a FINPANEL MAYORQUE {:RESULT = a ;:} ;
 
+
 LcuerpoTerminal ::=  panelCuerpo:a MAYORQUE {:RESULT =a;:}
     | LcuerpoTerminal:a cuerpoTerminal:b{:a.addComponent(b);RESULT = a;:}
     | LcuerpoTerminal:b panel:a {:b.addPanel(a); RESULT = b;:}
     | LcuerpoTerminal:b SALTOFIN MAYORQUE {:b.addSalto();RESULT = b;:}
+    
 ;
 
 panelCuerpo ::= PANEL {:RESULT = new Panel(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);:}
     | panelCuerpo:a ID:b IGUAL CADENA:c PUNTOCOMA {:a.addAtributo(b,c);RESULT =a;:}
+   
     ;
 cuerpoTerminal::=
      boton:a MAYORQUE botonCuerpo:b MAYORQUE  {:a.addText(b); this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
-    |textoc:a FINTEXTO:b MAYORQUE              {:a.addText(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
-    |cajatexto:a FINCAJATEXTO:b MAYORQUE      {:a.addText(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
-    |CAJA         FINCAJA
+    |textoc:a FINTEXTO:b MAYORQUE              {:a.addTexta(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
+    |cajatexto:a FINCAJATEXTO:b MAYORQUE      {:a.addTexta(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
+   
     |imagena:a MAYORQUE textos:b FINIMAGEN MAYORQUE {:a.addImagen(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
     |enlace:a MAYORQUE:b enlaceCuerpo:c MAYORQUE {:a.addText(c);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo");  RESULT = a;:} 
-    |textoa:a FINTEXTOA:b  MAYORQUE           {:a.addText(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
+    |textoa:a FINTEXTOA:b  MAYORQUE           {:a.addTexta(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
     |tabla
-    |error
+    |error:a {:Texto t = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas); RESULT = t;:}
+    |caja:a {:RESULT = a;:} 
+    //| opcion {:Texto t = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);RESULT = t;:}
 ;
+
+
     
 enlaceCuerpo ::= FINENLACE{:RESULT = "";:}
     | ID:a FINENLACE {:RESULT = a;:}
@@ -145,24 +160,51 @@ enlaceCuerpo ::= FINENLACE{:RESULT = "";:}
 botonCuerpo::= ID:b FINBOTON{:RESULT = b;:}
     |FINBOTON{:RESULT = "";:}
     ;
+
+caja::= cajaCuerpo:a  FINCAJA MAYORQUE {:RESULT = a;:}  ;
+
+cajaCuerpo::= cajaAtributo:a MAYORQUE{:RESULT = a;:} 
+        |cajaCuerpo:a opcion:b {:a.addItem(b); RESULT =a;:}
+;
+cajaAtributo::= CAJA {: RESULT = new Caja(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas); :}
+    |cajaAtributo:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT = a ;:}
+    ;
+
+opcion::= atributoOpcion:a MAYORQUE cuepoOpcion:b MAYORQUE{: a.addText(b); RESULT = b;:};
+
+cuepoOpcion::= textos:a FINOPCION {:RESULT =a ;:}
+    |FINOPCION {:RESULT ="" ;:}
+; 
+atributoOpcion::=OPCION{:RESULT = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);:}
+    | atributoOpcion:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT =a;:}
+    ;
+
+
+
 boton ::=  BOTON {:Boton a = new Boton(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);   RESULT = a;:}
     | boton:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT = a ;:}
+     |boton:a error{:RESULT =a;:}
     ;
 textoc::=TEXTO{:RESULT = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);:}
     |textoc:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT =a;:}
+     |textoc:a error{:RESULT =a;:}
     ;
     
 imagena::=IMAGEN{:RESULT = new Imagen(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);:}
     |imagena:c ID:a IGUAL CADENA:b PUNTOCOMA{:c.addAtributo(a,b); RESULT = c;:}
+     |imagena:a error{:RESULT =a;:}
     ;
 enlace::=ENLACE{:RESULT = new Enlace(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);:}
     |enlace:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT =a;:}
+     |enlace:a error{:RESULT =a;:}
     ;
 textoa::=TEXTOA{:RESULT = new Texto_A(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);:}
     |textoa:a ID:b IGUAL CADENA:c PUNTOCOMA{:a.addAtributo(b,c); RESULT =a;:}
+     |textoa:a error{:RESULT =a;:}
     ;
 cajatexto::=CAJATEXTO{:RESULT = new Caja_Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);:}
     |cajatexto:a ID:b IGUAL CADENA:c {:a.addAtributo(b,c); RESULT =a;:}
+    |cajatexto:a error{:RESULT =a;:}
     ;
 
 tabla::=   TABLA fila FINTABLA ;
@@ -183,7 +225,7 @@ archivo ::=
                   
                     com.Navegador.JS.JS c = new  com.Navegador.JS.JS(a,this.parser.chtml,this.parser.chtml);
                     this.parser.chtml.enlazarObservador(c.js);
-                    
+                     c.js.cssi = this.parser.chtml.componetesCSSI;
                     
                 } catch (Exception e) {
                     System.err.println("error al compilar arcihivo " + a);

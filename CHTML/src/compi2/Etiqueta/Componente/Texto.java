@@ -22,7 +22,7 @@ import org.compi2.Interprete.CSS.ID.Propiedad;
  *
  * @author luigitercero
  */
-public class Texto extends javax.swing.JTextArea implements CSSI, observador.Observable  {
+public class Texto extends javax.swing.JTextArea implements CSSI, observador.Observable {
 
     private ArrayList<Observador> observadores;
     private ArrayList<Observador> Observadorrutas;
@@ -32,20 +32,17 @@ public class Texto extends javax.swing.JTextArea implements CSSI, observador.Obs
     private String grupo;
     private ArrayList<CSS> css;
     private ObtenerPropiedades propiedades;
-    
+
     public Texto(String texto) {
 
-        String a = texto.replaceFirst(">", "");
-        String b = a.replaceAll("[<][Ff][Ii][Nn][-][Tt][Ee][Xx][Tt][Oo]", "");
-        this.setText(b);
         this.setPreferredSize(new Dimension(90, 90));
         this.setEnabled(false);
     }
 
     public Texto(ArrayList<CSS> css, ArrayList<Observador> observadores, ArrayList<Observador> rutas) {
         super();
-        this.setSize(10, 10);
-        this.setPreferredSize(new Dimension(10, 10));
+        this.setSize(100, 100);
+        this.setPreferredSize(new Dimension(100, 100));
         this.ClickAction();
         this.observadores = observadores;
         this.ruta = "";
@@ -58,11 +55,17 @@ public class Texto extends javax.swing.JTextArea implements CSSI, observador.Obs
         this.setEnabled(false);
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-        public void addText(String b) {
-        if (this.getText().equals("")) {
+
+    public void addText(String b) {
+        
             this.setText(b);
-        }
+        
+    }
+
+    public void addTexta(String texto) {
+        String a = texto.replaceFirst(">", "");
+        String b = a.replaceAll("[<][Ff][Ii][Nn][-][Tt][Ee][Xx][Tt][Oo]", "");
+        this.setText(b);
     }
 
     public void ClickAction() {
@@ -135,7 +138,7 @@ public class Texto extends javax.swing.JTextArea implements CSSI, observador.Obs
                 this.setVisible(propiedades.getLogico(propiedade.valor.toString()));
                 break;
             case "FONDOELEMENTO":
-            //    this.setContentAreaFilled(false);
+                //    this.setContentAreaFilled(false);
                 try {
                     this.setBackground(java.awt.Color.decode(propiedade.valor.toString()));
                 } catch (Exception e) {
@@ -144,9 +147,9 @@ public class Texto extends javax.swing.JTextArea implements CSSI, observador.Obs
                     } catch (Exception a) {
                         System.out.println("no salen colores");
                     }
-                    
+
                 }
-                
+
                 break;
             case "TAMTEXT":
                 this.setFont(new Font(this.getFont().getFontName(), this.getFont().getStyle(), Integer.parseInt(propiedade.valor.toString())));

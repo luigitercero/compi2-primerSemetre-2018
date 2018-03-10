@@ -81,6 +81,10 @@ ENTER   = [\ \n]
 <YYINITIAL> "<FIN-imagen"     { /*System.out.println("    FINIMAGEN"); */return new Symbol(sym.FINIMAGEN     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<ENLACE"         { /*System.out.println("    ENLACE");    */return new Symbol(sym.ENLACE     , yyline, yycolumn, yytext()); }
 <YYINITIAL> "<FIN-ENLACE"     { /*System.out.println("    FINENLACE"); */return new Symbol(sym.FINENLACE     , yyline, yycolumn, yytext()); }
+<YYINITIAL> "<OPCION"       { /*System.out.println("    FINENLACE"); */return new Symbol(sym.OPCION     , yyline, yycolumn, yytext()); }
+<YYINITIAL> "<CAJA"         { /*System.out.println("    FINENLACE"); */return new Symbol(sym.CAJA     , yyline, yycolumn, yytext()); }
+<YYINITIAL> "<FIN-Opcion"   { /*System.out.println("    FINENLACE"); */return new Symbol(sym.FINOPCION     , yyline, yycolumn, yytext()); }
+<YYINITIAL> "<FIN-Caja"     { /*System.out.println("    FINENLACE"); */return new Symbol(sym.FINCAJA     , yyline, yycolumn, yytext()); }
 
 <YYINITIAL> {ID}              { /*System.out.println("    ID");        */return new Symbol(sym.ID     , yyline, yycolumn, yytext()); }
 <YYINITIAL> {AID}             { /*System.out.println("    AID");       */return new Symbol(sym.AID     , yyline, yycolumn, yytext()); }

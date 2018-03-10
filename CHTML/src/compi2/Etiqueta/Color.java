@@ -24,9 +24,20 @@ public class Color {
                 return java.awt.Color.gray;
             case "verde":
                 return java.awt.Color.GREEN;
+               case "yellow":
+                return java.awt.Color.YELLOW;
+            case "red":
+                return java.awt.Color.RED;
+            case "blue":
+                return java.awt.Color.BLUE;
+            case "gray":
+                return java.awt.Color.gray;
+            case "green":
+                return java.awt.Color.GREEN;
              
                   
         }
-        return null;    
+        return java.awt.Color.PINK;
+        
     }
 }

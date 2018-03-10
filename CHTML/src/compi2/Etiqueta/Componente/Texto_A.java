@@ -34,14 +34,14 @@ public class Texto_A extends JTextArea implements CSSI, observador.Observable {
     private String grupo;
     private ArrayList<CSS> css;
     private ObtenerPropiedades propiedades;
-    
+
     public Texto_A(String texto) {
         super();
         String a = texto.replaceFirst(">", "");
         String b = a.replaceAll("[<][Ff][Ii][Nn][-][Tt][Ee][Xx][Tt][Oo][_][Aa]", "");
         this.setText(b);
         this.setPreferredSize(new Dimension(90, 90));
-       
+
     }
 
     public Texto_A(ArrayList<CSS> css, ArrayList<Observador> observadores, ArrayList<Observador> rutas) {
@@ -57,13 +57,21 @@ public class Texto_A extends JTextArea implements CSSI, observador.Observable {
         this.css = css;
         propiedades = new ObtenerPropiedades();
         this.Observadorrutas = rutas;
-    
+
     }
-    
-        public void addText(String b) {
-        if (this.getText().equals("")) {
-            this.setText(b);
-        }
+
+    public void addText(String b) {
+
+        this.setText(b);
+
+    }
+
+    public void addTexta(String texto) {
+
+        String a = texto.replaceFirst(">", "");
+        String b = a.replaceAll("[<][Ff][Ii][Nn][-][Tt][Ee][Xx][Tt][Oo][_][Aa]", "");
+        this.setText(b);
+
     }
 
     public void ClickAction() {
@@ -145,9 +153,9 @@ public class Texto_A extends JTextArea implements CSSI, observador.Observable {
                     } catch (Exception a) {
                         System.out.println("no salen colores");
                     }
-                    
+
                 }
-                
+
                 break;
             case "TAMTEXT":
                 this.setFont(new Font(this.getFont().getFontName(), this.getFont().getStyle(), Integer.parseInt(propiedade.valor.toString())));

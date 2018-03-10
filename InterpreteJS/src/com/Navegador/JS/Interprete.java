@@ -222,7 +222,7 @@ public class Interprete implements observador.Observador, observador.errores.Env
                 For f = new For(nodo, this);
                 return f.ejecutar(nodo, ciclo);
 
-            case "switch":
+            case "selecciona":
                 Switch s = new Switch(nodo, this);
                 return s.ejecutar(nodo, ciclo);
         }

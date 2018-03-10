@@ -61,10 +61,8 @@ public class CHTML extends JPanel implements observador.Observador,observador.Ob
 
     public void addSalto() {
 
-        JLabel a = new JLabel("esto es una pruo\n jisjisijs");
-        a.setBackground(java.awt.Color.blue);
-        a.setOpaque(true);
-        a.setForeground(java.awt.Color.red);
+        JLabel a = new JLabel();
+        
         add(a, "al right,wrap");
     }
 
