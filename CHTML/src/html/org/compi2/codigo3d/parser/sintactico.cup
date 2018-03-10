@@ -148,7 +148,7 @@ cuerpoTerminal::=
     |textoa:a FINTEXTOA:b  MAYORQUE           {:a.addTexta(b);  this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo"); RESULT = a;:}
     |tabla
     |error:a {:Texto t = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas); RESULT = t;:}
-    |caja:a {:RESULT = a;:} 
+    |caja:a {:this.parser.chtml.componetesCSSI.add(a); this.parser.chtml.notificar(a.id, "listo");  RESULT = a;:} 
     //| opcion {:Texto t = new Texto(this.parser.chtml.css,this.parser.chtml.observadores,this.parser.chtml.Observadorrutas);RESULT = t;:}
 ;
 

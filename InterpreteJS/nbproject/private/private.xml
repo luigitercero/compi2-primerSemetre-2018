@@ -2,6 +2,13 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/luigitercero/Documentos/Compi/InterpreteJS/src/navegadorcompi2/NavegadorCompi2.java</file>
+            <file>file:/home/luigitercero/Documentos/Compi/InterpreteJS/src/com/Iterprete/Control/Switch.java</file>
+            <file>file:/home/luigitercero/Documentos/Compi/InterpreteJS/src/com/Navegador/JS/Interprete.java</file>
+            <file>file:/home/luigitercero/Documentos/Compi/InterpreteJS/src/com/Iterprete/Control/For.java</file>
+            <file>file:/home/luigitercero/Documentos/Compi/InterpreteJS/src/com/Iterprete/Control/While.java</file>
+            <file>file:/home/luigitercero/Documentos/Compi/InterpreteJS/src/com/Interprete/EXP/EvaluarEXP.java</file>
+        </group>
     </open-files>
 </project-private>
